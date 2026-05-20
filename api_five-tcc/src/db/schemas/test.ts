@@ -1,17 +1,21 @@
 import {
   int,
-  nvarchar,
-  
-  mssqlTable,
-} from 'drizzle-orm/mssql-core';
-import e from 'express';
+  varchar,
+  mysqlTable,
+} from 'drizzle-orm/mysql-core';
 
-export const test = mssqlTable('test', {
-  id: int('id').primaryKey().identity(),
+export const test = mysqlTable('test', {
+  id: int('id')
+    .primaryKey()
+    .autoincrement(),
 
-  nome: nvarchar('nome', { length: 255 }).notNull(),
+  nome: varchar('nome', {
+    length: 255,
+  }).notNull(),
 
-    
+  email: varchar('email', {
+    length: 255,
+  }).notNull(),
 });
 
 export type Test = typeof test.$inferSelect;

@@ -1,32 +1,42 @@
-import {
-    Controller,
-    Post,
-    Put,
-}from '@nestjs/common';
+import { Controller, Get, ParseIntPipe , Param, Post, Body , Put} from '@nestjs/common';
+import { CriarUserDto  } from './userDto';
+import { UserServices } from './userServices';
 
 
-// Controlador para gerenciamento de usuários
+
+
+
+
 @Controller('usuarios')
 export class UserController {
+    constructor(private readonly useSerevices : UserServices ) {}
 
-
-// Rota para cadastro de usuário
-@Post('cadastroUsuario')
-async cadastroUsuario() {
-    return 'Cadastro de usuário';
+// Rota para listar todos os usuários 
+@Get('/listarUser')
+async listarUser(){
+    return await this.useSerevices.ListarUser();
+    
 }
 
-// Rota para edição de usuário
-@Put('editartUsuario/:id')
-async editartUsuario() {
-    return 'Editar usuário';
+// Rota para listar um usuário por ID
+@Get('/listarUserId/:id')
+async listarUserPorId(@Param('id', ParseIntPipe) id: number){
+    return await this.useSerevices.ListarUserId(id);
 }
 
-// Rota para inativar usuário
-@Put('deletarUsuario/:id')
-async InativarUsuario(){
-    return 'Inativar usuário';
+@Post('/cadastrarUser')
+async cadastrarUser(@Body() CriarUserDto: CriarUserDto){
+    return `Cadastrar usuário`;
 }
 
+@Put('/atualizarUser/:id')
+async atualizarUser(@Param('id', ParseIntPipe) id: number, @Body() userData: CriarUserDto){
+    return `Atualizar usuário por ID: ${id}`;
 }
+
+
+
+ 
+}
+
 
