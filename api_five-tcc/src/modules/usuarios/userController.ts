@@ -1,5 +1,5 @@
 import { Controller, Get, ParseIntPipe , Param, Post, Body , Put} from '@nestjs/common';
-import { CriarUserDto  } from './userDto';
+import { CreateUserDto  } from './userDto';
 import { UserServices } from './userServices';
 
 
@@ -25,12 +25,12 @@ async listarUserPorId(@Param('id', ParseIntPipe) id: number){
 }
 
 @Post('/cadastrarUser')
-async cadastrarUser(@Body() CriarUserDto: CriarUserDto){
-    return `Cadastrar usuário`;
+async cadastrarUser(@Body() CriarUserDto: CreateUserDto){
+    return await this.useSerevices.CadastrarUser(CriarUserDto);
 }
 
 @Put('/atualizarUser/:id')
-async atualizarUser(@Param('id', ParseIntPipe) id: number, @Body() userData: CriarUserDto){
+async atualizarUser(@Param('id', ParseIntPipe) id: number, @Body() userData: CreateUserDto){
     return `Atualizar usuário por ID: ${id}`;
 }
 

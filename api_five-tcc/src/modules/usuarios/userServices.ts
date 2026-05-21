@@ -1,5 +1,5 @@
 import {Injectable} from '@nestjs/common';
-import {CriarUserDto} from './userDto'
+import {CreateUserDto} from './userDto'
 import { UserRepositorio } from './userRepositorio';
 
 @Injectable()
@@ -15,6 +15,10 @@ export class UserServices {
   // Método para listar um usuário por ID
   async ListarUserId(id: number){
     return await this.userRepositorio.ListarUserId(id);
+  }
+
+  async CadastrarUser(CriarUserDto: CreateUserDto){
+    return await this.userRepositorio.CadastrarUser(CriarUserDto),'Usuario cadastrado com sucesso';
   }
 
 }

@@ -22,6 +22,13 @@
       "when": 1779286308574,
       "tag": "0002_spotty_lifeguard",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1779389209872,
+      "tag": "0003_atualizado",
+      "breakpoints": true
     }
   ]
 }
