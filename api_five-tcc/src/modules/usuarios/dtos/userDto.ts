@@ -7,6 +7,7 @@ import {
     Matches,
     MaxLength,
     MinLength,
+    IsOptional,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
 
@@ -30,9 +31,9 @@ export class CreateUserDto {
     })
     user_nome!: string;
 
-    @IsEmail({}, {message: 'E-mail inválido', })
+    @IsEmail({}, { message: 'E-mail inválido', })
     @MaxLength(255, { message: 'O e-mail deve ter no máximo 255 caracteres', })
-     @Transform(({ value }) => {
+    @Transform(({ value }) => {
         if (typeof value === 'string') {
             return value.trim();
         }
@@ -41,9 +42,9 @@ export class CreateUserDto {
     user_email!: string;
 
     
-    @IsString({message: 'A senha deve ser um texto',})
-    @MinLength(8, {message: 'A senha deve ter no mínimo 8 caracteres', })
-    @MaxLength(50, { message: 'A senha deve ter no máximo 50 caracteres',  })
+    @IsString({ message: 'A senha deve ser um texto', })
+    @MinLength(8, { message: 'A senha deve ter no mínimo 8 caracteres', })
+    @MaxLength(50, { message: 'A senha deve ter no máximo 50 caracteres', })
     @Matches(
         /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])/,
         {
@@ -51,7 +52,7 @@ export class CreateUserDto {
                 'A senha deve conter letra maiúscula, minúscula, número e caractere especial',
         },
     )
-     @Transform(({ value }) => {
+    @Transform(({ value }) => {
         if (typeof value === 'string') {
             return value.trim();
         }
@@ -61,7 +62,7 @@ export class CreateUserDto {
 
 
     @IsPhoneNumber('BR', { message: 'Telefone inválido', })
-     @Transform(({ value }) => {
+    @Transform(({ value }) => {
         if (typeof value === 'string') {
             return value.trim();
         }
@@ -70,7 +71,7 @@ export class CreateUserDto {
     user_tel!: string;
 
     @IsEnum(UserTipo, { message: 'Tipo de usuário inválido', })
-     @Transform(({ value }) => {
+    @Transform(({ value }) => {
         if (typeof value === 'string') {
             return value.trim();
         }
@@ -78,5 +79,6 @@ export class CreateUserDto {
     })
     user_tipo!: UserTipo;
 }
+
 
 

@@ -1,10 +1,7 @@
-import { Controller, Get, ParseIntPipe , Param, Post, Body , Put} from '@nestjs/common';
-import { CreateUserDto  } from './userDto';
+import { Controller, Get, ParseIntPipe , Param, Post, Body , Put, Patch} from '@nestjs/common';
+import { CreateUserDto } from './dtos/userDto';
+import { UpdateUserDto } from './dtos/userUpdateDto';
 import { UserServices } from './userServices';
-
-
-
-
 
 
 @Controller('usuarios')
@@ -24,19 +21,30 @@ async listarUserPorId(@Param('id', ParseIntPipe) id: number){
     return await this.useSerevices.ListarUserId(id);
 }
 
+// Rota para cadastrar um novo usuário
 @Post('/cadastrarUser')
 async cadastrarUser(@Body() CriarUserDto: CreateUserDto){
     return await this.useSerevices.CadastrarUser(CriarUserDto);
 }
 
+// Rota para atualizar um usuário existente
 @Put('/atualizarUser/:id')
-async atualizarUser(@Param('id', ParseIntPipe) id: number, @Body() userData: CreateUserDto){
-    return `Atualizar usuário por ID: ${id}`;
+async atualizarUser(@Param('id', ParseIntPipe) id: number, @Body() atualizarUserDto: UpdateUserDto){
+    return await this.useSerevices.AtualizarUser(id, atualizarUserDto);
+}
+
+@Patch('/inativarUser/:id')
+    async inativarUser( @Param('id', ParseIntPipe) id: number,) {
+        return await this.useSerevices.InativarUser(id,);
+    }
+
+
+@Get('/listUserDesativado')
+async listUserDesativado(){
+    return await this.useSerevices.listUserDesativado();
 }
 
 
-
- 
 }
 
 
