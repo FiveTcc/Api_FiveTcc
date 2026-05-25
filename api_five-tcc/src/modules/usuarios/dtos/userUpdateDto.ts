@@ -4,8 +4,8 @@ import { CreateUserDto } from './userDto';
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
 
- 
-    
+
+
 
 }
 

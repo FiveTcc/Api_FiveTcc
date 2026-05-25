@@ -2,7 +2,9 @@ import {
     Inject,
     Injectable,
     InternalServerErrorException,
-    NotFoundException
+    NotFoundException,
+    BadRequestException,
+
 } from '@nestjs/common';
 import { eq } from 'drizzle-orm';
 import { DRIZZLE } from 'src/db/database/database.constants';
@@ -46,12 +48,16 @@ export class UserRepositorio {
                 user_tipo: CriarUserDto.user_tipo,
             });
 
-        } catch (error) {
+        } catch (error: any) {
+
+            if (error?.cause?.code === 'ER_DUP_ENTRY') {
+                throw new BadRequestException('E-mail já cadastrado');
+            }
+
             throw new InternalServerErrorException('Erro ao cadastrar usuário');
         }
 
     }
-
 
     // metodo para atualizar um usuário na tabela User
     async AtualizarUser(id: number, atualizarUserDto: UpdateUserDto) {
@@ -96,32 +102,42 @@ export class UserRepositorio {
             throw new InternalServerErrorException('Erro ao atualizar usuário');
         }
     }
- 
+
     // metodo para inativar um usuário na tabela User   
-    async InativarUser(id: number) {
+    async AtualizarStatusUser(id: number,) {
         try {
+
+            // Verificar se o usuário existe antes de inativar
+            const user = await this.db.query.User.findFirst({
+                where: eq(User.id_user, id),
+            });
+
+            if (!user) {
+                throw new NotFoundException('Usuário não encontrado');
+            }
+
+            const novoStatus = !user.user_ativo;
+
             await this.db
                 .update(User)
-                .set({ user_ativo: false })
+                .set({ user_ativo: novoStatus })
                 .where(eq(User.id_user, id));
-
-            return 'Autor inativado com sucesso';
-
+            return {
+                message: `Usuário ${user.user_ativo ? 'inativado' : 'ativado'} com sucesso`,
+            }
 
         } catch (error) {
-            throw new InternalServerErrorException('Erro ao inativar usuário');
+            throw error;
         }
     }
-     
+
     // metodo para listar os usuários desativados na tabela User
-    async listUserDesativado() {
+    async listarStatusUser() {
         try {
             return await this.db.select().from(User).where(eq(User.user_ativo, false));
         } catch (error) {
             throw new InternalServerErrorException('Erro ao listar usuários desativados');
         }
     }
-
-
 
 }

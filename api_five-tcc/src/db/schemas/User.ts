@@ -1,12 +1,12 @@
-
-import {timestamp ,varchar, int, mysqlTable, boolean , 
-
+import {
+     timestamp,
+     varchar, 
+     int, 
+     mysqlTable, 
+     boolean,
 } from "drizzle-orm/mysql-core";
 
-
-
-
-export const User = mysqlTable ("users" ,{
+export const User = mysqlTable("users", {
 
     id_user: int("id_user").primaryKey().autoincrement(),
     user_nome: varchar("user_nome", { length: 100 }).notNull(),

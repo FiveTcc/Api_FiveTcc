@@ -7,7 +7,6 @@ import {
     Matches,
     MaxLength,
     MinLength,
-    IsOptional,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
 
@@ -41,7 +40,7 @@ export class CreateUserDto {
     })
     user_email!: string;
 
-    
+
     @IsString({ message: 'A senha deve ser um texto', })
     @MinLength(8, { message: 'A senha deve ter no mínimo 8 caracteres', })
     @MaxLength(50, { message: 'A senha deve ter no máximo 50 caracteres', })
