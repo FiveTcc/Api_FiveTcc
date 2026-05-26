@@ -1,8 +1,7 @@
 import {
     IsEmail,
     IsString,
-    MaxLength,
-    MinLength,
+    IsNotEmpty,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
 
@@ -14,13 +13,10 @@ export class LoginDto {
     @Transform(({ value }) => value?.trim().toLowerCase())
     user_email!: string;
 
+    @IsNotEmpty({
+        message: 'Senha é obrigatória',
+    })
     @IsString({
-        message: 'Credenciais inválidas',
-    })
-    @MinLength(6, {
-        message: 'Credenciais inválidas',
-    })
-    @MaxLength(40, {
         message: 'Credenciais inválidas',
     })
     user_senha!: string;

@@ -7,7 +7,7 @@ import { BcryptService } from '../auth/hashing/bcrypt.services';
 @Injectable()
 export class UserServices {
   constructor(private readonly userRepositorio: UserRepositorio,
-    private readonly bcryptService: BcryptService) { }
+    private readonly BcryptService: BcryptService) { }
 
   // Método para listar todos os usuários
   async ListarUser() {
@@ -22,7 +22,7 @@ export class UserServices {
   // Método para cadastrar um novo usuário
   async CadastrarUser(CriarUserDto: CreateUserDto) {
 
-    const hashedPassword = await this.bcryptService.hash(
+    const hashedPassword = await this.BcryptService.hash(
       CriarUserDto.user_senha);
 
     CriarUserDto.user_senha = hashedPassword;
@@ -38,7 +38,7 @@ export class UserServices {
   async AtualizarUser(id: number, atualizarUserDto: UpdateUserDto) {
 
     if (atualizarUserDto?.user_senha) {
-      const passwordHash = await this.bcryptService.hash(
+      const passwordHash = await this.BcryptService.hash(
         atualizarUserDto.user_senha);
 
       atualizarUserDto.user_senha = passwordHash;

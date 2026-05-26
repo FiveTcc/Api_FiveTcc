@@ -1,0 +1,1 @@
+ALTER TABLE `users` MODIFY COLUMN `user_senha` varchar(80) NOT NULL;

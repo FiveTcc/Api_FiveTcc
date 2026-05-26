@@ -140,4 +140,18 @@ export class UserRepositorio {
         }
     }
 
+
+    async VerificarEmailExistente(email: string) {
+
+        try {
+            return await this.db.query.User.findFirst({
+                where: eq(User.user_email, email),
+            });
+
+        } catch (error) {
+            throw new InternalServerErrorException('Erro ao verificar email existente');
+        }
+        
+    }
+
 }
