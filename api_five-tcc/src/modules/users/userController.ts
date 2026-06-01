@@ -1,9 +1,11 @@
-import { Controller, Get, ParseIntPipe, Param, Post, Body, Put, Patch } from '@nestjs/common';
+import { Controller, Get, ParseIntPipe, Param, Post, Body, Put, Patch, UseGuards } from '@nestjs/common';
 import { CreateUserDto } from './dtos/userDto';
 import { UpdateUserDto } from './dtos/userUpdateDto';
 import { UserServices } from './userServices';
+import { AuthTokenGuard } from '../auth/guards/auth-token.guad';
 
 
+@UseGuards(AuthTokenGuard) // Aplica o guard de autenticação a todas as rotas deste controlador
 @Controller('usuarios')
 export class UserController {
     constructor(private readonly useSerevices: UserServices) { }

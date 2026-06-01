@@ -8,7 +8,7 @@ export class AuthController {
     constructor(  private readonly AuthService: AuthServices ) {}
       
    
-
+    // Rota de login
     @Post('/login')
     async login(@Body() loginDto: LoginDto) {
         return await this.AuthService.Login(loginDto);

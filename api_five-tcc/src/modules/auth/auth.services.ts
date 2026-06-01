@@ -1,16 +1,24 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable , Inject } from "@nestjs/common";
 import { LoginDto } from "./auth.dto/login.dto";
 import { UserRepositorio } from "../users/userRepositorio";
+import type { ConfigType } from '@nestjs/config';
 import { HashingService } from "./hashing/hashing.service";
+import jwtConfig from "./config/jwt.config";
+import { JwtService } from "@nestjs/jwt";
+
 
 @Injectable()
 export class AuthServices {
 
     constructor(
         private readonly userRepositorio: UserRepositorio,
-        private readonly HashingService: HashingService
-    ) { }
-
+        private readonly HashingService: HashingService ,
+        @Inject(jwtConfig.KEY)
+        private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
+        private readonly jwtSevices: JwtService
+    ) {
+          console.log(jwtConfiguration)
+     }
 
     async Login(loginDto: LoginDto) {
 
@@ -37,9 +45,19 @@ export class AuthServices {
             throw new Error('usuario ou senha inválidos');
         }
 
-        // Aqui você pode gerar um token JWT ou realizar outras ações necessárias para autenticação bem-sucedida
+        const acceasToken = await this.jwtSevices.signAsync({
+            sub: user?.id_user,
+            email : user?.user_email
+        },
+        {
+           audience:this.jwtConfiguration.audience,
+           issuer: this.jwtConfiguration.issuer,
+           expiresIn: this.jwtConfiguration.jWTtl
+        }
+    
+        )
         return {
-            message: 'Login bem-sucedido',
+           acceasToken
         }
     }
 
