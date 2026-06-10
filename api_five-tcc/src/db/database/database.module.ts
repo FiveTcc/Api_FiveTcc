@@ -1,26 +1,23 @@
 import { Global, Module } from '@nestjs/common';
-import mysql from 'mysql2/promise';
-import { drizzle } from 'drizzle-orm/mysql2';
+import { Pool } from 'pg';
+import { drizzle } from 'drizzle-orm/node-postgres';
 import { DATABASE_URL, DRIZZLE } from './database.constants';
 import * as schema from '../schemas';
 
 @Global()
 @Module({
-   providers: [
+  providers: [
     {
       provide: DRIZZLE,
 
       useFactory: async () => {
-        const connection = await mysql.createConnection(
-          DATABASE_URL,
-        );
-
-        return drizzle(connection, {
-        schema,
-        mode: 'default',
-
+        const pool = new Pool({
+          connectionString: DATABASE_URL,
         });
-  
+
+        return drizzle(pool, {
+          schema,
+        });
       },
     },
   ],

@@ -1,14 +1,13 @@
 import {
-  int,
+  pgTable,
   varchar,
-  mysqlTable,
-} from 'drizzle-orm/mysql-core';
+  integer,
+} from 'drizzle-orm/pg-core';
 
-export const test = mysqlTable('test', {
-  id: int('id')
+export const test = pgTable('test', {
+  id: integer('id')
     .primaryKey()
-    .autoincrement(),
-
+    .notNull(),
   nome: varchar('nome', {
     length: 255,
   }).notNull(),
