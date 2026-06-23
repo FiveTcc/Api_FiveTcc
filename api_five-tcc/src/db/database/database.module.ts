@@ -12,7 +12,7 @@ import * as schema from '../schemas';
 
       useFactory: async () => {
         const connection = await mysql.createConnection(
-          DATABASE_URL,
+           process.env.DATABASE_URL!,
         );
 
         return drizzle(connection, {
