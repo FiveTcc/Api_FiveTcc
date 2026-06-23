@@ -8,6 +8,6 @@ import { ComponenteRepository } from "./componente.repository";
     controllers: [ComponenteController],
     providers: [ComponenteService, ComponenteRepository],
     exports: [],
-   
+
 })
-export class ComponenteModule{}
+export class ComponenteModule { }
