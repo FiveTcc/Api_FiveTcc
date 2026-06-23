@@ -5,7 +5,7 @@ import { UserServices } from './userServices';
 import { AuthTokenGuard } from '../auth/guards/auth-token.guad';
 
 
-@UseGuards(AuthTokenGuard) // Aplica o guard de autenticação a todas as rotas deste controlador
+//@UseGuards(AuthTokenGuard) // Aplica o guard de autenticação a todas as rotas deste controlador
 @Controller('usuarios')
 export class UserController {
     constructor(private readonly useSerevices: UserServices) { }
