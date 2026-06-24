@@ -6,21 +6,19 @@ import * as schema from '../schemas';
 
 @Global()
 @Module({
-   providers: [
+  providers: [
     {
       provide: DRIZZLE,
 
       useFactory: async () => {
-        const connection = await mysql.createConnection(
-           process.env.DATABASE_URL!,
-        );
-
-        return drizzle(connection, {
-        schema,
-        mode: 'default',
-
+        const connection = await mysql.createConnection({
+          host: process.env.DB_HOST,
+          port: Number(process.env.DB_PORT),
+          user: process.env.DB_USER,
+          password: process.env.DB_PASSWORD,
+          database: process.env.DB_DATABASE,
         });
-  
+
       },
     },
   ],
@@ -28,4 +26,4 @@ import * as schema from '../schemas';
   exports: [DRIZZLE],
 })
 
-export class DatabaseModule {}
+export class DatabaseModule { }
