@@ -33,8 +33,8 @@ export class AuthServices {
                 loginDto.user_senha,
                 user.user_senha
             );
-            console.log(loginDto.user_senha,);
-            console.log(user.user_senha);
+            // console.log(loginDto.user_senha,);
+            // console.log(user.user_senha);
         }
 
         if (passwordisValid) {

@@ -19,6 +19,12 @@ import * as schema from '../schemas';
           database: process.env.DB_DATABASE,
         });
 
+        const db = drizzle(connection, {
+          schema,
+          mode: 'default',
+        });
+
+        return db;
       },
     },
   ],
