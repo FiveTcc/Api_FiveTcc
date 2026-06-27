@@ -8,7 +8,7 @@ import {
 } from 'drizzle-orm/mysql-core';
 import {User} from "./User";
 
-export const ambientes = mysqlTable('ambientes', {
+export const Ambientes = mysqlTable('ambientes', {
   id_amb: int('id').autoincrement().primaryKey(),
   amb_Nome: varchar('amb_nome', { length: 100 }).notNull(),
   amb_Tipo: varchar('amb_tipo', { length: 50 }).notNull(),
@@ -20,5 +20,7 @@ export const ambientes = mysqlTable('ambientes', {
   criado_em: timestamp("criado_em").defaultNow().notNull(),
   id_user: int('id_user').notNull().references(() => User.id_user)
 
-
 });
+
+export type Ambientes = typeof Ambientes.$inferSelect;
+export type AmbientesInsert = typeof Ambientes.$inferInsert;
