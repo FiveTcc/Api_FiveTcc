@@ -1,5 +1,5 @@
 import { Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
-import { test, User } from "src/db/schemas";
+import { Componentes,} from "src/db/schemas";
 import { eq } from 'drizzle-orm';
 import { DRIZZLE } from "src/db/database/database.constants";
 import type { DrizzleDB } from "src/db/types/drizzleDB";
@@ -12,7 +12,7 @@ export class ComponenteRepository {
    // Método para dar select na tabela componente
    async ListarComponente() {
       try {
-         return await this.db.select().from(test);  // Alterar para tabela de componente quando for criada
+         return await this.db.select().from(Componentes); 
       } catch (error) {
          throw new InternalServerErrorException('Erro ao listar componentes')
       }
@@ -21,7 +21,7 @@ export class ComponenteRepository {
    // Método para dar select na tabela componente por id
    async ListarComponenteId(id: number) {
       try {
-         return await this.db.select().from(test).where(eq(test.id, id)); // Alterar para tabela de componente quando for criada, e mudar id para algo como 'id_componente'
+         return await this.db.select().from(Componentes).where(eq(Componentes.id_compo, id)); 
       } catch (error) {
         throw new InternalServerErrorException('Erro ao listar componente por ID');
       }
