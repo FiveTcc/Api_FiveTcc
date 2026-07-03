@@ -43,6 +43,13 @@
       "when": 1779813154070,
       "tag": "0005_overconfident_elektra",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1783108849525,
+      "tag": "0006_volatile_serpent_society",
+      "breakpoints": true
     }
   ]
 }

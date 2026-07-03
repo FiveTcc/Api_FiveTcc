@@ -6,7 +6,7 @@ boolean,
 timestamp,
 } from 'drizzle-orm/mysql-core';
 import {Ambientes} from './Ambiente';
-import {Componetes_tipo} from './componentes_tipo';
+import {Componentes_tipo} from './componentes_tipo';
 
 
 export const Componentes = mysqlTable('componentes', {
@@ -17,7 +17,7 @@ compo_Obs: varchar('compo_obs', { length: 150 }),
 atualizado_em: timestamp("atualizado_em").defaultNow().onUpdateNow().notNull(),
 criado_em: timestamp("criado_em").defaultNow().notNull(),
 id_amb: int('id_amb').notNull().references(() => Ambientes.id_amb),
-compo_tipo_id: int('compo_tipo_id').notNull().references(() => Componetes_tipo.id_compo_tipo)
+compo_tipo_id: int('compo_tipo_id').notNull().references(() => Componentes_tipo.id_compo_tipo)
 });
 
 export type Componentes = typeof Componentes.$inferSelect;
