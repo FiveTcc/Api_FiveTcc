@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { ComponenteRepository } from "./componente.repository";
+import { CreateComponenteDto } from "./dtos/create.componenteDto";
 
 @Injectable()
 export class ComponenteService {
@@ -16,7 +17,7 @@ export class ComponenteService {
     }
 
     // Método para criar componente
-    async CadastrarComponente(bodyRequest: any) {
-        return await this.componenteRepository.CadastrarComponente(bodyRequest)
+    async CadastrarComponente(CreateComponenteDto: CreateComponenteDto) {
+        return await this.componenteRepository.CadastrarComponente(CreateComponenteDto)
     }
 }

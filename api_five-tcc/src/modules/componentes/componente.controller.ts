@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Param, ParseIntPipe, Post } from "@nestjs/common";
 import { ComponenteService } from "./componente.service";
+import { CreateComponenteDto } from "./dtos/create.componenteDto";
 
 @Controller('componentes')
 export class ComponenteController {
@@ -19,8 +20,8 @@ export class ComponenteController {
 
     // Rota para cadastrar componente 
     @Post('/cadastrarComponente')
-    async cadastrarComponente(@Body() bodyRequest: any) {
-        return await this.componenteService.CadastrarComponente(bodyRequest);
+    async cadastrarComponente(@Body() CreateComponenteDto: CreateComponenteDto) {
+        return await this.componenteService.CadastrarComponente(CreateComponenteDto);
     }
 
 }
