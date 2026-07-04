@@ -20,12 +20,17 @@ export class CreateAmbienteDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(50)
+  amb_andar!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(50)
   amb_bloco!: string;
 
   @IsString()
   @IsOptional()
   @MaxLength(500)
-  amb_descricao?: string;
+  amb_obs?: string;
 
   @IsBoolean()
   @IsOptional()

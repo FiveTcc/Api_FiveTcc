@@ -18,6 +18,8 @@ export class AuthTokenGuard implements CanActivate {
         const request: Request = context.switchToHttp().getRequest();
         const token = this.extractTokenFromHeader(request);
 
+        
+
         if (!token) {
             throw new UnauthorizedException('Nâo Logado');
         }
@@ -27,12 +29,19 @@ export class AuthTokenGuard implements CanActivate {
                 token,
                 this.jwtConfiguration,
             )
+
+            
+            request['user'] = {
+                id_user: payload.sub,
+                email: payload.email,
+            };
+
             return true;
 
         } catch (error) {
             throw new UnauthorizedException('falha aou logar');
         }
-        
+
     }
 
 
