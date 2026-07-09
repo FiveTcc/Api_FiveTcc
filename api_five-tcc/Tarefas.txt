@@ -1,0 +1,39 @@
+retornar erro especifico para quando a tabela componentes tipo não retornar nada.
+
+
+Cadastrar componente 1
+Editar componente 1
+Excluir componente 1
+Associar componente ao ambiente 1
+Definir tipo do componente 1
+Atualizar status do componente 1
+Buscar componente 1
+Filtrar por ambiente
+Filtrar por tipo
+
+
+tipos de componentes
+
+Ar-condicionado
+Computador
+Projetor
+Impressora
+
+
+
+categoria de componentes
+
+Hardware
+Rede
+Elétrica
+Refrigeração
+
+
+
+
+fazer depois
+
+
+verificar se ambiente existe no método associar componente a ambiente
+
+verificar se tipo de componente existe no método alterar tipo de componente

@@ -1,0 +1,105 @@
+@baseUrl = http://localhost:3000
+
+
+### Login
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "user_email": "admin@email.com",
+  "user_senha": "Admin@123"
+}
+
+### Cadastrar usuário
+POST http://localhost:3000/usuarios/cadastrarUser
+Content-Type: application/json
+
+{
+  "user_nome": "Administrador",
+  "user_email": "admin@email.com",
+  "user_senha": "Admin@123",
+  "user_tel": "(18)99999-9999",
+  "user_tipo": "admin"
+}
+
+
+### ======================================================
+### COMPONENTES
+### ======================================================
+
+### Listar todos os componentes
+GET {{baseUrl}}/componentes/listarComponente
+
+###
+
+### Buscar componente por ID
+GET {{baseUrl}}/componentes/listarComponenteId/7
+
+###
+
+### Cadastrar componente
+POST {{baseUrl}}/componentes/cadastrarComponente
+Content-Type: application/json
+
+{
+  "compo_nome": "ESP",
+  "compo_obs": "Placa principal",
+  "compo_ativo": false,
+  "compo_tipo_id": 2,
+  "id_amb": 9
+}
+
+###
+
+### Atualizar componente
+PATCH {{baseUrl}}/componentes/atualizarComponente/10
+Content-Type: application/json
+
+{
+  "compo_nome": "ESP32-S3 DevKit",
+  "compo_obs": "Versão atualizada",
+  "compo_ativo": true,
+  "compo_tipo_id": 1,
+  "id_amb": 9
+}
+
+###
+
+### Excluir componente
+DELETE {{baseUrl}}/componentes/deletarComponente/9
+
+###
+
+### Atualizar status do componente
+PATCH {{baseUrl}}/componentes/atualizarStatusComponente/7
+
+###
+
+
+### Associar componente ao ambiente
+PATCH {{baseUrl}}/componentes/10/associarComponenteAmbiente
+Content-Type: application/json
+
+{
+  "id_amb": 9
+}
+
+###
+
+### Alterar tipo do componente
+PATCH {{baseUrl}}/componentes/9/alterarTipoComponente
+Content-Type: application/json
+
+{
+  "compo_tipo_id": 4
+}
+
+###
+
+### Filtrar componentes por ambiente
+GET {{baseUrl}}/componentes/buscarPorAmbiente/9
+
+###
+
+### Filtrar componentes por tipo
+GET {{baseUrl}}/componentes/buscarPorTipo/1
