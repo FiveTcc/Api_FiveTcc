@@ -41,8 +41,8 @@ export class ComponenteController {
     }
 
     // Rota para excluir componente
-    @Delete('/deletarComponente/:id')
-    async deletarComponente(
+    @Delete('/excluirComponente/:id')
+    async excluirComponente(
         @Param('id', ParseIntPipe) id: number
     ) {
         return await this.componenteService.excluirComonente(id);

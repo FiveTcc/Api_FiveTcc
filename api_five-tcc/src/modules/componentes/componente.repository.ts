@@ -5,22 +5,26 @@ import { DRIZZLE } from "src/db/database/database.constants";
 import type { DrizzleDB } from "src/db/types/drizzleDB";
 import { CreateComponenteDto } from "./dtos/create.componenteDto";
 import { UpdateComponenteDto } from "./dtos/updatecomponente";
+import { ComponenteTipoRepository } from "../componenteTipo/componenteTipo.repository";
 
 @Injectable()
 export class ComponenteRepository {
    constructor(
-      @Inject(DRIZZLE) private readonly db: DrizzleDB,) { }
+      @Inject(DRIZZLE) private readonly db: DrizzleDB, private readonly componenteTipoRepository: ComponenteTipoRepository) { }
+ 
 
    // Método para dar select na tabela componente
    async listarComponente() {
       try {
-         return await this.db.select().from(Componentes);
+         return await this.db
+         .select()
+         .from(Componentes);
       } catch (error) {
          throw new InternalServerErrorException('Erro ao listar componentes')
       }
    }
 
-   // Método para dar select na tabela componente por id
+   // Método para dar select na tabela componente por ID
    async listarComponenteId(id: number) {
       try {
          return await this.verificaComponenteExiste(id);
@@ -160,10 +164,10 @@ export class ComponenteRepository {
 
    async alterarTipoComponente(id: number, compoTipoId: number) {
       try {
-
+         // verifica se componente existe
          await this.verificaComponenteExiste(id);
-
-         // await this.componenteTipoRepository.verificaTipoExiste(compoTipoId); // exemplo para criar verificação de tipo de componente
+          // verifica se o tipo de componente existe
+         await this.componenteTipoRepository.verificaTipoComponenteExiste(compoTipoId);
 
          await this.db
             .update(Componentes)
@@ -238,7 +242,7 @@ export class ComponenteRepository {
 
 
    // Método de verificar se o componente existe
-   private async verificaComponenteExiste(id: number) {
+   async verificaComponenteExiste(id: number) {
 
       const [componente] = await this.db
          .select()
