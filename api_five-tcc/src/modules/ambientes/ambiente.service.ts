@@ -15,4 +15,14 @@ export class AmbienteService {
     async ListarAmbientes() {
         return this.AmbienteRepository.ListarAmbientes();
     }
+
+    async FiltroPorBloco(bloco: string) {
+        return this.AmbienteRepository.FiltroPorBloco(bloco);
+    }
+
+    async FiltroTipo(tipoAmb: string) {
+        return this.AmbienteRepository.FiltroTipo(tipoAmb);
+    }
+
+    
 }

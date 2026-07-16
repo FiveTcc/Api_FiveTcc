@@ -30,7 +30,7 @@ export class UserRepositorio {
 
     // metodo para dar select na tabela User por id
     async ListarUserId(id: number) {
-        try {
+        try {   
             return await this.db.select().from(User).where(eq(User.id_user, id));
         } catch (error) {
             throw new InternalServerErrorException('Erro ao listar usuário por ID');

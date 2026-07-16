@@ -1,16 +1,16 @@
-import { Controller, Post, Get, Patch, Body, Req, UseGuards } from "@nestjs/common";
+import { Controller, Post, Get, Patch, Body, Req, UseGuards , Param} from "@nestjs/common";
 import { CreateAmbienteDto } from "./dtos/create.ambienteDto";
 import type { Request } from "express";
 import { AmbienteService } from "./ambiente.service";
 import { AuthTokenGuard } from "../auth/guards/auth-token.guad";
 
 
+@UseGuards(AuthTokenGuard)
 @Controller('ambientes')
 export class AmbientesController {
     constructor(private readonly AmbienteService: AmbienteService) { }
 
 
-    @UseGuards(AuthTokenGuard)
     @Post('cadastrarAmbiente')
     Cadastrar(
         @Body() CreateAmbienteDto: CreateAmbienteDto,
@@ -22,19 +22,20 @@ export class AmbientesController {
         );
     }
 
+
     @Get('ListarAmbinete')
     async lisatraAmbientes() {
         return this.AmbienteService.ListarAmbientes();
     }
 
     @Get('/bloco/:bloco')
-    async buscarPorBloco() {
-        return 'bloco encontrado'
+    async buscarPorBloco(@Param('bloco') bloco: string) {
+        return this.AmbienteService.FiltroPorBloco(bloco);
     }
 
     @Get('/tipo/:tipo')
-    async buscarPorTipo() {
-        return 'tipo encontrado'
+    async buscarPorTipo(@Param('tipo') tipoAmb: string) {
+        return this.AmbienteService.FiltroTipo(tipoAmb);
     }
 
     @Patch(':id')
