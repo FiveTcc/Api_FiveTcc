@@ -1,0 +1,48 @@
+@baseUrl = http://localhost:3000
+
+### ======================================================
+### USUÁRIOS
+### ======================================================
+
+### Listar todos os usuarios
+GET {{baseUrl}}/usuarios/listarUser
+
+
+### Listar todos os usuarios por ID
+GET {{baseUrl}}/usuarios/listarUserId/2
+
+
+### Cadastrar usuario
+POST {{baseUrl}}/usuarios/cadastrarUser
+Content-Type: application/json
+
+{
+  "user_nome": "Tecnico",
+  "user_email": "tecnico@gmail.com",
+  "user_senha": "Tecnico!197",
+  "user_tel": "(18)99165-3674",
+  "user_tipo": "tecnico"
+}
+
+
+### Atualizar usuario
+PUT {{baseUrl}}/usuarios/atualizarUser/3
+Content-Type: application/json
+
+{
+  "user_nome": "Professor",
+  "user_email": "professor@gmail.com",
+  "user_senha": "Professor!234",
+  "user_tel": "(18)99478-3674",
+  "user_tipo": "funcionario"
+}
+
+
+### Atualizar status do usuario
+PATCH {{baseUrl}}/usuarios/inativarUser/2
+
+
+### Listar status de todos os usuarios inativados
+GET {{baseUrl}}/usuarios/listarStatusUser
+
+
