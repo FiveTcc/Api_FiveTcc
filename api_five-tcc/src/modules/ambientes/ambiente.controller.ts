@@ -1,8 +1,9 @@
-import { Controller, Post, Get, Patch, Body, Req, UseGuards , Param} from "@nestjs/common";
+import { Controller, Post, Get, Patch, Body, Req, UseGuards , Param, Put , ParseIntPipe, Query} from "@nestjs/common";
 import { CreateAmbienteDto } from "./dtos/create.ambienteDto";
 import type { Request } from "express";
 import { AmbienteService } from "./ambiente.service";
 import { AuthTokenGuard } from "../auth/guards/auth-token.guad";
+import { UpdateAmbienteDto } from "./dtos/update.ambienteDtos";
 
 
 @UseGuards(AuthTokenGuard)
@@ -23,34 +24,34 @@ export class AmbientesController {
     }
 
 
+    // Rota para listar todos os ambientes
     @Get('ListarAmbinete')
     async lisatraAmbientes() {
         return this.AmbienteService.ListarAmbientes();
     }
 
-    @Get('/bloco/:bloco')
-    async buscarPorBloco(@Param('bloco') bloco: string) {
+    // Rota para buscar ambientes por bloco
+    @Get('buscarPorBloco')
+    async buscarPorBloco(@Query('bloco') bloco: string) {
         return this.AmbienteService.FiltroPorBloco(bloco);
     }
-
-    @Get('/tipo/:tipo')
-    async buscarPorTipo(@Param('tipo') tipoAmb: string) {
+    
+    // Rota para buscar ambientes por tipo
+    @Get('buscarPorTipo')
+    async buscarPorTipo(@Query('tipo') tipoAmb: string) {
         return this.AmbienteService.FiltroTipo(tipoAmb);
     }
-
-    @Patch(':id')
-    async atualizar() {
-        return 'atualizado'
+    
+    // Rota para editar um ambiente existente
+    @Put('/editarAmbiente/:id')
+    async EditarAmbiente(@Param('id', ParseIntPipe) id: number, @Body() UpdateAmbienteDto: UpdateAmbienteDto) {
+        return this.AmbienteService.EditarAmbiente(id , UpdateAmbienteDto);
     }
 
-    @Patch(':id/status')
-    async alterarStatus() {
-        return 'atualizado ?'
-    }
-
-    @Patch(':id')
-    async inativarAmbiente() {
-        return 'ambiente inativado'
+    // Rota para Atualizar o status de um usuário existente (inativar/ativar)
+    @Patch('/AtualizarStatusAmbiente/:id')
+    async atualizarStatusUser(@Param('id', ParseIntPipe) id: number,) {
+        return await this.AmbienteService.AtualizarStatusAmbiente(id);
     }
 
 

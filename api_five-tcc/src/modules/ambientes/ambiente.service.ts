@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { CreateAmbienteDto } from "./dtos/create.ambienteDto";
+import { UpdateAmbienteDto } from "./dtos/update.ambienteDtos";
 import { AmbienteRepository } from "./ambiente.repository";
 
 @Injectable()
@@ -22,6 +23,14 @@ export class AmbienteService {
 
     async FiltroTipo(tipoAmb: string) {
         return this.AmbienteRepository.FiltroTipo(tipoAmb);
+    }
+
+    async EditarAmbiente( id: number, UpdateAmbienteDto: UpdateAmbienteDto ) {
+        return this.AmbienteRepository.EditarAmbiente(id ,UpdateAmbienteDto);
+    }
+
+    async AtualizarStatusAmbiente(id: number) {
+        return this.AmbienteRepository.AtualizarStatusAmbiente(id);
     }
 
     
