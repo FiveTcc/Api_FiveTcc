@@ -3,9 +3,12 @@ import { CreateUserDto } from './dtos/userDto';
 import { UpdateUserDto } from './dtos/userUpdateDto';
 import { UserServices } from './userServices';
 import { AuthTokenGuard } from '../auth/guards/auth-token.guad';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../auth/decorators/roles.decorator';
 
 
-@UseGuards(AuthTokenGuard) // Aplica o guard de autenticação a todas as rotas deste controlador
+@UseGuards(AuthTokenGuard , RolesGuard) // Aplica o guard de autenticação a todas as rotas deste controlador 
+//@Roles('admin', 'tecnico', 'funcionario') // Aplica o decorator de roles a todas as rotas deste controlador, permitindo apenas usuários com a role 'admin'
 @Controller('usuarios')
 export class UserController {
     constructor(private readonly useSerevices: UserServices) { }

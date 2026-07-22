@@ -1,5 +1,6 @@
-import { Injectable , Inject } from "@nestjs/common";
+import { Injectable, Inject, UnauthorizedException } from "@nestjs/common";
 import { LoginDto } from "./auth.dto/login.dto";
+import { LogonRefreshTokenDto } from "./auth.dto/logon.dto";
 import { UserRepositorio } from "../users/userRepositorio";
 import type { ConfigType } from '@nestjs/config';
 import { HashingService } from "./hashing/hashing.service";
@@ -12,53 +13,73 @@ export class AuthServices {
 
     constructor(
         private readonly userRepositorio: UserRepositorio,
-        private readonly HashingService: HashingService ,
+        private readonly HashingService: HashingService,
         @Inject(jwtConfig.KEY)
         private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
         private readonly jwtSevices: JwtService
     ) {
-          console.log(jwtConfiguration)
-     }
+        console.log(jwtConfiguration)
+    }
 
     async Login(loginDto: LoginDto) {
 
-        let passwordisValid = false;
-        let thowError = true;
 
         const user = await this.userRepositorio.VerificarEmailExistente(
             loginDto.user_email);
 
-        if (user) {
-            passwordisValid = await this.HashingService.compare(
-                loginDto.user_senha,
-                user.user_senha
+
+        if (!user) {
+            throw new UnauthorizedException(
+                'Usuário ou senha inválidos',
             );
-            // console.log(loginDto.user_senha,);
-            // console.log(user.user_senha);
         }
 
-        if (passwordisValid) {
-            thowError = false;
+        const passwordisValid = await this.HashingService.compare(
+            loginDto.user_senha,
+            user.user_senha
+        );
+
+        if (!passwordisValid) {
+            throw new UnauthorizedException(
+                'Usuário ou senha inválidos'
+            )
         }
 
-        if (thowError) {
-            throw new Error('usuario ou senha inválidos');
-        }
+        // Gerar o token JWT
+        const acceasToken = await this.signJwtAsync(
+            user.id_user,
+            this.jwtConfiguration.jWTtl,
+            { email: user.user_email });
 
-        const acceasToken = await this.jwtSevices.signAsync({
-            sub: user?.id_user,
-            email : user?.user_email
-        },
-        {
-           audience:this.jwtConfiguration.audience,
-           issuer: this.jwtConfiguration.issuer,
-           expiresIn: this.jwtConfiguration.jWTtl
-        }
-    
-        )
+
+        const refreshToken = await this.signJwtAsync(
+            user.id_user,
+            this.jwtConfiguration.jWTtlRefreshTtl,
+            );
+
         return {
-           acceasToken
+            acceasToken,
+            refreshToken
         }
+    }
+
+    // 
+    private async signJwtAsync<T>(sub: number, expiresIn: number, payload?: T) {
+        return await this.jwtSevices.signAsync({
+            sub,
+            ...payload,
+        },
+            {
+                audience: this.jwtConfiguration.audience,
+                issuer: this.jwtConfiguration.issuer,
+                expiresIn,
+            }
+
+        );
+    }
+
+    async refreshTokens(logonRefreshTokenDto: LogonRefreshTokenDto) {
+
     }
 
 }

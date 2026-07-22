@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "787e3bb6-ad66-4bee-b36b-e5953a1ca2dc",
-  "prevId": "b1fdf3d2-61f7-4d79-9cc0-dc95081ef806",
+  "id": "c520a6a8-1a95-42e5-b6e0-62cec8512804",
+  "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "users": {
       "name": "users",
@@ -57,6 +57,13 @@
           "autoincrement": false,
           "default": true
         },
+        "user_refresh_token": {
+          "name": "user_refresh_token",
+          "type": "varchar(250)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
         "atualizado_em": {
           "name": "atualizado_em",
           "type": "timestamp",
@@ -91,6 +98,12 @@
           "columns": [
             "user_email"
           ]
+        },
+        "users_user_refresh_token_unique": {
+          "name": "users_user_refresh_token_unique",
+          "columns": [
+            "user_refresh_token"
+          ]
         }
       },
       "checkConstraint": {}
@@ -98,8 +111,8 @@
     "ambientes": {
       "name": "ambientes",
       "columns": {
-        "id": {
-          "name": "id",
+        "id_amb": {
+          "name": "id_amb",
           "type": "int",
           "primaryKey": false,
           "notNull": true,
@@ -190,10 +203,10 @@
         }
       },
       "compositePrimaryKeys": {
-        "ambientes_id": {
-          "name": "ambientes_id",
+        "ambientes_id_amb": {
+          "name": "ambientes_id_amb",
           "columns": [
-            "id"
+            "id_amb"
           ]
         }
       },
@@ -203,8 +216,8 @@
     "componentes": {
       "name": "componentes",
       "columns": {
-        "id": {
-          "name": "id",
+        "id_compo": {
+          "name": "id_compo",
           "type": "int",
           "primaryKey": false,
           "notNull": true,
@@ -266,38 +279,38 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "componentes_id_amb_ambientes_id_fk": {
-          "name": "componentes_id_amb_ambientes_id_fk",
+        "componentes_id_amb_ambientes_id_amb_fk": {
+          "name": "componentes_id_amb_ambientes_id_amb_fk",
           "tableFrom": "componentes",
           "tableTo": "ambientes",
           "columnsFrom": [
             "id_amb"
           ],
           "columnsTo": [
-            "id"
+            "id_amb"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "componentes_compo_tipo_id_componentes_tipo_id_fk": {
-          "name": "componentes_compo_tipo_id_componentes_tipo_id_fk",
+        "componentes_compo_tipo_id_componentes_tipo_id_compo_tipo_fk": {
+          "name": "componentes_compo_tipo_id_componentes_tipo_id_compo_tipo_fk",
           "tableFrom": "componentes",
           "tableTo": "componentes_tipo",
           "columnsFrom": [
             "compo_tipo_id"
           ],
           "columnsTo": [
-            "id"
+            "id_compo_tipo"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {
-        "componentes_id": {
-          "name": "componentes_id",
+        "componentes_id_compo": {
+          "name": "componentes_id_compo",
           "columns": [
-            "id"
+            "id_compo"
           ]
         }
       },
@@ -307,8 +320,8 @@
     "componentes_tipo": {
       "name": "componentes_tipo",
       "columns": {
-        "id": {
-          "name": "id",
+        "id_compo_tipo": {
+          "name": "id_compo_tipo",
           "type": "int",
           "primaryKey": false,
           "notNull": true,
@@ -325,10 +338,10 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {
-        "componentes_tipo_id": {
-          "name": "componentes_tipo_id",
+        "componentes_tipo_id_compo_tipo": {
+          "name": "componentes_tipo_id_compo_tipo",
           "columns": [
-            "id"
+            "id_compo_tipo"
           ]
         }
       },

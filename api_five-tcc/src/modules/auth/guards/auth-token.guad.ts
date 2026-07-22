@@ -11,6 +11,8 @@ export class AuthTokenGuard implements CanActivate {
         @Inject(JwtConfig.KEY)
         private readonly jwtConfiguration: ConfigType<typeof JwtConfig>,
     ) { }
+
+    // O método canActivate é chamado automaticamente pelo NestJS para determinar se a solicitação atual deve ser permitida ou negada. Ele verifica se o token JWT está presente no cabeçalho da solicitação, valida o token e adiciona as informações do usuário ao objeto de solicitação.
     async canActivate(
         context: ExecutionContext,
     ): Promise<boolean> {
@@ -31,9 +33,11 @@ export class AuthTokenGuard implements CanActivate {
             )
 
             
+            // Adiciona as informações do usuário ao objeto de solicitação para que possam ser acessadas em outros lugares do aplicativo
             request['user'] = {
                 id_user: payload.sub,
                 email: payload.email,
+                role: payload.role,
             };
 
             return true;
