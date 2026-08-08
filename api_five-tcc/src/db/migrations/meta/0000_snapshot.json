@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "26107199-8e43-46d6-a729-642abbf0b480",
-  "prevId": "c520a6a8-1a95-42e5-b6e0-62cec8512804",
+  "id": "f010eab9-b6bf-4f46-a871-ba01d19ec471",
+  "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "users": {
       "name": "users",
@@ -56,30 +56,6 @@
           "notNull": true,
           "autoincrement": false,
           "default": true
-        },
-        "user_refresh_token": {
-          "name": "user_refresh_token",
-          "type": "varchar(250)",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "atualizado_em": {
-          "name": "atualizado_em",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "onUpdate": true,
-          "default": "(now())"
-        },
-        "criado_em": {
-          "name": "criado_em",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "(now())"
         }
       },
       "indexes": {},
@@ -97,12 +73,6 @@
           "name": "users_user_email_unique",
           "columns": [
             "user_email"
-          ]
-        },
-        "users_user_refresh_token_unique": {
-          "name": "users_user_refresh_token_unique",
-          "columns": [
-            "user_refresh_token"
           ]
         }
       },
@@ -160,23 +130,6 @@
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
-        },
-        "atualizado_em": {
-          "name": "atualizado_em",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "onUpdate": true,
-          "default": "(now())"
-        },
-        "criado_em": {
-          "name": "criado_em",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "(now())"
         },
         "id_user": {
           "name": "id_user",
@@ -244,23 +197,6 @@
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
-        },
-        "atualizado_em": {
-          "name": "atualizado_em",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "onUpdate": true,
-          "default": "(now())"
-        },
-        "criado_em": {
-          "name": "criado_em",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "(now())"
         },
         "id_amb": {
           "name": "id_amb",
@@ -379,30 +315,6 @@
           "notNull": true,
           "autoincrement": false
         },
-        "criado_em": {
-          "name": "criado_em",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "(now())"
-        },
-        "atualizado_em": {
-          "name": "atualizado_em",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "onUpdate": true,
-          "default": "(now())"
-        },
-        "encerrado_em": {
-          "name": "encerrado_em",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
         "ocorre_obs": {
           "name": "ocorre_obs",
           "type": "varchar(255)",
@@ -488,14 +400,6 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
-        },
-        "data_atribuicao": {
-          "name": "data_atribuicao",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "(now())"
         },
         "ocor_user_obs": {
           "name": "ocor_user_obs",

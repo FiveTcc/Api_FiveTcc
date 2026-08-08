@@ -16,8 +16,8 @@ export const Ambientes = mysqlTable('ambientes', {
   amb_andar: varchar('amb_andar', { length: 2 }).notNull(),
   amb_ativo: boolean('amb_ativo').default(true).notNull(),
   amb_obs: varchar('amb_obs', { length: 100 }),
-  atualizado_em: timestamp("atualizado_em").defaultNow().onUpdateNow().notNull(),
-  criado_em: timestamp("criado_em").defaultNow().notNull(),
+  // atualizado_em: timestamp("atualizado_em").defaultNow().onUpdateNow().notNull(),
+  // criado_em: timestamp("criado_em").defaultNow().notNull(),
   id_user: int('id_user').notNull().references(() => User.id_user)
 
 });

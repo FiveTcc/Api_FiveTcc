@@ -15,8 +15,8 @@ export const User = mysqlTable("users", {
     user_tipo: varchar("user_tipo", { length: 20 }).notNull(),
     user_senha: varchar("user_senha", { length: 80 }).notNull(),
     user_ativo: boolean("user_ativo").default(true).notNull(),
-    atualizado_em: timestamp("atualizado_em").defaultNow().onUpdateNow().notNull(),
-    criado_em: timestamp("criado_em").defaultNow().notNull(),
+    // atualizado_em: timestamp("atualizado_em").defaultNow().onUpdateNow().notNull(),
+    // criado_em: timestamp("criado_em").defaultNow().notNull(),
 })
 
 export type User = typeof User.$inferSelect;
