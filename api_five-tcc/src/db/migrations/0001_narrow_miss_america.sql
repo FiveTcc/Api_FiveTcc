@@ -1,0 +1,2 @@
+ALTER TABLE `componentes` ADD `atualizado_em` datetime DEFAULT CURRENT_TIMESTAMP NOT NULL;--> statement-breakpoint
+ALTER TABLE `componentes` ADD `criado_em` datetime DEFAULT CURRENT_TIMESTAMP NOT NULL;
