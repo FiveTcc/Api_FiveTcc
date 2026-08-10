@@ -8,13 +8,6 @@
       "when": 1786150259432,
       "tag": "0000_criaçao_db",
       "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1786326158597,
-      "tag": "0001_narrow_miss_america",
-      "breakpoints": true
     }
   ]
 }
