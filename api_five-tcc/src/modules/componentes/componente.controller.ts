@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query } from "@nestjs/common";
 import { ComponenteService } from "./componente.service";
 import { CreateComponenteDto } from "./dtos/create.componenteDto";
 import { UpdateComponenteDto } from "./dtos/updatecomponente";
@@ -77,19 +77,27 @@ export class ComponenteController {
     // ##### Rotas de Filtros #####
 
     // Rota para busca por ambiente
-    @Get('buscarPorAmbiente/:idAmb')
+    @Get('buscarPorAmbiente')
     async filtrarPorAmbiente(
-        @Param('idAmb', ParseIntPipe) idAmb: number
+        @Query('nomeAmb') nomeAmb: string
     ) {
-        return await this.componenteService.filtrarPorAmbiente(idAmb);
+        return await this.componenteService.filtrarPorAmbiente(nomeAmb);
     }
 
     // Rota para busca por tipo de componente
-    @Get('buscarPorTipo/:idTipo')
+    @Get('buscarPorTipo')
     async filtrarPorTipo(
-        @Param('idTipo', ParseIntPipe) idTipo: number
+        @Query('tipo') tipo: string
     ) {
-        return await this.componenteService.filtrarPorTipo(idTipo);
+        return await this.componenteService.filtrarPorTipo(tipo);
+    }
+
+    // Rota para buscar componente po nome
+    @Get('buscarPorNome/:nome')
+    async filtrarPorNome(
+        @Param('nome') nome: string
+    ) {
+        return await this.componenteService.filtrarPorNome(nome)
     }
 
 }

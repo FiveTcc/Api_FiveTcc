@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Patch, Body, Req, UseGuards , Param, Put , ParseIntPipe, Query} from "@nestjs/common";
+import { Controller, Post, Get, Patch, Body, Req, UseGuards , Param, ParseIntPipe, Query} from "@nestjs/common";
 import { CreateAmbienteDto } from "./dtos/create.ambienteDto";
 import type { Request } from "express";
 import { AmbienteService } from "./ambiente.service";
@@ -6,7 +6,7 @@ import { AuthTokenGuard } from "../auth/guards/auth-token.guad";
 import { UpdateAmbienteDto } from "./dtos/update.ambienteDtos";
 
 
-@UseGuards(AuthTokenGuard)
+//@UseGuards(AuthTokenGuard)
 @Controller('ambientes')
 export class AmbientesController {
     constructor(private readonly AmbienteService: AmbienteService) { }
@@ -25,8 +25,8 @@ export class AmbientesController {
 
 
     // Rota para listar todos os ambientes
-    @Get('ListarAmbinete')
-    async lisatraAmbientes() {
+    @Get('listarAmbiente')
+    async listarAmbientes() {
         return this.AmbienteService.ListarAmbientes();
     }
 
@@ -43,13 +43,13 @@ export class AmbientesController {
     }
     
     // Rota para editar um ambiente existente
-    @Put('/editarAmbiente/:id')
+    @Patch('/editarAmbiente/:id')
     async EditarAmbiente(@Param('id', ParseIntPipe) id: number, @Body() UpdateAmbienteDto: UpdateAmbienteDto) {
         return this.AmbienteService.EditarAmbiente(id , UpdateAmbienteDto);
     }
 
-    // Rota para Atualizar o status de um usuário existente (inativar/ativar)
-    @Patch('/AtualizarStatusAmbiente/:id')
+    // Rota para Atualizar o status de um ambiente existente (inativar/ativar)
+    @Patch('/atualizarStatusAmbiente/:id')
     async atualizarStatusUser(@Param('id', ParseIntPipe) id: number,) {
         return await this.AmbienteService.AtualizarStatusAmbiente(id);
     }

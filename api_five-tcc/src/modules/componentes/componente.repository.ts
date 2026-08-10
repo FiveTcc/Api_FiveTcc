@@ -1,24 +1,27 @@
 import { Inject, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { Componentes, } from "src/db/schemas";
-import { eq } from 'drizzle-orm';
+import { eq, like } from 'drizzle-orm';
 import { DRIZZLE } from "src/db/database/database.constants";
 import type { DrizzleDB } from "src/db/types/drizzleDB";
 import { CreateComponenteDto } from "./dtos/create.componenteDto";
 import { UpdateComponenteDto } from "./dtos/updatecomponente";
 import { ComponenteTipoRepository } from "../componenteTipo/componenteTipo.repository";
+import { AmbienteRepository } from '../ambientes/ambiente.repository';
+import { Ambientes } from "src/db/schemas/Ambiente";
+import { Componentes_tipo } from "src/db/schemas/componentes_tipo";
 
 @Injectable()
 export class ComponenteRepository {
    constructor(
       @Inject(DRIZZLE) private readonly db: DrizzleDB, private readonly componenteTipoRepository: ComponenteTipoRepository) { }
- 
+
 
    // Método para dar select na tabela componente
    async listarComponente() {
       try {
          return await this.db
-         .select()
-         .from(Componentes);
+            .select()
+            .from(Componentes);
       } catch (error) {
          throw new InternalServerErrorException('Erro ao listar componentes')
       }
@@ -166,7 +169,7 @@ export class ComponenteRepository {
       try {
          // verifica se componente existe
          await this.verificaComponenteExiste(id);
-          // verifica se o tipo de componente existe
+         // verifica se o tipo de componente existe
          await this.componenteTipoRepository.verificaTipoComponenteExiste(compoTipoId);
 
          await this.db
@@ -194,15 +197,35 @@ export class ComponenteRepository {
    // ##### Filtros de Componentes #####
 
    // Filtro por ambiente
-   async filtrarPorAmbiente(idAmb: number) {
+   async filtrarPorAmbiente(nomeAmb: string) {
       try {
 
-         // await this.ambienteRepository.verificaAmbienteExiste(idAmb);
+         //wait this..verificaAmbienteExiste(nomeAmb);
 
-         return await this.db
-            .select()
+         const componentes = await this.db
+            .select({
+               id_compo: Componentes.id_compo,
+               compo_nome: Componentes.compo_nome,
+               compo_ativo: Componentes.compo_ativo,
+               id_amb: Componentes.id_amb,
+               nome_ambiente: Ambientes.amb_nome,
+            })
             .from(Componentes)
-            .where(eq(Componentes.id_amb, idAmb));
+            .leftJoin(
+               Ambientes,
+               eq(Componentes.id_amb, Ambientes.id_amb),
+            )
+            .where(
+               like(Ambientes.amb_nome, `%${nomeAmb}%`)
+            );
+
+         if (componentes.length === 0) {
+            throw new NotFoundException(
+               'Nenhum componente encontrado para o ambiente informado',
+            );
+         }
+
+         return componentes;
 
       } catch (error) {
 
@@ -216,15 +239,33 @@ export class ComponenteRepository {
    }
 
    // Filtro por tipo de componente
-   async filtrarPorTipo(idTipo: number) {
+   async filtrarPorTipo(tipo: string) {
       try {
 
-         // await this.componenteTipoRepository.verificaTipoExiste(compoTipoId);
-         
-         return await this.db
-            .select()
+         //await this.componenteTipoRepository.verificaTipoComponenteExiste(tipo);
+         const componentes = await this.db
+            .select({
+               id_compo: Componentes.id_compo,
+               compo_nome: Componentes.compo_nome,
+               compo_ativo: Componentes.compo_ativo,
+               tipo_componente: Componentes_tipo.compo_tipo,
+            })
             .from(Componentes)
-            .where(eq(Componentes.compo_tipo_id, idTipo));
+            .leftJoin(
+               Componentes_tipo,
+               eq(Componentes.compo_tipo_id, Componentes_tipo.id_compo_tipo),
+            )
+            .where(
+               like(Componentes_tipo.compo_tipo, `%${tipo}%`)
+            );
+
+         if (componentes.length === 0) {
+            throw new NotFoundException(
+               'Nenhum componente encontrado para o tipo informado',
+            );
+         }
+
+         return componentes;
 
       } catch (error) {
 
@@ -236,6 +277,31 @@ export class ComponenteRepository {
          );
       }
    }
+
+   // Filtro por nome de componente
+   async filtrarPorNome(nome: string) {
+      try {
+
+         const componentes =
+            await this.db
+               .select()
+               .from(Componentes)
+               .where(like(Componentes.compo_nome, `%${nome}%`))
+
+         if (componentes.length === 0) {
+            throw new NotFoundException('Nenhum componente encontrado para o nome informado');
+         }
+
+         return componentes
+
+      } catch (error) {
+         if (error instanceof NotFoundException) {
+            throw error;
+         }
+         throw new InternalServerErrorException('Erro ao filtrar componente por nome');
+      }
+   }
+
 
 
 

@@ -1,0 +1,36 @@
+@baseUrl = http://localhost:3000
+
+
+### ======================================================
+### COMPONENTES TIPO
+### ======================================================
+
+### Listar todos os tipos componentes
+GET {{baseUrl}}/componentes-tipo/listarComponenteTipo
+
+
+### Buscar tipo de componente por ID
+GET {{baseUrl}}/componentes-tipo/listarComponenteTipoId/9
+
+
+### Cadastrar tipo de componente
+POST {{baseUrl}}/componentes-tipo/cadastrarComponenteTipo
+Content-Type: application/json
+
+{
+  "compo_tipo": "refrigeracao"
+}
+
+
+### Atualizar tipo de componente
+PATCH {{baseUrl}}/componentes-tipo/atualizarComponenteTipo/7
+Content-Type: application/json
+
+{
+  "compo_tipo": "hardware"
+}
+
+
+### Excluir tipo de componente
+DELETE {{baseUrl}}/componentes-tipo/excluirComponenteTipo/1
+

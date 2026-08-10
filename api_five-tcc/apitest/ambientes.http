@@ -3,3 +3,46 @@
 ### ======================================================
 ### AMBIENTES
 ### ======================================================
+
+
+### Listar todos os ambientes
+GET {{baseUrl}}/ambientes/listarAmbiente
+
+
+### Cadastrar ambiente
+POST {{baseUrl}}/ambientes/cadastrarAmbiente
+Content-Type: application/json
+
+{
+  "amb_nome": "Sala 8",
+  "amb_tipo": "Sala",
+  "amb_andar": "1º",
+  "amb_bloco": "A",
+  "amb_obs": "Sala de aula" 
+}
+ 
+### Atualizar ambiente
+PATCH {{baseUrl}}/ambientes/editarAmbiente/7
+Content-Type: application/json
+
+{
+  "amb_nome": "Sala 7",
+  "amb_tipo": "Sala",
+  "amb_andar": "2º",
+  "amb_bloco": "A",
+  "amb_obs": "sala de aula" 
+}
+
+### Atualizar ambiente
+PATCH {{baseUrl}}/ambientes/atualizarStatusAmbiente/7
+
+
+
+### Filtros de ambientes ###
+
+
+### Filtrar ambientes por bloco
+GET {{baseUrl}}/ambientes/buscarPorBloco?bloco=Bloco
+
+### Filtrar ambientes por tipo
+GET {{baseUrl}}/ambientes/buscarPorTipo?tipo=Sa

@@ -26,13 +26,13 @@ export class AmbienteRepository {
   async CadastrarAmbiente(CriarAmbienteDto: CreateAmbienteDto, idUser: number) {
     try {
 
-      const ambienteExitente = await this.db
+      const ambienteExistente = await this.db
         .select()
         .from(Ambientes)
         .where(eq(Ambientes.amb_nome, CriarAmbienteDto.amb_nome))
         .limit(1);
 
-      if (ambienteExitente.length > 0) {
+      if (ambienteExistente.length > 0) {
         throw new InternalServerErrorException('Já existe um ambiente com esse nome');
       }
 
@@ -110,7 +110,7 @@ export class AmbienteRepository {
     try {
 
       // Verifica se o ambiente existe antes de atualizar
-      const ambienteExistente = await this.db
+      const [ambienteExistente] = await this.db
         .select()
         .from(Ambientes)
         .where(eq(Ambientes.id_amb, id));

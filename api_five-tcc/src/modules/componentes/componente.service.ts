@@ -50,12 +50,17 @@ export class ComponenteService {
     // ##### Filtros #####
 
     // Método para filtrar componentes por ambiente
-    async filtrarPorAmbiente(idAmb: number) {
-       return await this.componenteRepository.filtrarPorAmbiente(idAmb) 
+    async filtrarPorAmbiente(nomeAmb: string) {
+       return await this.componenteRepository.filtrarPorAmbiente(nomeAmb) 
     }
 
     // Método para filtrar componentes por tipo
-    async filtrarPorTipo(idTipo: number) {
-       return await this.componenteRepository.filtrarPorTipo(idTipo) 
+    async filtrarPorTipo(tipo: string) {
+       return await this.componenteRepository.filtrarPorTipo(tipo) 
+    }
+
+    // Método para filtrar componentes por nome
+    async filtrarPorNome(nome: string) {
+        return await this.componenteRepository.filtrarPorNome(nome)
     }
 }

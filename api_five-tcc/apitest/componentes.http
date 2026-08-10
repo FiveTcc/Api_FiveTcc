@@ -48,11 +48,11 @@ PATCH {{baseUrl}}/componentes/atualizarStatusComponente/7
 
 
 ### Associar componente ao ambiente
-PATCH {{baseUrl}}/componentes/10/associarComponenteAmbiente
+PATCH {{baseUrl}}/componentes/15/associarComponenteAmbiente
 Content-Type: application/json
 
 {
-  "id_amb": 9
+  "id_amb": 7
 }
 
 
@@ -65,45 +65,18 @@ Content-Type: application/json
 }
 
 
+
+//Irei atualizar os filtros
+
+### Filtros de componentes ###
+
 ### Filtrar componentes por ambiente
-GET {{baseUrl}}/componentes/buscarPorAmbiente/9
+GET {{baseUrl}}/componentes/buscarPorAmbiente?nomeAmb=Lab
 
 
 ### Filtrar componentes por tipo
-GET {{baseUrl}}/componentes/buscarPorTipo/1
+GET {{baseUrl}}/componentes/buscarPorTipo?tipo=ele
 
-
-
-### ======================================================
-### COMPONENTES TIPO
-### ======================================================
-
-### Listar todos os tipos componentes
-GET {{baseUrl}}/componentes-tipo/listarComponenteTipo
-
-
-### Buscar tipo de componente por ID
-GET {{baseUrl}}/componentes-tipo/listarComponenteTipoId/9
-
-
-### Cadastrar tipo de componente
-POST {{baseUrl}}/componentes-tipo/cadastrarComponenteTipo
-Content-Type: application/json
-
-{
-  "compo_tipo": "refrigeracao"
-}
-
-
-### Atualizar tipo de componente
-PATCH {{baseUrl}}/componentes-tipo/atualizarComponenteTipo/7
-Content-Type: application/json
-
-{
-  "compo_tipo": "hardware"
-}
-
-
-### Excluir tipo de componente
-DELETE {{baseUrl}}/componentes-tipo/excluirComponenteTipo/1
+### Filtrar componentes por nome
+GET {{baseUrl}}/componentes/buscarPorNome/P
 
