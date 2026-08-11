@@ -1,10 +1,11 @@
 import {
-     timestamp,
-     varchar, 
-     int, 
-     mysqlTable, 
-     boolean,
+    datetime,
+    varchar,
+    int,
+    mysqlTable,
+    boolean,
 } from "drizzle-orm/mysql-core";
+import { sql } from "drizzle-orm";
 
 export const User = mysqlTable("users", {
 
@@ -15,8 +16,9 @@ export const User = mysqlTable("users", {
     user_tipo: varchar("user_tipo", { length: 20 }).notNull(),
     user_senha: varchar("user_senha", { length: 80 }).notNull(),
     user_ativo: boolean("user_ativo").default(true).notNull(),
-    // atualizado_em: timestamp("atualizado_em").defaultNow().onUpdateNow().notNull(),
-    // criado_em: timestamp("criado_em").defaultNow().notNull(),
+    atualizado_em: datetime("atualizado_em").notNull().default(sql`CURRENT_TIMESTAMP`).$onUpdate(() => sql`CURRENT_TIMESTAMP`),
+    criado_em: datetime("criado_em").notNull().default(sql`CURRENT_TIMESTAMP`),
+
 })
 
 export type User = typeof User.$inferSelect;

@@ -3,9 +3,10 @@ import {
   int,
   varchar,
   boolean,
-  timestamp,
+  datetime,
   
 } from 'drizzle-orm/mysql-core';
+import { sql } from 'drizzle-orm';
 import {User} from "./User";
 
 export const Ambientes = mysqlTable('ambientes', {
@@ -16,8 +17,8 @@ export const Ambientes = mysqlTable('ambientes', {
   amb_andar: varchar('amb_andar', { length: 2 }).notNull(),
   amb_ativo: boolean('amb_ativo').default(true).notNull(),
   amb_obs: varchar('amb_obs', { length: 100 }),
-  // atualizado_em: timestamp("atualizado_em").defaultNow().onUpdateNow().notNull(),
-  // criado_em: timestamp("criado_em").defaultNow().notNull(),
+  atualizado_em: datetime("atualizado_em").notNull().default(sql`CURRENT_TIMESTAMP`).$onUpdate(() => sql`CURRENT_TIMESTAMP`),
+  criado_em: datetime("criado_em").notNull().default(sql`CURRENT_TIMESTAMP`),
   id_user: int('id_user').notNull().references(() => User.id_user)
 
 });

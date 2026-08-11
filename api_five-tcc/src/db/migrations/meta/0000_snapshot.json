@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "f010eab9-b6bf-4f46-a871-ba01d19ec471",
+  "id": "3fe44888-6556-455c-86c9-6e72b9d03796",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "users": {
@@ -56,6 +56,22 @@
           "notNull": true,
           "autoincrement": false,
           "default": true
+        },
+        "atualizado_em": {
+          "name": "atualizado_em",
+          "type": "datetime",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "criado_em": {
+          "name": "criado_em",
+          "type": "datetime",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "CURRENT_TIMESTAMP"
         }
       },
       "indexes": {},
@@ -131,6 +147,22 @@
           "notNull": false,
           "autoincrement": false
         },
+        "atualizado_em": {
+          "name": "atualizado_em",
+          "type": "datetime",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "criado_em": {
+          "name": "criado_em",
+          "type": "datetime",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "CURRENT_TIMESTAMP"
+        },
         "id_user": {
           "name": "id_user",
           "type": "int",
@@ -197,6 +229,22 @@
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
+        },
+        "atualizado_em": {
+          "name": "atualizado_em",
+          "type": "datetime",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "criado_em": {
+          "name": "criado_em",
+          "type": "datetime",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "CURRENT_TIMESTAMP"
         },
         "id_amb": {
           "name": "id_amb",
@@ -315,6 +363,22 @@
           "notNull": true,
           "autoincrement": false
         },
+        "atualizado_em": {
+          "name": "atualizado_em",
+          "type": "datetime",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "criado_em": {
+          "name": "criado_em",
+          "type": "datetime",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "CURRENT_TIMESTAMP"
+        },
         "ocorre_obs": {
           "name": "ocorre_obs",
           "type": "varchar(255)",
@@ -400,6 +464,14 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
+        },
+        "atualizado_em": {
+          "name": "atualizado_em",
+          "type": "datetime",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "CURRENT_TIMESTAMP"
         },
         "ocor_user_obs": {
           "name": "ocor_user_obs",

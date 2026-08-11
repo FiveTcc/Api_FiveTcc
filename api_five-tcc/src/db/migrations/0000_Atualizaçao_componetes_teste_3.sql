@@ -6,6 +6,8 @@ CREATE TABLE `users` (
 	`user_tipo` varchar(20) NOT NULL,
 	`user_senha` varchar(80) NOT NULL,
 	`user_ativo` boolean NOT NULL DEFAULT true,
+	`atualizado_em` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`criado_em` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	CONSTRAINT `users_id_user` PRIMARY KEY(`id_user`),
 	CONSTRAINT `users_user_email_unique` UNIQUE(`user_email`)
 );
@@ -18,6 +20,8 @@ CREATE TABLE `ambientes` (
 	`amb_andar` varchar(2) NOT NULL,
 	`amb_ativo` boolean NOT NULL DEFAULT true,
 	`amb_obs` varchar(100),
+	`atualizado_em` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`criado_em` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	`id_user` int NOT NULL,
 	CONSTRAINT `ambientes_id_amb` PRIMARY KEY(`id_amb`)
 );
@@ -27,6 +31,8 @@ CREATE TABLE `componentes` (
 	`compo_nome` varchar(100) NOT NULL,
 	`compo_ativo` boolean NOT NULL DEFAULT true,
 	`compo_obs` varchar(150),
+	`atualizado_em` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`criado_em` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	`id_amb` int NOT NULL,
 	`compo_tipo_id` int NOT NULL,
 	CONSTRAINT `componentes_id_compo` PRIMARY KEY(`id_compo`)
@@ -43,6 +49,8 @@ CREATE TABLE `ocorrencias` (
 	`ocorre_nome` varchar(100) NOT NULL,
 	`ocorre_status` tinyint NOT NULL,
 	`ocorre_prioridade` varchar(10) NOT NULL,
+	`atualizado_em` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`criado_em` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	`ocorre_obs` varchar(255),
 	`componente_id` int NOT NULL,
 	`ambiente_id` int NOT NULL,
@@ -53,6 +61,7 @@ CREATE TABLE `ocorrencias_user` (
 	`id_ocorrencias_user` int AUTO_INCREMENT NOT NULL,
 	`user_id` int NOT NULL,
 	`ocorrencia_id` int NOT NULL,
+	`atualizado_em` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	`ocor_user_obs` varchar(150),
 	`ocor_user_tipo` tinyint NOT NULL,
 	CONSTRAINT `ocorrencias_user_id_ocorrencias_user` PRIMARY KEY(`id_ocorrencias_user`)

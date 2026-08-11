@@ -6,7 +6,7 @@ import { AuthTokenGuard } from "../auth/guards/auth-token.guad";
 import { UpdateAmbienteDto } from "./dtos/update.ambienteDtos";
 
 
-//@UseGuards(AuthTokenGuard)
+@UseGuards(AuthTokenGuard)
 @Controller('ambientes')
 export class AmbientesController {
     constructor(private readonly AmbienteService: AmbienteService) { }

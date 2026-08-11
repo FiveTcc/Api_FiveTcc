@@ -42,7 +42,6 @@ export class AmbienteRepository {
         amb_andar: CriarAmbienteDto.amb_andar,
         amb_bloco: CriarAmbienteDto.amb_bloco,
         amb_obs: CriarAmbienteDto.amb_obs,
-        amb_ativo: CriarAmbienteDto.amb_ativo,
         id_user: idUser
       });
 

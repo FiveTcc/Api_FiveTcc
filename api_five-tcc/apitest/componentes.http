@@ -21,21 +21,21 @@ Content-Type: application/json
   "compo_nome": "PC-10",
   "compo_obs": "Computador 10 do lab 6",
   "compo_ativo": false,
-  "compo_tipo_id": 7,
-  "id_amb": 9
+  "compo_tipo_id": 1,
+  "id_amb": 1
 }
 
 
 ### Atualizar componente
-PATCH {{baseUrl}}/componentes/atualizarComponente/10
+PATCH {{baseUrl}}/componentes/atualizarComponente/8
 Content-Type: application/json
 
 {
   "compo_nome": "ESP32-S3 DevKit",
-  "compo_obs": "Versão atualizada",
+  "compo_obs": "Versão atualizada 565",
   "compo_ativo": true,
   "compo_tipo_id": 1,
-  "id_amb": 9
+  "id_amb": 1
 }
 
 
@@ -44,7 +44,7 @@ DELETE {{baseUrl}}/componentes/excluirComponente/10
 
 
 ### Atualizar status do componente
-PATCH {{baseUrl}}/componentes/atualizarStatusComponente/7
+PATCH {{baseUrl}}/componentes/atualizarStatusComponente/4
 
 
 ### Associar componente ao ambiente

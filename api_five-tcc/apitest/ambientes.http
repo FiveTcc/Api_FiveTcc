@@ -1,16 +1,19 @@
 @baseUrl = http://localhost:3000
+@Token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiYWRtQGdtYWlsLmNvbSIsImlhdCI6MTc4NjQxMTY4OSwiZXhwIjoxNzg2NDE1Mjg5LCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjMwMDAiLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjMwMDAifQ.SCGjxm51zDW7SGpYv2G_-1NfCSt2XDoSGUjjgJg81V4
 
 ### ======================================================
 ### AMBIENTES
 ### ======================================================
 
-
 ### Listar todos os ambientes
 GET {{baseUrl}}/ambientes/listarAmbiente
 
 
+
+
 ### Cadastrar ambiente
 POST {{baseUrl}}/ambientes/cadastrarAmbiente
+Authorization: Bearer {{Token}}
 Content-Type: application/json
 
 {
@@ -22,7 +25,8 @@ Content-Type: application/json
 }
  
 ### Atualizar ambiente
-PATCH {{baseUrl}}/ambientes/editarAmbiente/7
+PATCH {{baseUrl}}/ambientes/editarAmbiente/1
+Authorization: Bearer {{Token}}
 Content-Type: application/json
 
 {
