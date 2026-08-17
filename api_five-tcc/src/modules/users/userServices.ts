@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dtos/userDto'
 import { UpdateUserDto } from './dtos/userUpdateDto';
+import { AtualizarPerfilDto } from './dtos/userDtoPefil';
 import { UserRepositorio } from './userRepositorio';
 import { BcryptService } from '../auth/hashing/bcrypt.services';
 
@@ -56,6 +57,16 @@ export class UserServices {
   // Método para listar usuários desativados
   async listarStatusUser() {
     return await this.userRepositorio.listarStatusUser();
+  }
+
+  // Método para visualizar o perfil do usuário logado
+  async visualizarPerfilUser(id: number) {
+    return await this.userRepositorio.visualizarPerfilUser(id);
+  }
+
+  // Método para atualizar o perfil do usuário logado
+  async atualizarPerfil(id: number, dto: AtualizarPerfilDto) {
+    return await this.userRepositorio.atualizarPerfil(id, dto);
   }
 
 }

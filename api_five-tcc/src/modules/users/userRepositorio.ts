@@ -12,6 +12,7 @@ import { User } from 'src/db/schemas';
 import type { DrizzleDB } from 'src/db/types/drizzleDB';
 import { CreateUserDto } from './dtos/userDto';
 import { UpdateUserDto } from './dtos/userUpdateDto';
+import { AtualizarPerfilDto } from './dtos/userDtoPefil';
 
 
 @Injectable()
@@ -30,7 +31,7 @@ export class UserRepositorio {
 
     // metodo para dar select na tabela User por id
     async ListarUserId(id: number) {
-        try {   
+        try {
             return await this.db.select().from(User).where(eq(User.id_user, id));
         } catch (error) {
             throw new InternalServerErrorException('Erro ao listar usuário por ID');
@@ -151,7 +152,70 @@ export class UserRepositorio {
         } catch (error) {
             throw new InternalServerErrorException('Erro ao verificar email existente');
         }
-        
+
+    }
+
+    async visualizarPerfilUser(id_user: number) {
+
+        try {
+            const usuario = await this.db
+                .select({
+                    id_user: User.id_user,
+                    user_nome: User.user_nome,
+                    user_email: User.user_email,
+                    user_telefone: User.user_tel,
+                    user_tipo: User.user_tipo,
+                    user_ativo: User.user_ativo,
+
+                })
+                .from(User)
+                .where(eq(User.id_user, id_user))
+                .limit(1)
+
+            if (usuario.length === 0) {
+                throw new NotFoundException('Usuário não encontrado');
+            }
+
+            return usuario[0];
+
+        } catch (error) {
+            throw new InternalServerErrorException('Erro ao visualizar perfil do usuário');
+        }
+
+    }
+
+
+    async atualizarPerfil(id_user: number, dto: AtualizarPerfilDto) {
+
+        try {
+
+            const usuario = await this.db
+                .select()
+                .from(User)
+                .where(eq(User.id_user, id_user))
+                .limit(1);
+
+            if (usuario.length === 0) {
+                throw new NotFoundException('Usuário não encontrado');
+            }
+
+            await this.db
+                .update(User)
+                .set({
+                    user_nome: dto.user_nome,
+                    user_email: dto.user_email,
+                    user_tel: dto.user_telefone,
+                })
+                .where(eq(User.id_user, id_user));
+
+            return {
+                message: 'Perfil atualizado com sucesso',
+            };
+
+        } catch (error) {
+            throw new InternalServerErrorException('Erro ao atualizar perfil do usuário');
+        }
+
     }
 
 }
