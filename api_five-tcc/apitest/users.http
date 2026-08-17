@@ -7,8 +7,7 @@
 
 ### Listar todos os usuarios
 GET {{baseUrl}}/usuarios/listarUser
-##Authorization: Bearer {{token}}
-
+Authorization: Bearer {{Token}}
 
 ### Listar todos os usuarios por ID
 GET {{baseUrl}}/usuarios/listarUserId/1
@@ -49,3 +48,18 @@ PATCH {{baseUrl}}/usuarios/inativarUser/2
 GET {{baseUrl}}/usuarios/listarStatusUser
 
 
+### Visualizar meu perfil
+GET {{baseUrl}}/usuarios/perfilUser
+Authorization: Bearer {{Token}}
+
+
+### Atualizar meu perfil
+PATCH {{baseUrl}}/usuarios/perfil
+Authorization: Bearer {{Token}}
+Content-Type: application/json
+
+{
+  "user_nome": "Administrador",
+  "user_email": "admin@gmail.com",
+  "user_telefone": "(18) 99999-9999"
+}

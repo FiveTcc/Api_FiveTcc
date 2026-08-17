@@ -14,10 +14,10 @@ Content-Type: application/json
  }
 
 // Banco de dados Brayan
-#{
-#    "user_email": "adm@gmail.com",
-#   "user_senha": "Tecnico!197"
-#}
+{
+    "user_email": "adm@1gmail.com",
+   "user_senha": "Tecnico!197"
+}
 
 # {
 #   "user_email": "tecnico@gmail.com",

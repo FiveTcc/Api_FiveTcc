@@ -1,13 +1,14 @@
-import { Controller, Get, ParseIntPipe, Param, Post, Body, Put, Patch, UseGuards } from '@nestjs/common';
+import { Controller, Get, ParseIntPipe, Param, Post, Body, Put, Patch, UseGuards, Req } from '@nestjs/common';
 import { CreateUserDto } from './dtos/userDto';
 import { UpdateUserDto } from './dtos/userUpdateDto';
+import { AtualizarPerfilDto } from './dtos/userDtoPefil';
 import { UserServices } from './userServices';
 import { AuthTokenGuard } from '../auth/guards/auth-token.guad';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 
 
-@UseGuards(AuthTokenGuard , RolesGuard) // Aplica o guard de autenticação a todas as rotas deste controlador 
+@UseGuards(AuthTokenGuard, RolesGuard) // Aplica o guard de autenticação a todas as rotas deste controlador 
 //@Roles('admin', 'tecnico', 'funcionario') // Aplica o decorator de roles a todas as rotas deste controlador, permitindo apenas usuários com a role 'admin'
 @Controller('usuarios')
 export class UserController {
@@ -49,6 +50,28 @@ export class UserController {
     async listarStatusUser() {
         return await this.useSerevices.listarStatusUser();
     }
+
+    // Rota para Visualizar Perfil do usuário logado
+
+    @Get('/perfilUser')
+    async visualizarPerfilUser(@Req() req: Request) {
+        return this.useSerevices.visualizarPerfilUser(
+            req['user'].id_user
+        )
+    }
+
+    @Patch('perfil')
+    @UseGuards(AuthTokenGuard)
+    async atualizarPerfil(
+        @Req() req: Request,
+        @Body() dto: AtualizarPerfilDto,
+    ) {
+        return this.useSerevices.atualizarPerfil(
+            req['user'].id_user,
+            dto,
+        );
+    }
+
 
 
 }
