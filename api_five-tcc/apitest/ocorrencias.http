@@ -1,0 +1,46 @@
+@baseUrl = http://localhost:3000
+
+GET {{baseUrl}}/ocorrencias/listarOcorrencia
+
+###
+
+POST {{baseUrl}}/ocorrencias/criarOcorrencia
+Content-Type: application/json
+
+{
+  "ocor_nome": "Computador não liga",
+  "ocor_status": "aberta",
+  "ocor_prioridade": "alta",
+  "ocor_obs": "O computador da sala não apresenta sinal de energia",
+  "componente_id": 5,
+  "ambiente_id": 1
+}
+
+###
+
+PATCH {{baseUrl}}/ocorrencias/editarOcorrencia/6
+Content-Type: application/json
+
+{
+  "ocor_nome": "Computador não liga",
+  "ocor_prioridade": "baixa",
+  "ocor_obs": "O computador da sala não apresenta sinal de energia",
+  "componente_id": 5,
+  "ambiente_id": 1
+}
+
+###
+PATCH {{baseUrl}}/ocorrencias/encerrarOcorrencia/9
+
+
+###
+PATCH {{baseUrl}}/ocorrencias/cancelarOcorrencia/9
+
+###
+
+PATCH {{baseUrl}}/ocorrencias/alterarStatus/10
+Content-Type: application/json
+
+{
+    "novoStatus": "em andamento"
+}

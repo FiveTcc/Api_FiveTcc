@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:3000
-@Token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiYWRtQDFnbWFpbC5jb20iLCJpYXQiOjE3ODY5MzMxNjMsImV4cCI6MTc4NjkzNjc2MywiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDozMDAwIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDozMDAwIn0.PITuTE6DZODD5jHGxFkUtcR-8G98DGvqrrMBamfqzXA
+@Token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiYWRtQDFnbWFpbC5jb20iLCJpYXQiOjE3ODY4OTE3ODksImV4cCI6MTc4Njg5NTM4OSwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDozMDAwIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDozMDAwIn0.3MXi9QvekU5vrUTqslgkCK_7udl3IxjicOsrU6t95qE
 
 ### ======================================================
 ### USUÁRIOS
@@ -10,20 +10,20 @@ GET {{baseUrl}}/usuarios/listarUser
 Authorization: Bearer {{Token}}
 
 ### Listar todos os usuarios por ID
-GET {{baseUrl}}/usuarios/listarUserId/2
+GET {{baseUrl}}/usuarios/listarUserId/1
 
 
 ### Cadastrar usuario
 POST {{baseUrl}}/usuarios/cadastrarUser
-Authorization: Bearer {{Token}}
+//Authorization: Bearer {{Token}}
 Content-Type: application/json
 
 {
-  "user_nome": "adm",
+  "user_nome": "adm2",
   "user_email": "adm@1gmail.com",
-  "user_senha": "Tecnico!197",
+  "user_senha": "Adm!2000",
   "user_tel": "(18)99165-3675",
-  "user_tipo": "tecnico"
+  "user_tipo": "admin"
 }
 
 

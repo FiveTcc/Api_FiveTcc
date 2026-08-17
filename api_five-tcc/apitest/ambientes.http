@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:3000
-@Token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiYWRtQGdtYWlsLmNvbSIsImlhdCI6MTc4NjQxMTY4OSwiZXhwIjoxNzg2NDE1Mjg5LCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjMwMDAiLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjMwMDAifQ.SCGjxm51zDW7SGpYv2G_-1NfCSt2XDoSGUjjgJg81V4
+@Token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiYWRtQDFnbWFpbC5jb20iLCJpYXQiOjE3ODY4OTE4MzIsImV4cCI6MTc4Njg5NTQzMiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDozMDAwIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDozMDAwIn0.I8t1EbX8eMWD4ntrOkxahQ30ZcJqCJR2GqyQzHwoxA0
 
 ### ======================================================
 ### AMBIENTES
@@ -7,13 +7,14 @@
 
 ### Listar todos os ambientes
 GET {{baseUrl}}/ambientes/listarAmbiente
+Authorization: Bearer: {{Token}}
 
 
 
 
 ### Cadastrar ambiente
 POST {{baseUrl}}/ambientes/cadastrarAmbiente
-Authorization: Bearer {{Token}}
+Authorization: Bearer: {{Token}}
 Content-Type: application/json
 
 {
@@ -26,7 +27,7 @@ Content-Type: application/json
  
 ### Atualizar ambiente
 PATCH {{baseUrl}}/ambientes/editarAmbiente/1
-Authorization: Bearer {{Token}}
+Authorization: Bearer: {{Token}}
 Content-Type: application/json
 
 {
