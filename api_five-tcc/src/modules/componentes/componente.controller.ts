@@ -45,7 +45,7 @@ export class ComponenteController {
     async excluirComponente(
         @Param('id', ParseIntPipe) id: number
     ) {
-        return await this.componenteService.excluirComonente(id);
+        return await this.componenteService.excluirComponente(id);
     }
 
     // Rota para atualizar o status do componente

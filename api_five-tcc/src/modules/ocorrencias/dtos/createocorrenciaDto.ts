@@ -1,13 +1,15 @@
 import { Transform, Type } from "class-transformer";
 import { IsNotEmpty, IsString, MinLength, MaxLength, IsEnum, IsOptional, IsInt } from "class-validator";
 
-// Status da ocorrencia (aberto, Em andamento, encerrado)
+// Status da ocorrencia (aberto, Em andamento, encerrado, cancelado)
 export enum OcorrenciaStatus {
-    ABERTO = 'aberto',
+    ABERTA = 'aberta',
     EM_ANDAMENTO = 'em andamento',
-    ENCERRADO = 'encerrado',
+    ENCERRADA = 'encerrada',
+    CANCELADA = 'cancelada',
 }
 
+// Prioridade da ocorrência (baixa, média, alta)
 export enum OcorrenciaPrioridade {
     BAIXA = 'baixa',
     MEDIA = 'media',

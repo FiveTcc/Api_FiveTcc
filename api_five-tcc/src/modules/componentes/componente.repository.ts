@@ -6,7 +6,6 @@ import type { DrizzleDB } from "src/db/types/drizzleDB";
 import { CreateComponenteDto } from "./dtos/create.componenteDto";
 import { UpdateComponenteDto } from "./dtos/updatecomponente";
 import { ComponenteTipoRepository } from "../componenteTipo/componenteTipo.repository";
-import { AmbienteRepository } from '../ambientes/ambiente.repository';
 import { Ambientes } from "src/db/schemas/Ambiente";
 import { Componentes_tipo } from "src/db/schemas/componentes_tipo";
 
@@ -142,8 +141,6 @@ export class ComponenteRepository {
 
          await this.verificaComponenteExiste(id); // verifica se o componente existe
 
-         // await this.ambienteRepository.verificaAmbienteExiste(idAmb); // exemplo para criar verificação de ambiente
-
          await this.db
             .update(Componentes)
             .set({
@@ -200,8 +197,6 @@ export class ComponenteRepository {
    async filtrarPorAmbiente(nomeAmb: string) {
       try {
 
-         //wait this..verificaAmbienteExiste(nomeAmb);
-
          const componentes = await this.db
             .select({
                id_compo: Componentes.id_compo,
@@ -242,7 +237,6 @@ export class ComponenteRepository {
    async filtrarPorTipo(tipo: string) {
       try {
 
-         //await this.componenteTipoRepository.verificaTipoComponenteExiste(tipo);
          const componentes = await this.db
             .select({
                id_compo: Componentes.id_compo,

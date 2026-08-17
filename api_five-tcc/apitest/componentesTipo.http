@@ -18,7 +18,7 @@ POST {{baseUrl}}/componentes-tipo/cadastrarComponenteTipo
 Content-Type: application/json
 
 {
-  "compo_tipo": "refrigeracao"
+  "compo_tipo": "hardware"
 }
 
 

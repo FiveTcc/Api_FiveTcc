@@ -28,7 +28,7 @@ export class ComponenteService {
     }
 
     // Método para excluir componente
-    async excluirComonente(id: number) {
+    async excluirComponente(id: number) {
         return await this.componenteRepository.excluirComponente(id)
     }
 
