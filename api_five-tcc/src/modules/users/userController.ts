@@ -60,7 +60,9 @@ export class UserController {
         )
     }
 
-    @Patch('perfil')
+    // Rota para atualizar perfil
+
+    @Patch('perfilUpdate')
     @UseGuards(AuthTokenGuard)
     async atualizarPerfil(
         @Req() req: Request,

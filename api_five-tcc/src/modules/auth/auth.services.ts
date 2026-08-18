@@ -46,7 +46,7 @@ export class AuthServices {
         }
 
         // Gerar o token JWT
-        const acceasToken = await this.signJwtAsync(
+        const accessToken = await this.signJwtAsync(
             user.id_user,
             this.jwtConfiguration.jWTtl,
             { email: user.user_email });
@@ -58,7 +58,7 @@ export class AuthServices {
             );
 
         return {
-            acceasToken,
+            accessToken,
             refreshToken
         }
     }

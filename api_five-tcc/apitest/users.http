@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:3000
-@Token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiYWRtQDFnbWFpbC5jb20iLCJpYXQiOjE3ODY4OTE3ODksImV4cCI6MTc4Njg5NTM4OSwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDozMDAwIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDozMDAwIn0.3MXi9QvekU5vrUTqslgkCK_7udl3IxjicOsrU6t95qE
+@Token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjQsImVtYWlsIjoiYWRtQDFnbWFpbC5jb20iLCJpYXQiOjE3ODcwMDk4MzYsImV4cCI6MTc4NzAxMzQzNiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDozMDAwIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDozMDAwIn0.kV_12e5rV-w11ydoVP7JuLGzkTRnsX4JBJ-tGBNVIEM
 
 ### ======================================================
 ### USUÁRIOS
@@ -54,12 +54,12 @@ Authorization: Bearer {{Token}}
 
 
 ### Atualizar meu perfil
-PATCH {{baseUrl}}/usuarios/perfil
+PATCH {{baseUrl}}/usuarios/perfilUpdate
 Authorization: Bearer {{Token}}
 Content-Type: application/json
 
 {
-  "user_nome": "Administrador",
+  "user_nome": "Ronaldo",
   "user_email": "admin@gmail.com",
   "user_telefone": "(18) 99999-9999"
 }
