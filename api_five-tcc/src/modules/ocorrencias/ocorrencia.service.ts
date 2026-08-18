@@ -32,11 +32,6 @@ export class OcorrenciaService {
         return await this.ocorrenciaRepository.cancelarOcorrencia(id);
     }
 
-    // Método para alterar prioridade da ocorrência
-    async alterarPrioridade() {
-        return await this.ocorrenciaRepository.alterarPrioridade();
-    }
-
     // Método para alterar status da ocorrência
     async alterarStatus(
         id: number,
@@ -45,19 +40,30 @@ export class OcorrenciaService {
         return await this.ocorrenciaRepository.alterarStatus(id, novoStatus);
     }
 
+    // Método para alterar prioridade da ocorrência
+    async alterarPrioridade() {
+        return await this.ocorrenciaRepository.alterarPrioridade();
+    }
+
     // Método para adicionar observação a ocorrência
     async adicionarObservação() {
         return await this.ocorrenciaRepository.adicionarObservacao();
     }
 
     // Método para associar componente a ocorrência
-    async associarComponente() {
-        return await this.ocorrenciaRepository.associarComponente();
+    async associarComponente(
+        id: number,
+        idComp: number
+    ) {
+        return await this.ocorrenciaRepository.associarComponente(id, idComp);
     }
 
     // Método para associar ambiente a ocorrência
-    async associarAmbiente() {
-        return await this.ocorrenciaRepository.associarAmbiente();
+    async associarAmbiente(
+        id: number,
+        idAmb: number
+    ) {
+        return await this.ocorrenciaRepository.associarAmbiente(id, idAmb);
     }
 
     // Método para atribuir ocorrência ao tecnico

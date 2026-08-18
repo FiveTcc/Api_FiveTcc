@@ -149,7 +149,7 @@ export class ComponenteRepository {
             .where(eq(Componentes.id_compo, id));
 
          return {
-            message: `Componente associado ao ambiente com sucesso`
+            message: 'Componente associado ao ambiente com sucesso'
          };
       } catch (error) {
          if (error instanceof NotFoundException) {

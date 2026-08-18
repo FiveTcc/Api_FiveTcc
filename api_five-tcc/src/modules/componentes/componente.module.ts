@@ -10,7 +10,7 @@ import { AmbienteModule } from "../ambientes/ambiente.module";
     controllers: [ComponenteController],
     providers: [ComponenteService, ComponenteRepository],
     imports: [ComponenteTipoModule, AmbienteModule],
-    exports: [],
+    exports: [ComponenteRepository],
 
 })
 export class ComponenteModule { }

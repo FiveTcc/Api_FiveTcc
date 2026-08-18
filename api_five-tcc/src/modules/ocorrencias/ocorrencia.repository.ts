@@ -5,10 +5,15 @@ import { CreateOcorrenciaDto, OcorrenciaStatus } from "./dtos/createocorrenciaDt
 import { ocorrencias } from "src/db/schemas";
 import { UpdateOcorrenciaDto } from "./dtos/update.ocorrenciaDto";
 import { eq } from "drizzle-orm";
+import { ComponenteRepository } from "../componentes/componente.repository";
+import { AmbienteRepository } from "../ambientes/ambiente.repository";
 
 @Injectable()
 export class OcorrenciaRepository {
-    constructor(@Inject(DRIZZLE) private readonly db: DrizzleDB) { }
+    constructor(@Inject(DRIZZLE) private readonly db: DrizzleDB,
+        private readonly componenteRepository: ComponenteRepository,
+        private readonly ambienteRepositiry: AmbienteRepository
+    ) { }
 
     async listarOcorrencia() {
         try {
@@ -23,7 +28,8 @@ export class OcorrenciaRepository {
 
     async criarOcorrencia(dto: CreateOcorrenciaDto) {
         try {
-            const [ocorrencia] = await this.db
+
+            await this.db
                 .insert(ocorrencias)
                 .values({
                     ocor_nome: dto.ocor_nome,
@@ -38,7 +44,10 @@ export class OcorrenciaRepository {
                 message: `Ocorrencia criada com sucesso`
             }
         } catch (error) {
-            throw new InternalServerErrorException('Erro ao criar ocorrência');
+
+            throw new InternalServerErrorException(
+                'Erro ao criar ocorrência'
+            );
         }
     }
 
@@ -67,41 +76,55 @@ export class OcorrenciaRepository {
     }
 
     async encerrarOcorrencia(id: number) {
-        try {
-            await this.alterarStatus(
-                id,
-                OcorrenciaStatus.ENCERRADA
-            );
 
-            return {
-                message: 'Ocorrência encerrada com sucesso'
-            };
-        } catch (error) {
+        await this.alterarStatus(
+            id,
+            OcorrenciaStatus.ENCERRADA
+        );
 
-            if (
-                error instanceof NotFoundException ||
-                error instanceof BadRequestException
-            ) {
-                throw error;
-            }
-            throw new InternalServerErrorException(
-                'Erro ao encerrar ocorrência'
-            );
-        }
+        return {
+            message: 'Ocorrência encerrada com sucesso'
+        };
+
     }
 
 
     async cancelarOcorrencia(id: number) {
+        await this.alterarStatus(
+            id,
+            OcorrenciaStatus.CANCELADA
+        );
+
+        return {
+            message: 'Ocorrência cancelada com sucesso'
+        }
+    }
+
+    // Método para alterar o status da ocorrência
+    async alterarStatus(
+        id: number,
+        novoStatus: OcorrenciaStatus
+    ) {
         try {
-            await this.alterarStatus(
-                id,
-                OcorrenciaStatus.CANCELADA
+            const ocorrencia = await this.verificaOcorrenciaExiste(id);
+
+            this.validarTransicao(
+                ocorrencia.ocor_status as OcorrenciaStatus,
+                novoStatus
             );
 
-            return {
-                message: 'Ocorrência cancelada com sucesso'
-            }
+            await this.db
+                .update(ocorrencias)
+                .set({
+                    ocor_status: novoStatus,
+                })
+                .where(
+                    eq(ocorrencias.id_ocor, id)
+                );
 
+            return {
+                message: 'Status da ocorrência alterado com sucesso'
+            }
         } catch (error) {
             if (
                 error instanceof NotFoundException ||
@@ -110,10 +133,12 @@ export class OcorrenciaRepository {
                 throw error;
             }
             throw new InternalServerErrorException(
-                'Erro ao cancelar ocorrência'
+                'Erro ao alterar status da ocorrência'
             );
         }
+
     }
+
 
     async alterarPrioridade() {
         try {
@@ -123,38 +148,71 @@ export class OcorrenciaRepository {
         }
     }
 
-    // Método para alterar o status da ocorrência
-    async alterarStatus(
-        id: number,
-        novoStatus: OcorrenciaStatus
-    ) {
-        const ocorrencia = await this.verificaOcorrenciaExiste(id);
-
-        this.validarTransicao(
-            ocorrencia.ocor_status as OcorrenciaStatus,
-            novoStatus
-        );
-
-        await this.db
-            .update(ocorrencias)
-            .set({
-                ocor_status: novoStatus,
-            })
-            .where(
-                eq(ocorrencias.id_ocor, id)
-            );
-
-            return {
-                message: 'Status da ocorrência alterado com sucesso'
-            }
-    }
 
     async adicionarObservacao() { }
 
-    async associarComponente() { }
+    async associarComponente(id: number, idComp: number) {
+        try {
 
-    async associarAmbiente() { }
+            // Verifica se a ocorrência existe
+            await this.verificaOcorrenciaExiste(id);
 
+            // Verifica se o componente existe
+            await this.componenteRepository.verificaComponenteExiste(idComp);
+
+            await this.db
+                .update(ocorrencias)
+                .set({
+                    componente_id: idComp,
+                })
+                .where(eq(ocorrencias.id_ocor, id));
+
+            return {
+                message: 'Componente associado com sucesso'
+            }
+        } catch (error) {
+            if (error instanceof NotFoundException) {
+                throw error;
+            }
+
+            throw new InternalServerErrorException(
+                'Erro ao associar componente a ocorrência',
+            );
+        }
+    }
+
+    async associarAmbiente(id: number, idAmb: number) {
+        try {
+            // Verifica se a ocorrência existe
+            await this.verificaOcorrenciaExiste(id);
+
+            // Verifica se ambiente existe
+
+            await this.db
+            .update(ocorrencias)
+            .set({
+                ambiente_id: idAmb,
+            })
+            .where(eq(ocorrencias.id_ocor, id));
+
+             return {
+                message: 'Ambiente associado com sucesso'
+            }
+
+        } catch (error) {
+             if (error instanceof NotFoundException) {
+                throw error;
+            }
+
+            throw new InternalServerErrorException(
+                'Erro ao associar ambiente a ocorrência',
+            );
+        }
+
+    }
+
+
+    
     async atribuirTecnico() { }
 
     async historicoDeOcorrencia() { }
@@ -183,7 +241,7 @@ export class OcorrenciaRepository {
     }
 
     // Método para validar a transição de status
-   private validarTransicao(
+    private validarTransicao(
         statusAtual: OcorrenciaStatus,
         novoStatus: OcorrenciaStatus
     ) {

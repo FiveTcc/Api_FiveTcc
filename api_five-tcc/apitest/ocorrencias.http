@@ -44,3 +44,19 @@ Content-Type: application/json
 {
     "novoStatus": "em andamento"
 }
+
+### Associar componente a ocorrencia
+PATCH {{baseUrl}}/ocorrencias/16/associarComponente
+Content-Type: application/json
+
+{
+  "id_comp": 2
+}
+
+### Associar ambiente a ocorrencia
+PATCH {{baseUrl}}/ocorrencias/16/associarAmbiente
+Content-Type: application/json
+
+{
+  "id_amb": 17
+}

@@ -3,6 +3,8 @@ import { OcorrenciaService } from "./ocorrencia.service"
 import { Post, Body } from "@nestjs/common";
 import { CreateOcorrenciaDto, OcorrenciaStatus } from "./dtos/createocorrenciaDto";
 import { UpdateOcorrenciaDto } from "./dtos/update.ocorrenciaDto";
+import { AssociateOcorCompDto } from "./dtos/associate.ocorCompDto";
+import { AssociateOcorAmbDto } from "./dtos/associate.ocorAmbDto";
 
 @Controller('ocorrencias')
 export class OcorrenciaController {
@@ -39,6 +41,7 @@ export class OcorrenciaController {
         return await this.ocorrenciaService.encerrarOcorrencia(id);
     }
 
+    // Rota para cancelar a ocorrência
     @Patch('/cancelarOcorrencia/:id')
     async cancelarOcorrencia(
         @Param('id', ParseIntPipe) id: number
@@ -46,6 +49,7 @@ export class OcorrenciaController {
         return await this.ocorrenciaService.cancelarOcorrencia(id);
     }
 
+    // Rota para alterar status da ocorrência(aberta, em andamento, encerrada ou cancelada)
     @Patch('/alterarStatus/:id')
     async alterarStatus(
         @Param('id', ParseIntPipe) id: number,
@@ -55,5 +59,23 @@ export class OcorrenciaController {
             id,
             novoStatus
         );
+    }
+
+    // Rota para associar componente a ocorrência
+    @Patch(':id/associarComponente')
+    async associarComponente(
+        @Param('id', ParseIntPipe) id: number,
+        @Body() associateOcorCompDto: AssociateOcorCompDto
+    ) {
+        return await this.ocorrenciaService.associarComponente(id, associateOcorCompDto.id_comp)
+    }
+
+    // Rota para associar ambiente a ocorrência
+     @Patch(':id/associarAmbiente')
+    async associarAmbiente(
+        @Param('id', ParseIntPipe) id: number,
+        @Body() associateOcorAmbDto: AssociateOcorAmbDto
+    ) {
+        return await this.ocorrenciaService.associarAmbiente(id, associateOcorAmbDto.id_amb)
     }
 }
