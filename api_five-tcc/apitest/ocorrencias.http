@@ -37,7 +37,7 @@ PATCH {{baseUrl}}/ocorrencias/encerrarOcorrencia/9
 
 
 ###
-PATCH {{baseUrl}}/ocorrencias/cancelarOcorrencia/9
+PATCH {{baseUrl}}/ocorrencias/cancelarOcorrencia/13
 
 ###
 

@@ -4,7 +4,7 @@ import type { DrizzleDB } from "src/db/types/drizzleDB";
 import { CreateOcorrenciaDto, OcorrenciaStatus } from "./dtos/createocorrenciaDto";
 import { ocorrencias, Ambientes, Componentes } from "src/db/schemas";
 import { UpdateOcorrenciaDto } from "./dtos/update.ocorrenciaDto";
-import { eq } from "drizzle-orm";
+import { eq , sql} from "drizzle-orm";
 import { ComponenteRepository } from "../componentes/componente.repository";
 import { AmbienteRepository } from "../ambientes/ambiente.repository";
 
@@ -141,30 +141,73 @@ export class OcorrenciaRepository {
 
     }
 
+    // Eu passei por aqui
+    // async encerrarOcorrencia(id: number) {
+
+    //     await this.alterarStatus(
+    //         id,
+    //         OcorrenciaStatus.ENCERRADA
+    //     );
+
+    //     return {
+    //         message: 'Ocorrência encerrada com sucesso'
+    //     };
+
+    // }
     async encerrarOcorrencia(id: number) {
+        try {
+            await this.db.update(ocorrencias)
+                .set({
+                    ocor_status: OcorrenciaStatus.ENCERRADA,
+                    encerrado_em: sql`lCURRENT_TIMESTAMP`,
+                })
+                .where(eq(ocorrencias.id_ocor, id));
 
-        await this.alterarStatus(
-            id,
-            OcorrenciaStatus.ENCERRADA
-        );
+            return {
+                message: 'Ocorrência encerrada com sucesso'
+            }
 
-        return {
-            message: 'Ocorrência encerrada com sucesso'
-        };
+        } catch (error) {
+             throw new InternalServerErrorException(
+                'Erro ao encerrar ocorrência'
+            );
+        }
 
     }
 
+   // eu passei por aqui também
+    // async cancelarOcorrencia(id: number) {
+    //     await this.alterarStatus(
+    //         id,
+    //         OcorrenciaStatus.CANCELADA
+    //     );
 
-    async cancelarOcorrencia(id: number) {
-        await this.alterarStatus(
-            id,
-            OcorrenciaStatus.CANCELADA
-        );
+    //     return {
+    //         message: 'Ocorrência cancelada com sucesso'
+    //     }
+    // }
 
-        return {
-            message: 'Ocorrência cancelada com sucesso'
+       async cancelarOcorrencia(id: number) {
+         try {
+            await this.db.update(ocorrencias)
+                .set({
+                    ocor_status: OcorrenciaStatus.CANCELADA,
+                    encerrado_em: sql`lCURRENT_TIMESTAMP`,
+                })
+                .where(eq(ocorrencias.id_ocor, id));
+
+            return {
+                message: 'Ocorrência cancelada com sucesso'
+            }
+
+        } catch (error) {
+             throw new InternalServerErrorException(
+                'Erro ao encerrar ocorrência'
+            );
         }
     }
+
+
 
     // Método para alterar o status da ocorrência
     async alterarStatus(
