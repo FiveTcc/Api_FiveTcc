@@ -3,6 +3,9 @@
 GET {{baseUrl}}/ocorrencias/listarOcorrencia
 
 ###
+GET  {{baseUrl}}/ocorrencias/listarOcorrenciaId/10
+
+###
 
 POST {{baseUrl}}/ocorrencias/criarOcorrencia
 Content-Type: application/json
@@ -43,6 +46,14 @@ Content-Type: application/json
 
 {
     "novoStatus": "em andamento"
+}
+
+###
+PATCH {{baseUrl}}/ocorrencias/10/adicionarObservacao
+Content-Type: application/json
+
+{
+    "ocor_obs": "Foi realizada uma tentativa de reparo no computador."
 }
 
 ### Associar componente a ocorrencia

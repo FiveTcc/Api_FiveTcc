@@ -5,6 +5,7 @@ import { CreateOcorrenciaDto, OcorrenciaStatus } from "./dtos/createocorrenciaDt
 import { UpdateOcorrenciaDto } from "./dtos/update.ocorrenciaDto";
 import { AssociateOcorCompDto } from "./dtos/associate.ocorCompDto";
 import { AssociateOcorAmbDto } from "./dtos/associate.ocorAmbDto";
+import { AdicionarObservacaoDto } from "./dtos/add.ocorrenciaObsDto";
 
 @Controller('ocorrencias')
 export class OcorrenciaController {
@@ -14,6 +15,14 @@ export class OcorrenciaController {
     @Get('/listarOcorrencia')
     async listarOcorrencia() {
         return await this.ocorrenciaService.listarOcorrencia();
+    }
+
+    // Rota para listar ocorrências por ID
+    @Get('/listarOcorrenciaId/:id')
+    async listarOcorrenciaId(
+        @Param('id', ParseIntPipe) id: number
+    ) {
+        return await this.ocorrenciaService.listarOcorrenciaId(id);
     }
 
     // Rota para criar ocorrência
@@ -59,6 +68,15 @@ export class OcorrenciaController {
             id,
             novoStatus
         );
+    }
+
+    // Rota para alterar observação da ocorrência
+    @Patch(':id/adicionarObservacao')
+    async adicionarObservacao(
+        @Param('id', ParseIntPipe) id: number,
+        @Body() obsDto: AdicionarObservacaoDto
+    ) {
+        return await this.ocorrenciaService.adicionarObservação(id, obsDto.ocor_obs)
     }
 
     // Rota para associar componente a ocorrência

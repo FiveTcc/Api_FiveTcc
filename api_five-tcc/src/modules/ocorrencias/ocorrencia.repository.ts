@@ -2,7 +2,7 @@ import { BadRequestException, Inject, Injectable, InternalServerErrorException, 
 import { DRIZZLE } from "src/db/database/database.constants";
 import type { DrizzleDB } from "src/db/types/drizzleDB";
 import { CreateOcorrenciaDto, OcorrenciaStatus } from "./dtos/createocorrenciaDto";
-import { ocorrencias } from "src/db/schemas";
+import { ocorrencias, Ambientes, Componentes } from "src/db/schemas";
 import { UpdateOcorrenciaDto } from "./dtos/update.ocorrenciaDto";
 import { eq } from "drizzle-orm";
 import { ComponenteRepository } from "../componentes/componente.repository";
@@ -25,6 +25,72 @@ export class OcorrenciaRepository {
             throw new InternalServerErrorException('Erro ao listar ocorrencias')
         }
     }
+
+    async listarOcorrenciaId(id: number) {
+        try {
+            const ocorrencia = await this.db
+                .select({
+                    ocorrencia: {
+                        id_ocor: ocorrencias.id_ocor,
+                        ocor_nome: ocorrencias.ocor_nome,
+                        ocor_status: ocorrencias.ocor_status,
+                        ocor_prioridade: ocorrencias.ocor_prioridade,
+                        ocor_obs: ocorrencias.ocor_obs,
+                        criado_em: ocorrencias.criado_em,
+                        atualizado_em: ocorrencias.atualizado_em,
+                        encerrado_em: ocorrencias.encerrado_em,
+                    },
+
+                    componente: {
+                        id_compo: Componentes.id_compo,
+                        compo_nome: Componentes.compo_nome,
+                        compo_tipo_id: Componentes.compo_tipo_id,
+                    },
+
+                    ambiente: {
+                        id_amb: Ambientes.id_amb,
+                        amb_nome: Ambientes.amb_nome,
+                        amb_tipo: Ambientes.amb_tipo,
+                        amb_bloco: Ambientes.amb_bloco,
+                        amb_andar: Ambientes.amb_andar,
+                    },
+                })
+                .from(ocorrencias)
+                .leftJoin(
+                    Componentes,
+                    eq(ocorrencias.componente_id,
+                        Componentes.id_compo
+                    ))
+                .leftJoin(
+                    Ambientes,
+                    eq(ocorrencias.ambiente_id,
+                        Ambientes.id_amb
+                    )
+                )
+                .where(
+                    eq(ocorrencias.id_ocor, id)
+                );
+
+            if (ocorrencia.length === 0) {
+                throw new NotFoundException(
+                    'Ocorrência não encontrada'
+                );
+            }
+
+            return ocorrencia[0];
+
+
+        } catch (error) {
+            if (error instanceof NotFoundException) {
+                throw error;
+            }
+
+            throw new InternalServerErrorException(
+                'Erro ao buscar ocorrência'
+            );
+        }
+    }
+
 
     async criarOcorrencia(dto: CreateOcorrenciaDto) {
         try {
@@ -149,7 +215,35 @@ export class OcorrenciaRepository {
     }
 
 
-    async adicionarObservacao() { }
+    async adicionarObservacao(
+        id: number,
+        obs: string
+    ) {
+        try {
+
+            // Verifica se a ocorrência existe
+            await this.verificaOcorrenciaExiste(id);
+
+            await this.db
+                .update(ocorrencias)
+                .set({
+                    ocor_obs: obs
+                })
+                .where(eq(ocorrencias.id_ocor, id));
+
+            return {
+                message: 'Observação adicionada com sucesso'
+            };
+        } catch (error) {
+            if (error instanceof NotFoundException) {
+                throw error;
+            }
+
+            throw new InternalServerErrorException(
+                'Erro ao adicionar observação'
+            );
+        }
+    }
 
     async associarComponente(id: number, idComp: number) {
         try {
@@ -187,20 +281,21 @@ export class OcorrenciaRepository {
             await this.verificaOcorrenciaExiste(id);
 
             // Verifica se ambiente existe
+            // await this.ambienteRepository.verificaAmbienteExiste(idAmb);
 
             await this.db
-            .update(ocorrencias)
-            .set({
-                ambiente_id: idAmb,
-            })
-            .where(eq(ocorrencias.id_ocor, id));
+                .update(ocorrencias)
+                .set({
+                    ambiente_id: idAmb,
+                })
+                .where(eq(ocorrencias.id_ocor, id));
 
-             return {
+            return {
                 message: 'Ambiente associado com sucesso'
             }
 
         } catch (error) {
-             if (error instanceof NotFoundException) {
+            if (error instanceof NotFoundException) {
                 throw error;
             }
 
@@ -212,7 +307,7 @@ export class OcorrenciaRepository {
     }
 
 
-    
+
     async atribuirTecnico() { }
 
     async historicoDeOcorrencia() { }

@@ -12,6 +12,11 @@ export class OcorrenciaService {
         return await this.ocorrenciaRepository.listarOcorrencia();
     }
 
+    // Método para listar ocorrência por id
+    async listarOcorrenciaId(id: number) {
+        return await this.ocorrenciaRepository.listarOcorrenciaId(id);
+    }
+
     // Método para criar ocorrência
     async criarOcorrencia(dto: CreateOcorrenciaDto) {
         return await this.ocorrenciaRepository.criarOcorrencia(dto);
@@ -46,8 +51,11 @@ export class OcorrenciaService {
     }
 
     // Método para adicionar observação a ocorrência
-    async adicionarObservação() {
-        return await this.ocorrenciaRepository.adicionarObservacao();
+    async adicionarObservação(
+        id: number,
+        obs: string
+    ) {
+        return await this.ocorrenciaRepository.adicionarObservacao(id, obs);
     }
 
     // Método para associar componente a ocorrência
