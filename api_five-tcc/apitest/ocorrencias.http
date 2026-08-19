@@ -15,7 +15,7 @@ Content-Type: application/json
   "ocor_status": "aberta",
   "ocor_prioridade": "alta",
   "ocor_obs": "O computador da sala não apresenta sinal de energia",
-  "componente_id": 5,
+  "componente_id": 2,
   "ambiente_id": 1
 }
 
@@ -28,20 +28,20 @@ Content-Type: application/json
   "ocor_nome": "Computador não liga",
   "ocor_prioridade": "baixa",
   "ocor_obs": "O computador da sala não apresenta sinal de energia",
-  "componente_id": 5,
+  "componente_id": 2,
   "ambiente_id": 1
 }
 
 ###
-PATCH {{baseUrl}}/ocorrencias/encerrarOcorrencia/9
+PATCH {{baseUrl}}/ocorrencias/encerrarOcorrencia/18
 
 
 ###
-PATCH {{baseUrl}}/ocorrencias/cancelarOcorrencia/13
+PATCH {{baseUrl}}/ocorrencias/cancelarOcorrencia/17
 
 ###
 
-PATCH {{baseUrl}}/ocorrencias/alterarStatus/10
+PATCH {{baseUrl}}/ocorrencias/alterarStatus/18
 Content-Type: application/json
 
 {

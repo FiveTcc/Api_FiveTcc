@@ -159,7 +159,7 @@ export class OcorrenciaRepository {
             await this.db.update(ocorrencias)
                 .set({
                     ocor_status: OcorrenciaStatus.ENCERRADA,
-                    encerrado_em: sql`lCURRENT_TIMESTAMP`,
+                    encerrado_em: sql`CURRENT_TIMESTAMP`,
                 })
                 .where(eq(ocorrencias.id_ocor, id));
 
@@ -168,6 +168,7 @@ export class OcorrenciaRepository {
             }
 
         } catch (error) {
+            console.error('Erro ao encerrar ocorrência:', error);
              throw new InternalServerErrorException(
                 'Erro ao encerrar ocorrência'
             );
@@ -192,7 +193,7 @@ export class OcorrenciaRepository {
             await this.db.update(ocorrencias)
                 .set({
                     ocor_status: OcorrenciaStatus.CANCELADA,
-                    encerrado_em: sql`lCURRENT_TIMESTAMP`,
+                    encerrado_em: sql`CURRENT_TIMESTAMP`,
                 })
                 .where(eq(ocorrencias.id_ocor, id));
 
