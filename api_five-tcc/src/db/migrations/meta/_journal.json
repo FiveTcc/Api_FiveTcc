@@ -15,6 +15,13 @@
       "when": 1786667413203,
       "tag": "0001_volatile_nekra",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1787102826040,
+      "tag": "0002_correçao-tabela-ocor-encerrado_em",
+      "breakpoints": true
     }
   ]
 }

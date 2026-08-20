@@ -16,7 +16,8 @@ ocor_status: varchar('ocorre_status', {length: 50}).notNull(),
 ocor_prioridade: varchar('ocorre_prioridade', {length: 10}).notNull(),
 atualizado_em: datetime("atualizado_em").notNull().default(sql`CURRENT_TIMESTAMP`).$onUpdate(() => sql`CURRENT_TIMESTAMP`),
 criado_em: datetime("criado_em").notNull().default(sql`CURRENT_TIMESTAMP`),
-encerrado_em: datetime("encerrado_em").notNull().default(sql`CURRENT_TIMESTAMP`),
+//
+encerrado_em: datetime("encerrado_em"),
 ocor_obs: varchar('ocorre_obs', { length: 255 }),
 componente_id: int('componente_id').notNull().references(() => Componentes.id_compo),  
 ambiente_id: int('ambiente_id').notNull().references(() => Ambientes.id_amb)
