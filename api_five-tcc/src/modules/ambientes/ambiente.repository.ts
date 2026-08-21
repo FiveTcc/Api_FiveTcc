@@ -108,15 +108,8 @@ export class AmbienteRepository {
 
     try {
 
-      // Verifica se o ambiente existe antes de atualizar
-      const [ambienteExistente] = await this.db
-        .select()
-        .from(Ambientes)
-        .where(eq(Ambientes.id_amb, id));
-
-      if (!ambienteExistente) {
-        throw new NotFoundException('Ambiente não encontrado');
-      }
+      // Verifica se o ambiente existe antes de atualizar 
+      await this.verificaAmbienteExiste(id);
 
       await this.db
         .update(Ambientes)
@@ -163,5 +156,24 @@ export class AmbienteRepository {
       throw error;
     }
   }
+
+
+  // Método de verificar se a ocorrência existe
+      async verificaAmbienteExiste(id: number) {
+  
+          const [ambiente] = await this.db
+              .select()
+              .from(Ambientes)
+              .where(eq(Ambientes.id_amb, id));
+  
+  
+          if (!ambiente) {
+              throw new NotFoundException(
+                  'Ambiente não encontrada'
+              );
+          }
+  
+          return ambiente;
+      }
 
 }

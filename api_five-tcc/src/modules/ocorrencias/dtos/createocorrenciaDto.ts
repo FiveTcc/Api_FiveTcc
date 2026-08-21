@@ -5,7 +5,7 @@ import { IsNotEmpty, IsString, MinLength, MaxLength, IsEnum, IsOptional, IsInt }
 export enum OcorrenciaStatus {
     ABERTA = 'aberta',
     EM_ANDAMENTO = 'em andamento',
-    ENCERRADA = 'encerrada',
+    CONCLUIDA = 'concluida',
     CANCELADA = 'cancelada',
 }
 

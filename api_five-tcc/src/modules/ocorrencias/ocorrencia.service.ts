@@ -74,11 +74,6 @@ export class OcorrenciaService {
         return await this.ocorrenciaRepository.associarAmbiente(id, idAmb);
     }
 
-    // Método para atribuir ocorrência ao tecnico
-    async atribuirTecnico() {
-        return await this.ocorrenciaRepository.atribuirTecnico();
-    }
-
     // Histórico de ocorrências
     async historicoDeOcorrencia() {
        return await this.ocorrenciaRepository.historicoDeOcorrencia() 

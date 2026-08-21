@@ -4,7 +4,7 @@ import type { DrizzleDB } from "src/db/types/drizzleDB";
 import { CreateOcorrenciaDto, OcorrenciaStatus } from "./dtos/createocorrenciaDto";
 import { ocorrencias, Ambientes, Componentes } from "src/db/schemas";
 import { UpdateOcorrenciaDto } from "./dtos/update.ocorrenciaDto";
-import { eq , sql} from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { ComponenteRepository } from "../componentes/componente.repository";
 import { AmbienteRepository } from "../ambientes/ambiente.repository";
 
@@ -12,7 +12,7 @@ import { AmbienteRepository } from "../ambientes/ambiente.repository";
 export class OcorrenciaRepository {
     constructor(@Inject(DRIZZLE) private readonly db: DrizzleDB,
         private readonly componenteRepository: ComponenteRepository,
-        private readonly ambienteRepositiry: AmbienteRepository
+        private readonly ambienteRepository: AmbienteRepository
     ) { }
 
     async listarOcorrencia() {
@@ -141,24 +141,12 @@ export class OcorrenciaRepository {
 
     }
 
-    // Eu passei por aqui
-    // async encerrarOcorrencia(id: number) {
 
-    //     await this.alterarStatus(
-    //         id,
-    //         OcorrenciaStatus.ENCERRADA
-    //     );
-
-    //     return {
-    //         message: 'Ocorrência encerrada com sucesso'
-    //     };
-
-    // }
     async encerrarOcorrencia(id: number) {
         try {
             await this.db.update(ocorrencias)
                 .set({
-                    ocor_status: OcorrenciaStatus.ENCERRADA,
+                    ocor_status: OcorrenciaStatus.CONCLUIDA,
                     encerrado_em: sql`CURRENT_TIMESTAMP`,
                 })
                 .where(eq(ocorrencias.id_ocor, id));
@@ -168,28 +156,17 @@ export class OcorrenciaRepository {
             }
 
         } catch (error) {
-            console.error('Erro ao encerrar ocorrência:', error);
-             throw new InternalServerErrorException(
+
+            throw new InternalServerErrorException(
                 'Erro ao encerrar ocorrência'
             );
         }
 
     }
 
-   // eu passei por aqui também
-    // async cancelarOcorrencia(id: number) {
-    //     await this.alterarStatus(
-    //         id,
-    //         OcorrenciaStatus.CANCELADA
-    //     );
 
-    //     return {
-    //         message: 'Ocorrência cancelada com sucesso'
-    //     }
-    // }
-
-       async cancelarOcorrencia(id: number) {
-         try {
+    async cancelarOcorrencia(id: number) {
+        try {
             await this.db.update(ocorrencias)
                 .set({
                     ocor_status: OcorrenciaStatus.CANCELADA,
@@ -202,7 +179,7 @@ export class OcorrenciaRepository {
             }
 
         } catch (error) {
-             throw new InternalServerErrorException(
+            throw new InternalServerErrorException(
                 'Erro ao encerrar ocorrência'
             );
         }
@@ -325,7 +302,7 @@ export class OcorrenciaRepository {
             await this.verificaOcorrenciaExiste(id);
 
             // Verifica se ambiente existe
-            // await this.ambienteRepository.verificaAmbienteExiste(idAmb);
+            await this.ambienteRepository.verificaAmbienteExiste(idAmb);
 
             await this.db
                 .update(ocorrencias)
@@ -349,10 +326,6 @@ export class OcorrenciaRepository {
         }
 
     }
-
-
-
-    async atribuirTecnico() { }
 
     async historicoDeOcorrencia() { }
 
@@ -394,11 +367,11 @@ export class OcorrenciaRepository {
             ],
 
             [OcorrenciaStatus.EM_ANDAMENTO]: [
-                OcorrenciaStatus.ENCERRADA,
+                OcorrenciaStatus.CONCLUIDA,
                 OcorrenciaStatus.CANCELADA,
             ],
 
-            [OcorrenciaStatus.ENCERRADA]: [],
+            [OcorrenciaStatus.CONCLUIDA]: [],
 
             [OcorrenciaStatus.CANCELADA]: [],
         };
