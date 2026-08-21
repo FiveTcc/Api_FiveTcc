@@ -74,8 +74,8 @@ export class OcorrenciaService {
         return await this.ocorrenciaRepository.associarAmbiente(id, idAmb);
     }
 
-    // Histórico de ocorrências
-    async historicoDeOcorrencia() {
-       return await this.ocorrenciaRepository.historicoDeOcorrencia() 
-    }
+    // // Histórico de ocorrências
+    // async historicoDeOcorrencia() {
+    //    return await this.ocorrenciaRepository.historicoDeOcorrencia() 
+    // }
 }

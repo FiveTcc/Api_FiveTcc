@@ -4,7 +4,7 @@ import type { DrizzleDB } from "src/db/types/drizzleDB";
 import { CreateOcorrenciaDto, OcorrenciaStatus } from "./dtos/createocorrenciaDto";
 import { ocorrencias, Ambientes, Componentes } from "src/db/schemas";
 import { UpdateOcorrenciaDto } from "./dtos/update.ocorrenciaDto";
-import { eq, sql } from "drizzle-orm";
+import { eq, sql, desc } from "drizzle-orm";
 import { ComponenteRepository } from "../componentes/componente.repository";
 import { AmbienteRepository } from "../ambientes/ambiente.repository";
 
@@ -17,12 +17,52 @@ export class OcorrenciaRepository {
 
     async listarOcorrencia() {
         try {
+
             return await this.db
-                .select()
-                .from(ocorrencias);
+                .select({
+                    ocorrencia: {
+                        id_ocor: ocorrencias.id_ocor,
+                        ocor_nome: ocorrencias.ocor_nome,
+                        ocor_status: ocorrencias.ocor_status,
+                        ocor_prioridade: ocorrencias.ocor_prioridade,
+                        ocor_obs: ocorrencias.ocor_obs,
+                        criado_em: ocorrencias.criado_em,
+                        atualizado_em: ocorrencias.atualizado_em,
+                        encerrado_em: ocorrencias.encerrado_em,
+                    },
+
+                    componente: {
+                        id_compo: Componentes.id_compo,
+                        compo_nome: Componentes.compo_nome,
+                        compo_tipo_id: Componentes.compo_tipo_id,
+                    },
+
+                    ambiente: {
+                        id_amb: Ambientes.id_amb,
+                        amb_nome: Ambientes.amb_nome,
+                        amb_tipo: Ambientes.amb_tipo,
+                        amb_bloco: Ambientes.amb_bloco,
+                        amb_andar: Ambientes.amb_andar,
+                    },
+                })
+                .from(ocorrencias)
+                .leftJoin(
+                    Componentes,
+                    eq(ocorrencias.componente_id,
+                        Componentes.id_compo
+                    ))
+                .leftJoin(
+                    Ambientes,
+                    eq(ocorrencias.ambiente_id,
+                        Ambientes.id_amb
+                    )
+                )
+                .orderBy(desc(ocorrencias.criado_em));
 
         } catch (error) {
-            throw new InternalServerErrorException('Erro ao listar ocorrencias')
+            throw new InternalServerErrorException(
+                'Erro ao listar ocorrências'
+            );
         }
     }
 
@@ -86,7 +126,7 @@ export class OcorrenciaRepository {
             }
 
             throw new InternalServerErrorException(
-                'Erro ao buscar ocorrência'
+                'Erro ao listar ocorrência'
             );
         }
     }
@@ -100,7 +140,7 @@ export class OcorrenciaRepository {
                 .values({
                     ocor_nome: dto.ocor_nome,
                     ocor_prioridade: dto.ocor_prioridade,
-                    ocor_status: dto.ocor_status,
+                    ocor_status: OcorrenciaStatus.ABERTA,
                     ocor_obs: dto.ocor_obs,
                     componente_id: dto.componente_id,
                     ambiente_id: dto.ambiente_id,
@@ -119,7 +159,11 @@ export class OcorrenciaRepository {
 
     async editarOcorrencia(id: number, dto: UpdateOcorrenciaDto) {
         try {
-            await this.verificaOcorrenciaExiste(id);
+            const ocorrencia = await this.verificaOcorrenciaExiste(id);
+
+            this.validarAlteracao(
+                ocorrencia.ocor_status as OcorrenciaStatus,
+            );
 
             await this.db
                 .update(ocorrencias)
@@ -133,7 +177,10 @@ export class OcorrenciaRepository {
             };
 
         } catch (error) {
-            if (error instanceof NotFoundException) {
+            if (
+                error instanceof NotFoundException ||
+                error instanceof BadRequestException
+            ) {
                 throw error;
             }
             throw new InternalServerErrorException('Erro ao editar ocorrência');
@@ -142,49 +189,19 @@ export class OcorrenciaRepository {
     }
 
 
-    async encerrarOcorrencia(id: number) {
-        try {
-            await this.db.update(ocorrencias)
-                .set({
-                    ocor_status: OcorrenciaStatus.CONCLUIDA,
-                    encerrado_em: sql`CURRENT_TIMESTAMP`,
-                })
-                .where(eq(ocorrencias.id_ocor, id));
-
-            return {
-                message: 'Ocorrência encerrada com sucesso'
-            }
-
-        } catch (error) {
-
-            throw new InternalServerErrorException(
-                'Erro ao encerrar ocorrência'
-            );
-        }
-
-    }
-
-
     async cancelarOcorrencia(id: number) {
-        try {
-            await this.db.update(ocorrencias)
-                .set({
-                    ocor_status: OcorrenciaStatus.CANCELADA,
-                    encerrado_em: sql`CURRENT_TIMESTAMP`,
-                })
-                .where(eq(ocorrencias.id_ocor, id));
-
-            return {
-                message: 'Ocorrência cancelada com sucesso'
-            }
-
-        } catch (error) {
-            throw new InternalServerErrorException(
-                'Erro ao encerrar ocorrência'
-            );
-        }
+        return this.alterarStatus(
+            id,
+            OcorrenciaStatus.CANCELADA
+        );
     }
 
+    async encerrarOcorrencia(id: number) {
+        return this.alterarStatus(
+            id,
+            OcorrenciaStatus.CONCLUIDA
+        );
+    }
 
 
     // Método para alterar o status da ocorrência
@@ -204,6 +221,11 @@ export class OcorrenciaRepository {
                 .update(ocorrencias)
                 .set({
                     ocor_status: novoStatus,
+                    encerrado_em:
+                        novoStatus === OcorrenciaStatus.CONCLUIDA ||
+                            novoStatus === OcorrenciaStatus.CANCELADA
+                            ? sql`CURRENT_TIMESTAMP`
+                            : null,
                 })
                 .where(
                     eq(ocorrencias.id_ocor, id)
@@ -243,7 +265,11 @@ export class OcorrenciaRepository {
         try {
 
             // Verifica se a ocorrência existe
-            await this.verificaOcorrenciaExiste(id);
+            const ocorrencia = await this.verificaOcorrenciaExiste(id);
+
+            this.validarAlteracao(
+                ocorrencia.ocor_status as OcorrenciaStatus,
+            );
 
             await this.db
                 .update(ocorrencias)
@@ -256,7 +282,10 @@ export class OcorrenciaRepository {
                 message: 'Observação adicionada com sucesso'
             };
         } catch (error) {
-            if (error instanceof NotFoundException) {
+            if (
+                error instanceof NotFoundException ||
+                error instanceof BadRequestException
+            ) {
                 throw error;
             }
 
@@ -270,7 +299,13 @@ export class OcorrenciaRepository {
         try {
 
             // Verifica se a ocorrência existe
-            await this.verificaOcorrenciaExiste(id);
+            const ocorrencia = await this.verificaOcorrenciaExiste(id);
+
+            // Verifica se ocorrência não está Concluida ou Cancelada
+            this.validarAlteracao(
+                ocorrencia.ocor_status as OcorrenciaStatus,
+            );
+
 
             // Verifica se o componente existe
             await this.componenteRepository.verificaComponenteExiste(idComp);
@@ -286,10 +321,12 @@ export class OcorrenciaRepository {
                 message: 'Componente associado com sucesso'
             }
         } catch (error) {
-            if (error instanceof NotFoundException) {
+            if (
+                error instanceof NotFoundException ||
+                error instanceof BadRequestException
+            ) {
                 throw error;
             }
-
             throw new InternalServerErrorException(
                 'Erro ao associar componente a ocorrência',
             );
@@ -299,10 +336,16 @@ export class OcorrenciaRepository {
     async associarAmbiente(id: number, idAmb: number) {
         try {
             // Verifica se a ocorrência existe
-            await this.verificaOcorrenciaExiste(id);
+            const ocorrencia = await this.verificaOcorrenciaExiste(id);
+
+            // Verifica se ocorrência não está Concluida ou Cancelada
+            this.validarAlteracao(
+                ocorrencia.ocor_status as OcorrenciaStatus,
+            );
 
             // Verifica se ambiente existe
             await this.ambienteRepository.verificaAmbienteExiste(idAmb);
+
 
             await this.db
                 .update(ocorrencias)
@@ -316,7 +359,10 @@ export class OcorrenciaRepository {
             }
 
         } catch (error) {
-            if (error instanceof NotFoundException) {
+            if (
+                error instanceof NotFoundException ||
+                error instanceof BadRequestException
+            ) {
                 throw error;
             }
 
@@ -327,11 +373,7 @@ export class OcorrenciaRepository {
 
     }
 
-    async historicoDeOcorrencia() { }
-
-
-
-
+    // async historicoDeOcorrencia() { }
 
 
     // Método de verificar se a ocorrência existe
@@ -350,6 +392,19 @@ export class OcorrenciaRepository {
         }
 
         return ocorrencia;
+    }
+
+    private validarAlteracao(status: OcorrenciaStatus) {
+        const statusFinais = [
+            OcorrenciaStatus.CONCLUIDA,
+            OcorrenciaStatus.CANCELADA,
+        ];
+
+        if (statusFinais.includes(status)) {
+            throw new BadRequestException(
+                `Não é possível editar uma ocorrência com status "${status}"`,
+            );
+        }
     }
 
     // Método para validar a transição de status
@@ -384,4 +439,5 @@ export class OcorrenciaRepository {
             );
         }
     }
+
 }
