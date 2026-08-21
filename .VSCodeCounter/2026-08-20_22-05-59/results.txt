@@ -1,0 +1,173 @@
+Date : 2026-08-20 22:05:59
+Directory : d:\brayan\Api_FiveTcc
+Total : 101 files,  17455 codes, 162 comments, 716 blanks, all 18333 lines
+
+Languages
++--------------------+------------+------------+------------+------------+------------+
+| language           | files      | code       | comment    | blank      | total      |
++--------------------+------------+------------+------------+------------+------------+
+| JSON               |          8 |     14,736 |          0 |          4 |     14,740 |
+| TypeScript         |         86 |      2,515 |        153 |        675 |      3,343 |
+| Markdown           |          2 |         73 |          2 |         34 |        109 |
+| MS SQL             |          3 |         73 |          6 |          0 |         79 |
+| JavaScript         |          1 |         33 |          1 |          2 |         36 |
+| JSON with Comments |          1 |         25 |          0 |          1 |         26 |
++--------------------+------------+------------+------------+------------+------------+
+
+Directories
++---------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                              | files      | code       | comment    | blank      | total      |
++---------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                 |        101 |     17,455 |        162 |        716 |     18,333 |
+| . (Files)                                                                                         |          1 |          5 |          0 |          5 |         10 |
+| api_five-tcc                                                                                      |        100 |     17,450 |        162 |        711 |     18,323 |
+| api_five-tcc (Files)                                                                              |          8 |     13,205 |          3 |         39 |     13,247 |
+| api_five-tcc\src                                                                                  |         92 |      4,245 |        159 |        672 |      5,076 |
+| api_five-tcc\src (Files)                                                                          |          2 |         39 |          0 |         10 |         49 |
+| api_five-tcc\src\db                                                                               |         17 |      1,900 |         15 |         48 |      1,963 |
+| api_five-tcc\src\db\database                                                                      |          2 |         31 |          1 |          8 |         40 |
+| api_five-tcc\src\db\migrations                                                                    |          7 |      1,741 |          6 |          0 |      1,747 |
+| api_five-tcc\src\db\migrations (Files)                                                            |          3 |         73 |          6 |          0 |         79 |
+| api_five-tcc\src\db\migrations\meta                                                               |          4 |      1,668 |          0 |          0 |      1,668 |
+| api_five-tcc\src\db\schemas                                                                       |          7 |        125 |          8 |         37 |        170 |
+| api_five-tcc\src\db\types                                                                         |          1 |          3 |          0 |          3 |          6 |
+| api_five-tcc\src\modules                                                                          |         73 |      2,306 |        144 |        614 |      3,064 |
+| api_five-tcc\src\modules\ambientes                                                                |          6 |        236 |         14 |         79 |        329 |
+| api_five-tcc\src\modules\ambientes (Files)                                                        |          4 |        205 |         14 |         73 |        292 |
+| api_five-tcc\src\modules\ambientes\dtos                                                           |          2 |         31 |          0 |          6 |         37 |
+| api_five-tcc\src\modules\atribuicaoTecnicos                                                       |          4 |         29 |          0 |          8 |         37 |
+| api_five-tcc\src\modules\auditoria                                                                |          4 |         29 |          0 |          8 |         37 |
+| api_five-tcc\src\modules\auth                                                                     |         11 |        232 |         12 |         75 |        319 |
+| api_five-tcc\src\modules\auth (Files)                                                             |          3 |        110 |          4 |         34 |        148 |
+| api_five-tcc\src\modules\auth\auth.dto                                                            |          2 |         25 |          0 |          8 |         33 |
+| api_five-tcc\src\modules\auth\config                                                              |          1 |         10 |          0 |          4 |         14 |
+| api_five-tcc\src\modules\auth\decorators                                                          |          1 |          3 |          0 |          2 |          5 |
+| api_five-tcc\src\modules\auth\guards                                                              |          2 |         69 |          6 |         21 |         96 |
+| api_five-tcc\src\modules\auth\hashing                                                             |          2 |         15 |          2 |          6 |         23 |
+| api_five-tcc\src\modules\chat                                                                     |          6 |         29 |          0 |         10 |         39 |
+| api_five-tcc\src\modules\chat (Files)                                                             |          4 |         29 |          0 |          8 |         37 |
+| api_five-tcc\src\modules\chat\dtos                                                                |          2 |          0 |          0 |          2 |          2 |
+| api_five-tcc\src\modules\componenteTipo                                                           |          6 |        209 |         18 |         51 |        278 |
+| api_five-tcc\src\modules\componenteTipo (Files)                                                   |          4 |        192 |         18 |         49 |        259 |
+| api_five-tcc\src\modules\componenteTipo\dtos                                                      |          2 |         17 |          0 |          2 |         19 |
+| api_five-tcc\src\modules\componentes                                                              |          8 |        439 |         37 |        105 |        581 |
+| api_five-tcc\src\modules\componentes (Files)                                                      |          4 |        377 |         37 |         92 |        506 |
+| api_five-tcc\src\modules\componentes\dtos                                                         |          4 |         62 |          0 |         13 |         75 |
+| api_five-tcc\src\modules\dashboard                                                                |          4 |        120 |          4 |         23 |        147 |
+| api_five-tcc\src\modules\notificacao                                                              |          4 |         29 |          0 |          8 |         37 |
+| api_five-tcc\src\modules\ocorrencias                                                              |          9 |        560 |         32 |        124 |        716 |
+| api_five-tcc\src\modules\ocorrencias (Files)                                                      |          4 |        447 |         30 |        104 |        581 |
+| api_five-tcc\src\modules\ocorrencias\dtos                                                         |          5 |        113 |          2 |         20 |        135 |
+| api_five-tcc\src\modules\relatorios                                                               |          4 |         29 |          0 |          8 |         37 |
+| api_five-tcc\src\modules\users                                                                    |          7 |        365 |         27 |        115 |        507 |
+| api_five-tcc\src\modules\users (Files)                                                            |          4 |        275 |         27 |         91 |        393 |
+| api_five-tcc\src\modules\users\dtos                                                               |          3 |         90 |          0 |         24 |        114 |
++---------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++---------------------------------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+
+| filename                                                                                          | language           | code       | comment    | blank      | total      |
++---------------------------------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+
+| d:\brayan\Api_FiveTcc\README.md                                                                   | Markdown           |          5 |          0 |          5 |         10 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\README.md                                                      | Markdown           |         68 |          2 |         29 |         99 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\drizzle.config.ts                                              | TypeScript         |         11 |          0 |          3 |         14 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\eslint.config.mjs                                              | JavaScript         |         33 |          1 |          2 |         36 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\nest-cli.json                                                  | JSON               |          8 |          0 |          1 |          9 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\package-lock.json                                              | JSON               |     12,966 |          0 |          1 |     12,967 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\package.json                                                   | JSON               |         90 |          0 |          1 |         91 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\app.module.ts                                              | TypeScript         |         22 |          0 |          3 |         25 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\db\database\database.constants.ts                          | TypeScript         |          2 |          1 |          1 |          4 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\db\database\database.module.ts                             | TypeScript         |         29 |          0 |          7 |         36 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\db\migrations\0000_Atualizaçao_componetes_teste_3.sql      | MS SQL             |         70 |          6 |          0 |         76 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\db\migrations\0001_volatile_nekra.sql                      | MS SQL             |          2 |          0 |          0 |          2 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\db\migrations\0002_correçao-tabela-ocor-encerrado_em.sql   | MS SQL             |          1 |          0 |          0 |          1 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\db\migrations\meta\0000_snapshot.json                      | JSON               |        542 |          0 |          0 |        542 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\db\migrations\meta\0001_snapshot.json                      | JSON               |        550 |          0 |          0 |        550 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\db\migrations\meta\0002_snapshot.json                      | JSON               |        549 |          0 |          0 |        549 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\db\migrations\meta\_journal.json                           | JSON               |         27 |          0 |          0 |         27 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\db\schemas\Ambiente.ts                                     | TypeScript         |         23 |          0 |          5 |         28 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\db\schemas\User.ts                                         | TypeScript         |         21 |          0 |          5 |         26 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\db\schemas\componentes.ts                                  | TypeScript         |         22 |          1 |          6 |         29 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\db\schemas\componentes_tipo.ts                             | TypeScript         |         11 |          0 |          5 |         16 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\db\schemas\index.ts                                        | TypeScript         |          6 |          6 |          9 |         21 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\db\schemas\ocorrencias.ts                                  | TypeScript         |         22 |          1 |          4 |         27 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\db\schemas\ocorrencias_user.ts                             | TypeScript         |         20 |          0 |          3 |         23 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\db\types\drizzleDB.ts                                      | TypeScript         |          3 |          0 |          3 |          6 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\main.ts                                                    | TypeScript         |         17 |          0 |          7 |         24 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\ambientes\ambiente.controller.ts                   | TypeScript         |         41 |          5 |         14 |         60 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\ambientes\ambiente.module.ts                       | TypeScript         |         10 |          0 |          6 |         16 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\ambientes\ambiente.repository.ts                   | TypeScript         |        128 |          9 |         42 |        179 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\ambientes\ambiente.service.ts                      | TypeScript         |         26 |          0 |         11 |         37 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\ambientes\dtos\create.ambienteDto.ts               | TypeScript         |         28 |          0 |          5 |         33 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\ambientes\dtos\update.ambienteDtos.ts              | TypeScript         |          3 |          0 |          1 |          4 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\atribuicaoTecnicos\atribuicaoTecnico.controller.ts | TypeScript         |          6 |          0 |          2 |          8 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\atribuicaoTecnicos\atribuicaoTecnico.module.ts     | TypeScript         |         10 |          0 |          2 |         12 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\atribuicaoTecnicos\atribuicaoTecnico.repository.ts | TypeScript         |          7 |          0 |          2 |          9 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\atribuicaoTecnicos\atribuicaoTecnico.service.ts    | TypeScript         |          6 |          0 |          2 |          8 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\auditoria\auditoria.controller.ts                  | TypeScript         |          6 |          0 |          2 |          8 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\auditoria\auditoria.module.ts                      | TypeScript         |         10 |          0 |          2 |         12 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\auditoria\auditoria.repository.ts                  | TypeScript         |          7 |          0 |          2 |          9 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\auditoria\auditoria.service.ts                     | TypeScript         |          6 |          0 |          2 |          8 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\auth\auth.controller.ts                            | TypeScript         |         16 |          2 |         10 |         28 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\auth\auth.dto\login.dto.ts                         | TypeScript         |         20 |          0 |          5 |         25 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\auth\auth.dto\logon.dto.ts                         | TypeScript         |          5 |          0 |          3 |          8 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\auth\auth.module.ts                                | TypeScript         |         30 |          0 |          4 |         34 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\auth\auth.services.ts                              | TypeScript         |         64 |          2 |         20 |         86 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\auth\config\jwt.config.ts                          | TypeScript         |         10 |          0 |          4 |         14 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\auth\decorators\roles.decorator.ts                 | TypeScript         |          3 |          0 |          2 |          5 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\auth\guards\auth-token.guad.ts                     | TypeScript         |         43 |          2 |         16 |         61 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\auth\guards\roles.guard.ts                         | TypeScript         |         26 |          4 |          5 |         35 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\auth\hashing\bcrypt.services.ts                    | TypeScript         |         11 |          2 |          5 |         18 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\auth\hashing\hashing.service.ts                    | TypeScript         |          4 |          0 |          1 |          5 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\chat\chat.controller.ts                            | TypeScript         |          6 |          0 |          2 |          8 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\chat\chat.module.ts                                | TypeScript         |         10 |          0 |          2 |         12 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\chat\chat.repository.ts                            | TypeScript         |          7 |          0 |          2 |          9 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\chat\chat.service.ts                               | TypeScript         |          6 |          0 |          2 |          8 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\chat\dtos\create.chatDto.ts                        | TypeScript         |          0 |          0 |          1 |          1 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\chat\dtos\update.chatDto.ts                        | TypeScript         |          0 |          0 |          1 |          1 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\componenteTipo\componenteTipo.controller.ts        | TypeScript         |         37 |          5 |          6 |         48 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\componenteTipo\componenteTipo.module.ts            | TypeScript         |         10 |          0 |          3 |         13 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\componenteTipo\componenteTipo.repository.ts        | TypeScript         |        122 |          8 |         34 |        164 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\componenteTipo\componenteTipo.service.ts           | TypeScript         |         23 |          5 |          6 |         34 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\componenteTipo\dtos\create.componenteTipoDto.ts    | TypeScript         |         14 |          0 |          1 |         15 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\componenteTipo\dtos\update.componenteTipoDto.ts    | TypeScript         |          3 |          0 |          1 |          4 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\componentes\componente.controller.ts               | TypeScript         |         77 |         12 |         14 |        103 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\componentes\componente.module.ts                   | TypeScript         |         13 |          0 |          3 |         16 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\componentes\componente.repository.ts               | TypeScript         |        246 |         13 |         62 |        321 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\componentes\componente.service.ts                  | TypeScript         |         41 |         12 |         13 |         66 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\componentes\dtos\associate.compAmbDto.ts           | TypeScript         |         12 |          0 |          3 |         15 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\componentes\dtos\create.componenteDto.ts           | TypeScript         |         35 |          0 |          5 |         40 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\componentes\dtos\define.tipoComponenteDto.ts       | TypeScript         |         12 |          0 |          3 |         15 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\componentes\dtos\updatecomponente.ts               | TypeScript         |          3 |          0 |          2 |          5 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\dashboard\dashboard.controller.ts                  | TypeScript         |         22 |          4 |          6 |         32 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\dashboard\dashboard.module.ts                      | TypeScript         |         10 |          0 |          2 |         12 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\dashboard\dashboard.repository.ts                  | TypeScript         |         70 |          0 |          9 |         79 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\dashboard\dashboard.service.ts                     | TypeScript         |         18 |          0 |          6 |         24 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\notificacao\notificacao.controller.ts              | TypeScript         |          6 |          0 |          2 |          8 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\notificacao\notificacao.module.ts                  | TypeScript         |         10 |          0 |          2 |         12 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\notificacao\notificacao.repository.ts              | TypeScript         |          7 |          0 |          2 |          9 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\notificacao\notificacao.service.ts                 | TypeScript         |          6 |          0 |          2 |          8 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\ocorrencias\dtos\add.ocorrenciaObsDto.ts           | TypeScript         |         24 |          0 |          4 |         28 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\ocorrencias\dtos\associate.ocorAmbDto.ts           | TypeScript         |         12 |          0 |          3 |         15 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\ocorrencias\dtos\associate.ocorCompDto.ts          | TypeScript         |         12 |          0 |          3 |         15 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\ocorrencias\dtos\createocorrenciaDto.ts            | TypeScript         |         60 |          2 |          9 |         71 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\ocorrencias\dtos\update.ocorrenciaDto.ts           | TypeScript         |          5 |          0 |          1 |          6 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\ocorrencias\ocorrencia.controller.ts               | TypeScript         |         78 |         10 |         11 |         99 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\ocorrencias\ocorrencia.module.ts                   | TypeScript         |         12 |          0 |          2 |         14 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\ocorrencias\ocorrencia.repository.ts               | TypeScript         |        301 |          8 |         78 |        387 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\ocorrencias\ocorrencia.service.ts                  | TypeScript         |         56 |         12 |         13 |         81 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\relatorios\relatorio.controller.ts                 | TypeScript         |          6 |          0 |          2 |          8 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\relatorios\relatorio.module.ts                     | TypeScript         |         10 |          0 |          2 |         12 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\relatorios\relatorio.repository.ts                 | TypeScript         |          7 |          0 |          2 |          9 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\relatorios\relatorio.service.ts                    | TypeScript         |          6 |          0 |          2 |          8 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\users\dtos\userDto.ts                              | TypeScript         |         71 |          0 |         13 |         84 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\users\dtos\userDtoPefil.ts                         | TypeScript         |         15 |          0 |          3 |         18 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\users\dtos\userUpdateDto.ts                        | TypeScript         |          4 |          0 |          8 |         12 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\users\userController.ts                            | TypeScript         |         54 |          9 |         19 |         82 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\users\userModule.ts                                | TypeScript         |         11 |          0 |          3 |         14 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\users\userRepositorio.ts                           | TypeScript         |        162 |         10 |         49 |        221 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\src\modules\users\userServices.ts                              | TypeScript         |         48 |          8 |         20 |         76 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\tsconfig.build.json                                            | JSON               |          4 |          0 |          1 |          5 |
+| d:\brayan\Api_FiveTcc\api_five-tcc\tsconfig.json                                                  | JSON with Comments |         25 |          0 |          1 |         26 |
+| Total                                                                                             |                    |     17,455 |        162 |        716 |     18,333 |
++---------------------------------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+

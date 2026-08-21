@@ -6,6 +6,7 @@ import type { ConfigType } from '@nestjs/config';
 import { HashingService } from "./hashing/hashing.service";
 import jwtConfig from "./config/jwt.config";
 import { JwtService } from "@nestjs/jwt";
+import { Roles } from "./decorators/roles.decorator";
 
 
 @Injectable()
@@ -49,7 +50,11 @@ export class AuthServices {
         const accessToken = await this.signJwtAsync(
             user.id_user,
             this.jwtConfiguration.jWTtl,
-            { email: user.user_email });
+            { 
+                email: user.user_email ,
+                role : user.user_tipo
+
+            });
 
 
         const refreshToken = await this.signJwtAsync(
