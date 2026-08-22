@@ -3,7 +3,7 @@
 GET {{baseUrl}}/ocorrencias/listarOcorrencia
 
 ###
-GET  {{baseUrl}}/ocorrencias/listarOcorrenciaId/10
+GET  {{baseUrl}}/ocorrencias/listarOcorrenciaId/36
 
 ###
 
@@ -11,8 +11,20 @@ POST {{baseUrl}}/ocorrencias/criarOcorrencia
 Content-Type: application/json
 
 {
+  "ocor_nome": "Estabilizador não funciona",
+  "ocor_prioridade": "media",
+  "ocor_obs": "O computador da sala não apresenta sinal de energia",
+  "componente_id": 2,
+  "ambiente_id": 1
+}
+
+###
+
+PATCH {{baseUrl}}/ocorrencias/editarOcorrencia/31
+Content-Type: application/json
+
+{
   "ocor_nome": "Computador não liga",
-  "ocor_status": "aberta",
   "ocor_prioridade": "alta",
   "ocor_obs": "O computador da sala não apresenta sinal de energia",
   "componente_id": 2,
@@ -20,28 +32,15 @@ Content-Type: application/json
 }
 
 ###
-
-PATCH {{baseUrl}}/ocorrencias/editarOcorrencia/6
-Content-Type: application/json
-
-{
-  "ocor_nome": "Computador não liga",
-  "ocor_prioridade": "baixa",
-  "ocor_obs": "O computador da sala não apresenta sinal de energia",
-  "componente_id": 2,
-  "ambiente_id": 1
-}
-
-###
-PATCH {{baseUrl}}/ocorrencias/encerrarOcorrencia/18
+PATCH {{baseUrl}}/ocorrencias/encerrarOcorrencia/31
 
 
 ###
-PATCH {{baseUrl}}/ocorrencias/cancelarOcorrencia/17
+PATCH {{baseUrl}}/ocorrencias/cancelarOcorrencia/30
 
 ###
 
-PATCH {{baseUrl}}/ocorrencias/alterarStatus/18
+PATCH {{baseUrl}}/ocorrencias/alterarStatus/36
 Content-Type: application/json
 
 {
@@ -49,7 +48,16 @@ Content-Type: application/json
 }
 
 ###
-PATCH {{baseUrl}}/ocorrencias/10/adicionarObservacao
+
+PATCH  {{baseUrl}}/ocorrencias/alterarPrioridade/36
+Content-Type: application/json
+
+{
+    "prioridade": "alta"
+}
+
+###
+PATCH {{baseUrl}}/ocorrencias/1/adicionarObservacao
 Content-Type: application/json
 
 {
@@ -57,7 +65,7 @@ Content-Type: application/json
 }
 
 ### Associar componente a ocorrencia
-PATCH {{baseUrl}}/ocorrencias/16/associarComponente
+PATCH {{baseUrl}}/ocorrencias/1/associarComponente
 Content-Type: application/json
 
 {
@@ -65,7 +73,7 @@ Content-Type: application/json
 }
 
 ### Associar ambiente a ocorrencia
-PATCH {{baseUrl}}/ocorrencias/16/associarAmbiente
+PATCH {{baseUrl}}/ocorrencias/1/associarAmbiente
 Content-Type: application/json
 
 {

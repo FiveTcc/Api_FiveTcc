@@ -29,19 +29,10 @@ export class CreateOcorrenciaDto {
     })
     ocor_nome!: string;
 
-    @IsEnum(OcorrenciaStatus, { message: 'Status inválido', })
-    @Transform(({ value }) => {
-        if (typeof value === 'string') {
-            return value.trim();
-        }
-        return value;
-    })
-    ocor_status!: OcorrenciaStatus;
-
     @IsEnum(OcorrenciaPrioridade, { message: 'Prioridade inválida', })
     @Transform(({ value }) => {
         if (typeof value === 'string') {
-            return value.trim();
+            return value.trim().toLowerCase();;
         }
         return value;
     })
