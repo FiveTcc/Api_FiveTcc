@@ -87,7 +87,7 @@ export class AmbienteRepository {
           .where(like(Ambientes.amb_tipo, `%${tipoAmb}%`));
 
       if (ambientesFiltrados.length === 0) {
-        throw new NotFoundException('Nenhum ambiente encontrado para o tipo informado');
+        throw new NotFoundException('Nenhum ambiente encontrado para o bloco informado');
       }
 
       return ambientesFiltrados;
@@ -149,7 +149,7 @@ export class AmbienteRepository {
         .set({ amb_ativo: novoStatus })
         .where(eq(Ambientes.id_amb, id));
       return {
-        message: `Ambiente ${user.amb_ativo ? 'inativado' : 'ativado'} com sucesso`,
+        message: `Usuário ${user.amb_ativo ? 'inativado' : 'ativado'} com sucesso`,
       }
 
     } catch (error) {
@@ -169,7 +169,7 @@ export class AmbienteRepository {
   
           if (!ambiente) {
               throw new NotFoundException(
-                  'Ambiente não encontrado'
+                  'Ambiente não encontrada'
               );
           }
   

@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { OcorrenciaRepository } from "./ocorrencia.repository";
-import { CreateOcorrenciaDto, OcorrenciaStatus, OcorrenciaPrioridade } from "./dtos/createocorrenciaDto";
+import { CreateOcorrenciaDto, OcorrenciaStatus } from "./dtos/createocorrenciaDto";
 import { UpdateOcorrenciaDto } from "./dtos/update.ocorrenciaDto";
 
 @Injectable()
@@ -46,11 +46,8 @@ export class OcorrenciaService {
     }
 
     // Método para alterar prioridade da ocorrência
-    async alterarPrioridade(
-        id: number,
-        prioridade: OcorrenciaPrioridade
-    ) {
-        return await this.ocorrenciaRepository.alterarPrioridade(id, prioridade);
+    async alterarPrioridade() {
+        return await this.ocorrenciaRepository.alterarPrioridade();
     }
 
     // Método para adicionar observação a ocorrência
@@ -77,8 +74,8 @@ export class OcorrenciaService {
         return await this.ocorrenciaRepository.associarAmbiente(id, idAmb);
     }
 
-    // // Histórico de ocorrências
-    // async historicoDeOcorrencia() {
-    //    return await this.ocorrenciaRepository.historicoDeOcorrencia() 
-    // }
+    // Histórico de ocorrências
+    async historicoDeOcorrencia() {
+       return await this.ocorrenciaRepository.historicoDeOcorrencia() 
+    }
 }
