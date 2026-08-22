@@ -1,7 +1,7 @@
 import { BadRequestException, Inject, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { DRIZZLE } from "src/db/database/database.constants";
 import type { DrizzleDB } from "src/db/types/drizzleDB";
-import { CreateOcorrenciaDto, OcorrenciaStatus } from "./dtos/createocorrenciaDto";
+import { CreateOcorrenciaDto, OcorrenciaStatus, OcorrenciaPrioridade } from "./dtos/createocorrenciaDto";
 import { ocorrencias, Ambientes, Componentes } from "src/db/schemas";
 import { UpdateOcorrenciaDto } from "./dtos/update.ocorrenciaDto";
 import { eq, sql, desc } from "drizzle-orm";
@@ -135,6 +135,12 @@ export class OcorrenciaRepository {
     async criarOcorrencia(dto: CreateOcorrenciaDto) {
         try {
 
+            // Verifica se o componente existe
+            await this.componenteRepository.verificaComponenteExiste(dto.componente_id)
+
+            // Verifica se o ambiente existe
+            await this.ambienteRepository.verificaAmbienteExiste(dto.ambiente_id)
+
             await this.db
                 .insert(ocorrencias)
                 .values({
@@ -147,9 +153,15 @@ export class OcorrenciaRepository {
                 });
 
             return {
-                message: `Ocorrencia criada com sucesso`
+                message: 'Ocorrencia criada com sucesso'
             }
         } catch (error) {
+            if (
+                error instanceof NotFoundException ||
+                error instanceof BadRequestException
+            ) {
+                throw error;
+            }
 
             throw new InternalServerErrorException(
                 'Erro ao criar ocorrência'
@@ -157,7 +169,7 @@ export class OcorrenciaRepository {
         }
     }
 
-    async editarOcorrencia(id: number, dto: UpdateOcorrenciaDto) {
+    async editarOcorrencia(id: number, updateDto: UpdateOcorrenciaDto) {
         try {
             const ocorrencia = await this.verificaOcorrenciaExiste(id);
 
@@ -168,7 +180,7 @@ export class OcorrenciaRepository {
             await this.db
                 .update(ocorrencias)
                 .set({
-                    ...dto
+                    ...updateDto
                 })
                 .where(eq(ocorrencias.id_ocor, id))
 
@@ -249,11 +261,38 @@ export class OcorrenciaRepository {
     }
 
 
-    async alterarPrioridade() {
+    async alterarPrioridade(
+        id: number,
+        prioridade: OcorrenciaPrioridade,
+    ) {
         try {
+            const ocorrencia = await this.verificaOcorrenciaExiste(id);
 
+            this.validarAlteracao(
+                ocorrencia.ocor_status as OcorrenciaStatus,
+            );
+
+            await this.db
+                .update(ocorrencias)
+                .set({
+                    ocor_prioridade: prioridade,
+                })
+                .where(eq(ocorrencias.id_ocor, id));
+
+            return {
+                message: 'Prioridade alterada com sucesso',
+            };
         } catch (error) {
+            if (
+                error instanceof NotFoundException ||
+                error instanceof BadRequestException
+            ) {
+                throw error;
+            }
 
+            throw new InternalServerErrorException(
+                'Erro ao alterar prioridade',
+            );
         }
     }
 
@@ -305,7 +344,6 @@ export class OcorrenciaRepository {
             this.validarAlteracao(
                 ocorrencia.ocor_status as OcorrenciaStatus,
             );
-
 
             // Verifica se o componente existe
             await this.componenteRepository.verificaComponenteExiste(idComp);
@@ -402,7 +440,7 @@ export class OcorrenciaRepository {
 
         if (statusFinais.includes(status)) {
             throw new BadRequestException(
-                `Não é possível editar uma ocorrência com status "${status}"`,
+                `Não é possível alterar uma ocorrência com status "${status}"`,
             );
         }
     }

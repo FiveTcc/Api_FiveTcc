@@ -6,6 +6,7 @@ import { UpdateOcorrenciaDto } from "./dtos/update.ocorrenciaDto";
 import { AssociateOcorCompDto } from "./dtos/associate.ocorCompDto";
 import { AssociateOcorAmbDto } from "./dtos/associate.ocorAmbDto";
 import { AdicionarObservacaoDto } from "./dtos/add.ocorrenciaObsDto";
+import { AlterarOcorrenciaPrioridadeDto } from "./dtos/alter.ocorPriorDto";
 
 @Controller('ocorrencias')
 export class OcorrenciaController {
@@ -64,10 +65,16 @@ export class OcorrenciaController {
         @Param('id', ParseIntPipe) id: number,
         @Body('novoStatus') novoStatus: OcorrenciaStatus
     ) {
-        return this.ocorrenciaService.alterarStatus(
-            id,
-            novoStatus
-        );
+        return this.ocorrenciaService.alterarStatus(id, novoStatus);
+    }
+
+    // Rota para alterar prioridade da ocorrência(Baixa, Media, Alta)
+    @Patch('/alterarPrioridade/:id')
+    async alterarPrioridade(
+        @Param('id', ParseIntPipe) id: number,
+        @Body() dto: AlterarOcorrenciaPrioridadeDto
+    ) {
+        return this.ocorrenciaService.alterarPrioridade(id, dto.prioridade);
     }
 
     // Rota para alterar observação da ocorrência
@@ -89,11 +96,12 @@ export class OcorrenciaController {
     }
 
     // Rota para associar ambiente a ocorrência
-     @Patch(':id/associarAmbiente')
+    @Patch(':id/associarAmbiente')
     async associarAmbiente(
         @Param('id', ParseIntPipe) id: number,
         @Body() associateOcorAmbDto: AssociateOcorAmbDto
     ) {
         return await this.ocorrenciaService.associarAmbiente(id, associateOcorAmbDto.id_amb)
     }
+
 }
