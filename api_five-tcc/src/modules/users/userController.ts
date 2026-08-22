@@ -9,7 +9,7 @@ import { Roles } from '../auth/decorators/roles.decorator';
 
 
 @UseGuards(AuthTokenGuard, RolesGuard) // Aplica o guard de autenticação a todas as rotas deste controlador 
-@Roles('admin', 'tecnico', 'funcionario') // Aplica o decorator de roles a todas as rotas deste controlador, permitindo apenas usuários com a role 'admin'
+//@Roles('admin', 'tecnico', 'funcionario') // Aplica o decorator de roles a todas as rotas deste controlador, permitindo apenas usuários com a role 'admin'
 @Controller('usuarios')
 export class UserController {
     constructor(private readonly useSerevices: UserServices) { }

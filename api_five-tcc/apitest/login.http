@@ -7,17 +7,17 @@
 POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
-// Banco de dados Mid
-  {
-     "user_email": "adm@1gmail.com",
-     "user_senha": "Adm!2000"
-  }
+# // Banco de dados Mid
+#   {
+#      "user_email": "adm@1gmail.com",
+#      "user_senha": "Adm!2000"
+#   }
 
-# // Banco de dados Brayan
-# {
-#     "user_email": "adm@1gmail.com",
-#    "user_senha": "Tecnico!197"
-# }
+// Banco de dados Brayan
+{
+    "user_email": "brayanstilos@gmail.com",
+   "user_senha": "Bra0609!"
+}
 
 # {
 #   "user_email": "tecnico@gmail.com",
