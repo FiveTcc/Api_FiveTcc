@@ -7,10 +7,26 @@ GET  {{baseUrl}}/ocorrencias/listarOcorrenciaId/10
 
 ###
 
-POST {{baseUrl}}/ocorrencias/criarOcorrencia
+POST {{baseUrl}}/ocorrencias/abrirOcorrencia
 Content-Type: application/json
 
 {
+<<<<<<< Updated upstream
+=======
+  "ocor_nome": "Estabilizador queimou",
+  "ocor_prioridade": "alta",
+  "ocor_obs": "O computador da sala não apresenta sinal de energia",
+  "componente_id": 2,
+  "ambiente_id": 1
+}
+
+###
+
+PATCH {{baseUrl}}/ocorrencias/editarOcorrencia/31
+Content-Type: application/json
+
+{
+>>>>>>> Stashed changes
   "ocor_nome": "Computador não liga",
   "ocor_status": "aberta",
   "ocor_prioridade": "alta",
@@ -71,3 +87,7 @@ Content-Type: application/json
 {
   "id_amb": 17
 }
+
+
+### Filtrar ocorrências por ambiente
+GET {{baseUrl}}/ocorrencias/buscarPorAmbiente?nomeAmb=Lab
