@@ -4,7 +4,7 @@ import type { DrizzleDB } from "src/db/types/drizzleDB";
 import { CreateOcorrenciaDto, OcorrenciaStatus } from "./dtos/createocorrenciaDto";
 import { ocorrencias, Ambientes, Componentes } from "src/db/schemas";
 import { UpdateOcorrenciaDto } from "./dtos/update.ocorrenciaDto";
-import { eq, sql } from "drizzle-orm";
+import { eq, sql, desc, like } from "drizzle-orm";
 import { ComponenteRepository } from "../componentes/componente.repository";
 import { AmbienteRepository } from "../ambientes/ambiente.repository";
 
@@ -92,7 +92,7 @@ export class OcorrenciaRepository {
     }
 
 
-    async criarOcorrencia(dto: CreateOcorrenciaDto) {
+    async abrirOcorrencia(dto: CreateOcorrenciaDto) {
         try {
 
             await this.db
@@ -107,12 +107,12 @@ export class OcorrenciaRepository {
                 });
 
             return {
-                message: `Ocorrencia criada com sucesso`
+                message: 'Ocorrencia aberta com sucesso'
             }
         } catch (error) {
 
             throw new InternalServerErrorException(
-                'Erro ao criar ocorrência'
+                'Erro ao abrir ocorrência'
             );
         }
     }
@@ -333,6 +333,99 @@ export class OcorrenciaRepository {
 
 
 
+
+    // ##### Filtros de Ocorrências #####
+
+    async filtrarPorStatus() {
+
+    }
+
+    async filtrarPorPrioridade() {
+
+    }
+
+    async filtrarPorAmbiente(nomeAmb: string) {
+        try {
+
+            const ocorrencia = await this.db
+                .select({
+                    id_ocor: ocorrencias.id_ocor,
+                    ocor_nome: ocorrencias.ocor_nome,
+                    ocor_status: ocorrencias.ocor_status,
+                    ocor_prioridade: ocorrencias.ocor_prioridade,
+                    ocor_obs: ocorrencias.ocor_obs,
+                    criado_em: ocorrencias.criado_em,
+                    atualizado_em: ocorrencias.atualizado_em,
+                    encerrado_em: ocorrencias.encerrado_em,
+
+                    componente: {
+                        id_compo: Componentes.id_compo,
+                        compo_nome: Componentes.compo_nome,
+                        compo_tipo_id: Componentes.compo_tipo_id,
+                    },
+
+                    ambiente: {
+                        id_amb: Ambientes.id_amb,
+                        amb_nome: Ambientes.amb_nome,
+                        amb_tipo: Ambientes.amb_tipo,
+                        amb_bloco: Ambientes.amb_bloco,
+                        amb_andar: Ambientes.amb_andar,
+                    },
+                })
+                .from(ocorrencias)
+                .leftJoin(
+                    Componentes,
+                    eq(ocorrencias.componente_id,
+                        Componentes.id_compo
+                    ))
+                .leftJoin(
+                    Ambientes,
+                    eq(ocorrencias.ambiente_id,
+                        Ambientes.id_amb
+                    )
+                )
+                .orderBy(desc(ocorrencias.criado_em))
+                .where(
+                    like(Ambientes.amb_nome, `%${nomeAmb}%`)
+                );
+
+            if (ocorrencia.length === 0) {
+                throw new NotFoundException(
+                    'Nenhuma ocorrência encontrada para o ambiente informado',
+                );
+            }
+
+            return ocorrencia;
+
+        } catch (error) {
+            if (error instanceof NotFoundException) {
+                throw error;
+            }
+            throw new InternalServerErrorException(
+                'Erro ao filtrar ocorrências por ambiente',
+            );
+        }
+    }
+
+    async filtrarPorComponente() {
+
+    }
+
+    async filtrarPorPeriodo() {
+
+    }
+
+    async filtrarPorNome() {
+
+    }
+
+
+
+
+
+
+
+    // ##### Métodos de validação #####
 
     // Método de verificar se a ocorrência existe
     async verificaOcorrenciaExiste(id: number) {

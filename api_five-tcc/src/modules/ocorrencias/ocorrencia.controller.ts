@@ -1,4 +1,4 @@
-import { Controller, Get, Param, ParseIntPipe, Patch } from "@nestjs/common";
+import { Controller, Get, Param, ParseIntPipe, Patch, Query } from "@nestjs/common";
 import { OcorrenciaService } from "./ocorrencia.service"
 import { Post, Body } from "@nestjs/common";
 import { CreateOcorrenciaDto, OcorrenciaStatus } from "./dtos/createocorrenciaDto";
@@ -25,12 +25,12 @@ export class OcorrenciaController {
         return await this.ocorrenciaService.listarOcorrenciaId(id);
     }
 
-    // Rota para criar ocorrência
-    @Post('/criarOcorrencia')
-    async criarOcorrencia(
+    // Rota para abrir ocorrência
+    @Post('/abrirOcorrencia')
+    async abrirOcorrencia(
         @Body() dto: CreateOcorrenciaDto
     ) {
-        return await this.ocorrenciaService.criarOcorrencia(dto);
+        return await this.ocorrenciaService.abrirOcorrencia(dto);
     }
 
     // Rota para editar ocorrência
@@ -96,4 +96,13 @@ export class OcorrenciaController {
     ) {
         return await this.ocorrenciaService.associarAmbiente(id, associateOcorAmbDto.id_amb)
     }
+
+    // ##### Rotas de Filtros #####
+    @Get('buscarPorAmbiente')
+    async filtrarPorAmbiente(
+        @Query('nomeAmb') nomeAmb: string
+    ) {
+        return await this.ocorrenciaService.filtrarPorAmbiente(nomeAmb);
+    }
+
 }

@@ -18,8 +18,8 @@ export class OcorrenciaService {
     }
 
     // Método para criar ocorrência
-    async criarOcorrencia(dto: CreateOcorrenciaDto) {
-        return await this.ocorrenciaRepository.criarOcorrencia(dto);
+    async abrirOcorrencia(dto: CreateOcorrenciaDto) {
+        return await this.ocorrenciaRepository.abrirOcorrencia(dto);
     }
 
     // Método para editar ocorrência
@@ -74,8 +74,16 @@ export class OcorrenciaService {
         return await this.ocorrenciaRepository.associarAmbiente(id, idAmb);
     }
 
-    // Histórico de ocorrências
-    async historicoDeOcorrencia() {
-       return await this.ocorrenciaRepository.historicoDeOcorrencia() 
-    }
+    // // Histórico de ocorrências
+    // async historicoDeOcorrencia() {
+    //    return await this.ocorrenciaRepository.historicoDeOcorrencia() 
+    // }
+
+
+     // ##### Filtros de Ocorrências #####
+
+     // Filtro por ambiente
+     async filtrarPorAmbiente(nomeAmb: string) {
+        return await this.ocorrenciaRepository.filtrarPorAmbiente(nomeAmb);
+     }
 }
