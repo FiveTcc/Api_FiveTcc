@@ -6,4 +6,5 @@ import type { DrizzleDB } from "src/db/types/drizzleDB";
 export class AtribuicaoTecnicoRepository {
     constructor(@Inject(DRIZZLE) private readonly db: DrizzleDB) { }
 
+    
 }
