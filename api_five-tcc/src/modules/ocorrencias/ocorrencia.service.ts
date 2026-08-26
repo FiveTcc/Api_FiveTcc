@@ -1,13 +1,13 @@
 import { Injectable } from "@nestjs/common";
 import { OcorrenciaRepository } from "./ocorrencia.repository";
-import { CreateOcorrenciaDto, OcorrenciaStatus } from "./dtos/createocorrenciaDto";
+import { CreateOcorrenciaDto, OcorrenciaStatus, OcorrenciaPrioridade } from "./dtos/createocorrenciaDto";
 import { UpdateOcorrenciaDto } from "./dtos/update.ocorrenciaDto";
 
 @Injectable()
 export class OcorrenciaService {
     constructor(private readonly ocorrenciaRepository: OcorrenciaRepository) { }
 
-     // Método para listar ocorrência
+    // Método para listar ocorrência
     async listarOcorrencia() {
         return await this.ocorrenciaRepository.listarOcorrencia();
     }
@@ -23,8 +23,8 @@ export class OcorrenciaService {
     }
 
     // Método para editar ocorrência
-    async editarOcorrencia(id: number, dto: UpdateOcorrenciaDto) {
-        return await this.ocorrenciaRepository.editarOcorrencia(id, dto);
+    async editarOcorrencia(id: number, updateDto: UpdateOcorrenciaDto) {
+        return await this.ocorrenciaRepository.editarOcorrencia(id, updateDto);
     }
 
     // Método para encerrar ocorrência
@@ -46,8 +46,11 @@ export class OcorrenciaService {
     }
 
     // Método para alterar prioridade da ocorrência
-    async alterarPrioridade() {
-        return await this.ocorrenciaRepository.alterarPrioridade();
+    async alterarPrioridade(
+        id: number,
+        prioridade: OcorrenciaPrioridade
+    ) {
+        return await this.ocorrenciaRepository.alterarPrioridade(id, prioridade);
     }
 
     // Método para adicionar observação a ocorrência
@@ -80,10 +83,35 @@ export class OcorrenciaService {
     // }
 
 
-     // ##### Filtros de Ocorrências #####
+    // ##### Filtros de Ocorrências #####
 
-     // Filtro por ambiente
-     async filtrarPorAmbiente(nomeAmb: string) {
+     // Filtro por nome
+    async filtrarPorNome(nomeOcor: string) {
+        return await this.ocorrenciaRepository.filtrarPorNome(nomeOcor);
+    }
+
+    // Filtro por ambiente
+    async filtrarPorAmbiente(nomeAmb: string) {
         return await this.ocorrenciaRepository.filtrarPorAmbiente(nomeAmb);
-     }
+    }
+
+    // Filtro por componente
+    async filtrarPorComponente(nomeComp: string) {
+        return await this.ocorrenciaRepository.filtrarPorComponente(nomeComp);
+    }
+
+    // Filtro por status
+    async filtrarPorStatus(status: OcorrenciaStatus) {
+        return await this.ocorrenciaRepository.filtrarPorStatus(status);
+    }
+
+    // Filtro por status
+    async filtrarPorPrioridade(prioridade: OcorrenciaPrioridade) {
+        return await this.ocorrenciaRepository.filtrarPorPrioridade(prioridade);
+    }
+
+    // Filtro por status
+    async filtrarPorPeriodo(dataInicio: string, dataFim: string) {
+        return await this.ocorrenciaRepository.filtrarPorPeriodo(dataInicio, dataFim);
+    }
 }

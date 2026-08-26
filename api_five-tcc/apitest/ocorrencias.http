@@ -11,24 +11,20 @@ POST {{baseUrl}}/ocorrencias/abrirOcorrencia
 Content-Type: application/json
 
 {
-<<<<<<< Updated upstream
-=======
-  "ocor_nome": "Estabilizador queimou",
+  "ocor_nome": "roteador",
   "ocor_prioridade": "alta",
-  "ocor_obs": "O computador da sala não apresenta sinal de energia",
-  "componente_id": 2,
-  "ambiente_id": 1
+  "ocor_obs": "Não liga",
+  "componente_id": 3,
+  "ambiente_id": 2
 }
 
 ###
 
-PATCH {{baseUrl}}/ocorrencias/editarOcorrencia/31
+PATCH {{baseUrl}}/ocorrencias/editarOcorrencia/3
 Content-Type: application/json
 
 {
->>>>>>> Stashed changes
   "ocor_nome": "Computador não liga",
-  "ocor_status": "aberta",
   "ocor_prioridade": "alta",
   "ocor_obs": "O computador da sala não apresenta sinal de energia",
   "componente_id": 2,
@@ -49,19 +45,19 @@ Content-Type: application/json
 }
 
 ###
-PATCH {{baseUrl}}/ocorrencias/encerrarOcorrencia/18
+PATCH {{baseUrl}}/ocorrencias/encerrarOcorrencia/5
 
 
 ###
-PATCH {{baseUrl}}/ocorrencias/cancelarOcorrencia/17
+PATCH {{baseUrl}}/ocorrencias/cancelarOcorrencia/5
 
 ###
 
-PATCH {{baseUrl}}/ocorrencias/alterarStatus/18
+PATCH {{baseUrl}}/ocorrencias/alterarStatus/5
 Content-Type: application/json
 
 {
-    "novoStatus": "em andamento"
+    "novoStatus": "concluida"
 }
 
 ###
@@ -89,5 +85,23 @@ Content-Type: application/json
 }
 
 
+############################# Filtros ####################################
+
+### Filtrar ocorrências por componente
+GET {{baseUrl}}/ocorrencias/buscarPorNome?nomeOcor=computador
+
 ### Filtrar ocorrências por ambiente
-GET {{baseUrl}}/ocorrencias/buscarPorAmbiente?nomeAmb=Lab
+GET {{baseUrl}}/ocorrencias/buscarPorAmbiente?nomeAmb=Sala
+
+
+### Filtrar ocorrências por componente
+GET {{baseUrl}}/ocorrencias/buscarPorComponente?nomeComp=roteador
+
+### Filtrar ocorrências por status
+GET {{baseUrl}}/ocorrencias/buscarPorStatus?status=cancelada
+
+### Filtrar ocorrências por prioridade
+GET {{baseUrl}}/ocorrencias/buscarPorPrioridade?prioridade=media
+
+### Filtrar ocorrências por periodo
+GET {{baseUrl}}/ocorrencias/buscarPorPeriodo?dataInicio=2026-08-25&dataFim=2026-08-25

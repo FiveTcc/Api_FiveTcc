@@ -1,11 +1,12 @@
-import { Controller, Get, Param, ParseIntPipe, Patch, Query } from "@nestjs/common";
+import { Controller, Get, Param, ParseIntPipe, Patch, Query, ParseEnumPipe, BadRequestException } from "@nestjs/common";
 import { OcorrenciaService } from "./ocorrencia.service"
 import { Post, Body } from "@nestjs/common";
-import { CreateOcorrenciaDto, OcorrenciaStatus } from "./dtos/createocorrenciaDto";
+import { CreateOcorrenciaDto, OcorrenciaStatus, OcorrenciaPrioridade } from "./dtos/createocorrenciaDto";
 import { UpdateOcorrenciaDto } from "./dtos/update.ocorrenciaDto";
 import { AssociateOcorCompDto } from "./dtos/associate.ocorCompDto";
 import { AssociateOcorAmbDto } from "./dtos/associate.ocorAmbDto";
 import { AdicionarObservacaoDto } from "./dtos/add.ocorrenciaObsDto";
+import { AlterarOcorrenciaPrioridadeDto } from "./dtos/alter.ocorPriorDto";
 
 @Controller('ocorrencias')
 export class OcorrenciaController {
@@ -37,9 +38,9 @@ export class OcorrenciaController {
     @Patch('/editarOcorrencia/:id')
     async editarOcorrencia(
         @Param('id', ParseIntPipe) id: number,
-        @Body() dto: UpdateOcorrenciaDto
+        @Body() updateDto: UpdateOcorrenciaDto
     ) {
-        return await this.ocorrenciaService.editarOcorrencia(id, dto);
+        return await this.ocorrenciaService.editarOcorrencia(id, updateDto);
     }
 
     // Rota para encerrar ocorrência
@@ -70,6 +71,15 @@ export class OcorrenciaController {
         );
     }
 
+    // Rota para alterar prioridade da ocorrência(Baixa, Media, Alta)
+    @Patch('/alterarPrioridade/:id')
+    async alterarPrioridade(
+        @Param('id', ParseIntPipe) id: number,
+        @Body() dto: AlterarOcorrenciaPrioridadeDto
+    ) {
+        return this.ocorrenciaService.alterarPrioridade(id, dto.prioridade);
+    }
+
     // Rota para alterar observação da ocorrência
     @Patch(':id/adicionarObservacao')
     async adicionarObservacao(
@@ -89,7 +99,7 @@ export class OcorrenciaController {
     }
 
     // Rota para associar ambiente a ocorrência
-     @Patch(':id/associarAmbiente')
+    @Patch(':id/associarAmbiente')
     async associarAmbiente(
         @Param('id', ParseIntPipe) id: number,
         @Body() associateOcorAmbDto: AssociateOcorAmbDto
@@ -105,4 +115,52 @@ export class OcorrenciaController {
         return await this.ocorrenciaService.filtrarPorAmbiente(nomeAmb);
     }
 
+    @Get('buscarPorComponente')
+    async filtrarPorComponente(
+        @Query('nomeComp') nomeComp: string
+    ) {
+        return await this.ocorrenciaService.filtrarPorComponente(nomeComp);
+    }
+
+    @Get('buscarPorNome')
+    async filtrarPorNome(
+        @Query('nomeOcor') nomeOcor: string
+    ) {
+        return await this.ocorrenciaService.filtrarPorNome(nomeOcor);
+    }
+
+    @Get('buscarPorStatus')
+    async filtrarPorStatus(
+        @Query('status', new ParseEnumPipe(OcorrenciaStatus, {
+            exceptionFactory: () =>
+                new BadRequestException(
+                    'Status inválido'
+                ),
+        }))
+        status: OcorrenciaStatus,
+    ) {
+        return await this.ocorrenciaService.filtrarPorStatus(status);
+    }
+
+
+    @Get('buscarPorPrioridade')
+    async filtrarPorPrioridade(
+        @Query('prioridade', new ParseEnumPipe(OcorrenciaPrioridade, {
+            exceptionFactory: () =>
+                new BadRequestException(
+                    'Prioridade inválida'
+                ),
+        }))
+        prioridade: OcorrenciaPrioridade,
+    ) {
+        return await this.ocorrenciaService.filtrarPorPrioridade(prioridade);
+    }
+
+    @Get('buscarPorPeriodo')
+    async filtrarPorPeriodo(
+        @Query('dataInicio') dataInicio: string,
+        @Query('dataFim') dataFim: string,
+    ) {
+        return await this.ocorrenciaService.filtrarPorPeriodo(dataInicio, dataFim);
+    }
 }
