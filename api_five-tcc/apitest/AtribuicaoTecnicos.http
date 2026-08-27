@@ -1,0 +1,17 @@
+@baseUrl = http://localhost:3000
+
+
+POST {{baseUrl}}/atribuicaoTecnicos/6/vincularTecnico
+Content-Type: application/json
+
+{
+  "id_user": 3
+}
+
+###
+
+GET {{baseUrl}}/atribuicaoTecnicos/ocorrencia/6/tecnicos
+
+###
+
+GET {{baseUrl}}/atribuicaoTecnicos/tecnico/2/ocorrencias

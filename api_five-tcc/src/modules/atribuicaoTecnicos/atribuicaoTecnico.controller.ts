@@ -17,51 +17,34 @@ import { AtualizarAtribuicaoDto } from './dtos/atualizarAtribuicaoDto ';
 export class AtribuicaoController {
   constructor(
     private readonly atribuicaoService: AtribuicaoTecnicoService,
-  ) {}
+  ) { }
 
   // Vincular técnico
-  @Post(':id/tecnicos')
+  @Post(':idOcor/vincularTecnico')
   async vincularTecnico(
     @Param('idOcor', ParseIntPipe) idOcor: number,
     @Body() dto: AtribuirTecnicoDto,
   ) {
     return this.atribuicaoService.vincularTecnico(
       idOcor,
-      dto,
+      dto
     );
   }
 
-//   // Atualizar atribuição
-//   @Patch(':id/tecnicos/:id_user')
-//   async atualizarAtribuicao(
-//     @Param('id', ParseIntPipe) id_ocor: number,
-//     @Param('id_user', ParseIntPipe) id_user: number,
-//     @Body() dto: AtualizarAtribuicaoDto,
-//   ) {
-//     return this.atribuicaoService.atualizarAtribuicao(
-//       id_ocor,
-//       id_user,
-//       dto,
-//     );
-//   }
+  @Get('ocorrencia/:idOcor/tecnicos')
+  async listarTecnicosDaOcorrencia(
+    @Param('idOcor', ParseIntPipe) idOcor: number
+  ) {
+    return this.atribuicaoService.listarTecnicoDaOcorrencia(idOcor);
+  }
 
-//   // Remover técnico
-//   @Delete(':id/tecnicos/:id_user')
-//   async removerTecnico(
-//     @Param('id', ParseIntPipe) id_ocor: number,
-//     @Param('id_user', ParseIntPipe) id_user: number,
-//   ) {
-//     return this.atribuicaoService.removerTecnico(
-//       id_ocor,
-//       id_user,
-//     );
-//   }
 
-//   // Listar técnicos
-//   @Get(':id/tecnicos')
-//   async listarTecnicos(
-//     @Param('id', ParseIntPipe) id_ocor: number,
-//   ) {
-//     return this.atribuicaoService.listarTecnicos(id_ocor);
-//   }
+  // Listar ocorrências do técnico
+  @Get('tecnico/:idUser/ocorrencias')
+  async listarOcorrenciasDoTecnico(
+    @Param('idUser', ParseIntPipe) idUser: number
+  ) {
+    return this.atribuicaoService.listarOcorrenciaDoTecnico(idUser);
+  }
+
 }

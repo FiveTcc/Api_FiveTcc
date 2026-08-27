@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:3000
-@Token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjI2LCJlbWFpbCI6ImJyYXlhbnN0aWxvc0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3ODczNTIyOTYsImV4cCI6MTc4NzM1NTg5NiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDozMDAwIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDozMDAwIn0.5hcX10hjr05XEhkymVFVx0JL1Pys17UYB8j6yjNxCYQ
+@Token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiYWRtQDFnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3ODc4NTYxODMsImV4cCI6MTc4Nzg1OTc4MywiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDozMDAwIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDozMDAwIn0.C951fBfqSf4gKW_51i00LnJcxOagxV-B2TpkL5l8iWo
 ### ======================================================
 ### USUÁRIOS
 ### ======================================================
@@ -18,11 +18,11 @@ Authorization: Bearer {{Token}}
 Content-Type: application/json
 
 {
-  "user_nome": "brayan",
-  "user_email": "brayanstilos@gmail.com",
-  "user_senha": "Bra0609!",
+  "user_nome": "Mauricio",
+  "user_email": "maumau@gmail.com",
+  "user_senha": "Mau0609!",
   "user_tel": "(18)99165-3675",
-  "user_tipo": "admin"
+  "user_tipo": "tecnico"
 }
 
 

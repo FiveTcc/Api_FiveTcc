@@ -7,24 +7,17 @@ export class AtribuicaoTecnicoService {
     constructor(private readonly atribuicaoTecnicoRepository: AtribuicaoTecnicoRepository) { }
 
 
-    async vincularTecnico(idOcor: number, dto: AtribuirTecnicoDto) {
-        // Lógica para vincular técnico a uma ocorrência
+    async vincularTecnico(idOcor: number, dto: AtribuirTecnicoDto) {    
         return this.atribuicaoTecnicoRepository.vincularTecnico(idOcor, dto);
     }
 
-    // async atualizarAtribuicao(id_ocor: number, id_user: number, dto: any) {
-    //     // Lógica para atualizar a atribuição de um técnico a uma ocorrência
-    //     return this.atribuicaoTecnicoRepository.atualizarAtribuicao(id_ocor, id_user, dto);
-    // }
+    async listarTecnicoDaOcorrencia(idOcor: number) {
+        return this.atribuicaoTecnicoRepository.listarTecnicoDaOcorrencia(idOcor);
+    }
 
-    // async removerTecnico(id_ocor: number, id_user: number) {
-    //     // Lógica para remover um técnico de uma ocorrência
-    //     return this.atribuicaoTecnicoRepository.removerTecnico(id_ocor, id_user);
-    // }
-
-    // async listarTecnicos(id_ocor: number) {
-    //     // Lógica para listar técnicos atribuídos a uma ocorrência
-    //     return this.atribuicaoTecnicoRepository.listarTecnicos(id_ocor);
-    // }
+    
+    async listarOcorrenciaDoTecnico(idUser: number) {
+        return this.atribuicaoTecnicoRepository.listarOcorrenciaDoTecnico(idUser);
+    }
 
 }

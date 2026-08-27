@@ -4,7 +4,7 @@ import type { DrizzleDB } from "src/db/types/drizzleDB";
 import { CreateOcorrenciaDto, OcorrenciaStatus, OcorrenciaPrioridade } from "./dtos/createocorrenciaDto";
 import { ocorrencias, Ambientes, Componentes } from "src/db/schemas";
 import { UpdateOcorrenciaDto } from "./dtos/update.ocorrenciaDto";
-import { eq, sql, desc, like, and, gte, lt, lte } from "drizzle-orm";
+import { eq, sql, desc, like} from "drizzle-orm";
 import { ComponenteRepository } from "../componentes/componente.repository";
 import { AmbienteRepository } from "../ambientes/ambiente.repository";
 
