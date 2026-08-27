@@ -23,7 +23,7 @@ export class AuthTokenGuard implements CanActivate {
         
 
         if (!token) {
-            throw new UnauthorizedException('Nâo Logado');
+            throw new UnauthorizedException('Não está logado');
         }
 
         try {
@@ -43,7 +43,7 @@ export class AuthTokenGuard implements CanActivate {
             return true;
 
         } catch (error) {
-            throw new UnauthorizedException('falha aou logar');
+            throw new UnauthorizedException('Falha ao logar');
         }
 
     }
