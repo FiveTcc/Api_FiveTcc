@@ -45,15 +45,15 @@ Content-Type: application/json
 }
 
 ###
-PATCH {{baseUrl}}/ocorrencias/encerrarOcorrencia/5
+PATCH {{baseUrl}}/ocorrencias/encerrarOcorrencia/45
 
 
 ###
-PATCH {{baseUrl}}/ocorrencias/cancelarOcorrencia/5
+PATCH {{baseUrl}}/ocorrencias/cancelarOcorrencia/187756
 
 ###
 
-PATCH {{baseUrl}}/ocorrencias/alterarStatus/5
+PATCH {{baseUrl}}/ocorrencias/alterarStatus/70
 Content-Type: application/json
 
 {
@@ -85,23 +85,27 @@ Content-Type: application/json
 }
 
 
-############################# Filtros ####################################
-
-### Filtrar ocorrências por componente
-GET {{baseUrl}}/ocorrencias/buscarPorNome?nomeOcor=computador
 
 ### Filtrar ocorrências por ambiente
-GET {{baseUrl}}/ocorrencias/buscarPorAmbiente?nomeAmb=Sala
+GET {{baseUrl}}/ocorrencias/buscarPorAmbiente?nomeAmb=Sala de TI
 
 
 ### Filtrar ocorrências por componente
-GET {{baseUrl}}/ocorrencias/buscarPorComponente?nomeComp=roteador
+GET {{baseUrl}}/ocorrencias/buscarPorComponente?nomeComp=Computador
+
+
+### Filtrar ocorrências por nome
+GET {{baseUrl}}/ocorrencias/buscarPorNome?nomeOcor=Computador
+
 
 ### Filtrar ocorrências por status
-GET {{baseUrl}}/ocorrencias/buscarPorStatus?status=cancelada
+GET {{baseUrl}}/ocorrencias/buscarPorStatus?status=concluida
+
 
 ### Filtrar ocorrências por prioridade
-GET {{baseUrl}}/ocorrencias/buscarPorPrioridade?prioridade=media
+GET {{baseUrl}}/ocorrencias/buscarPorPrioridade?prioridade=baixa
 
-### Filtrar ocorrências por periodo
-GET {{baseUrl}}/ocorrencias/buscarPorPeriodo?dataInicio=2026-08-25&dataFim=2026-08-25
+
+### Filtrar ocorrências por período
+GET {{baseUrl}}/ocorrencias/buscarPorPeriodo?dataInicio=2026-08-01&dataFim=2026-08-26
+

@@ -1,15 +1,16 @@
 import { Injectable } from "@nestjs/common";
 import { AtribuicaoTecnicoRepository } from "./atribuicaoTecnico.repository";
+import { AtribuirTecnicoDto } from "./dtos/atribuirTecnicoDtos";
 
 @Injectable()
 export class AtribuicaoTecnicoService {
     constructor(private readonly atribuicaoTecnicoRepository: AtribuicaoTecnicoRepository) { }
 
 
-    // async vincularTecnico(id_ocor: number, dto: any) {
-    //     // Lógica para vincular técnico a uma ocorrência
-    //     return this.atribuicaoTecnicoRepository.vincularTecnico(id_ocor, dto);
-    // }
+    async vincularTecnico(idOcor: number, dto: AtribuirTecnicoDto) {
+        // Lógica para vincular técnico a uma ocorrência
+        return this.atribuicaoTecnicoRepository.vincularTecnico(idOcor, dto);
+    }
 
     // async atualizarAtribuicao(id_ocor: number, id_user: number, dto: any) {
     //     // Lógica para atualizar a atribuição de um técnico a uma ocorrência

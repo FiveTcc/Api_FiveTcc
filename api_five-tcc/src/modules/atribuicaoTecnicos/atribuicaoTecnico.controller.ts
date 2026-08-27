@@ -1,35 +1,35 @@
-// import {
-//   Body,
-//   Controller,
-//   Delete,
-//   Get,
-//   Param,
-//   ParseIntPipe,
-//   Patch,
-//   Post,
-// } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+} from '@nestjs/common';
 
-// import { AtribuicaoTecnicoService } from './atribuicaoTecnico.service';
-// import { AtribuirTecnicoDto } from './dtos/atribuirTecnicoDtos';
-// import { AtualizarAtribuicaoDto } from './dtos/AtualizarAtribuicaoDto ';
+import { AtribuicaoTecnicoService } from './atribuicaoTecnico.service';
+import { AtribuirTecnicoDto } from './dtos/atribuirTecnicoDtos';
+import { AtualizarAtribuicaoDto } from './dtos/atualizarAtribuicaoDto ';
 
-// @Controller('ocorrencias')
-// export class AtribuicaoController {
-//   constructor(
-//     private readonly atribuicaoService: AtribuicaoTecnicoService,
-//   ) {}
+@Controller('atribuicaoTecnicos')
+export class AtribuicaoController {
+  constructor(
+    private readonly atribuicaoService: AtribuicaoTecnicoService,
+  ) {}
 
-//   // Vincular técnico
-//   @Post(':id/tecnicos')
-//   async vincularTecnico(
-//     @Param('id', ParseIntPipe) id_ocor: number,
-//     @Body() dto: AtribuirTecnicoDto,
-//   ) {
-//     return this.atribuicaoService.vincularTecnico(
-//       id_ocor,
-//       dto,
-//     );
-//   }
+  // Vincular técnico
+  @Post(':id/tecnicos')
+  async vincularTecnico(
+    @Param('idOcor', ParseIntPipe) idOcor: number,
+    @Body() dto: AtribuirTecnicoDto,
+  ) {
+    return this.atribuicaoService.vincularTecnico(
+      idOcor,
+      dto,
+    );
+  }
 
 //   // Atualizar atribuição
 //   @Patch(':id/tecnicos/:id_user')
@@ -64,4 +64,4 @@
 //   ) {
 //     return this.atribuicaoService.listarTecnicos(id_ocor);
 //   }
-// }
+}

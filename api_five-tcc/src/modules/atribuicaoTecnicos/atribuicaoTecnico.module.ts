@@ -1,12 +1,14 @@
 import { Module } from "@nestjs/common";
-// import { AtribuicaoTecnicoController } from "./atribuicaoTecnico.controller";
+
 import { AtribuicaoTecnicoService } from "./atribuicaoTecnico.service";
 import { AtribuicaoTecnicoRepository } from "./atribuicaoTecnico.repository";
+import { OcorrenciaModule } from "../ocorrencias/ocorrencia.module";
+import { AtribuicaoController } from "./atribuicaoTecnico.controller";
 
 
 @Module({
-    // controllers: [AtribuicaoTecnicoController],
+    controllers: [AtribuicaoController],
     providers: [AtribuicaoTecnicoService, AtribuicaoTecnicoRepository],
-    imports: [],
+    imports: [OcorrenciaModule],
 })
 export class AtribuicaoTecnicoModule { }

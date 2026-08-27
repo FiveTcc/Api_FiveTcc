@@ -10,5 +10,6 @@ import { AmbienteModule } from "../ambientes/ambiente.module";
     controllers: [OcorrenciaController ],
     providers: [OcorrenciaService, OcorrenciaRepository],
     imports: [ComponenteModule, AmbienteModule],
+    exports: [OcorrenciaRepository]
 })
 export class OcorrenciaModule { }
