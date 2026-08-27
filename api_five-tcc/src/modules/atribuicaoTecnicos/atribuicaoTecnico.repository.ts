@@ -6,6 +6,7 @@ import { OcorrenciaRepository } from "../ocorrencias/ocorrencia.repository";
 import { Ambientes, Componentes, ocorrencias, ocorrencias_user, User } from "src/db/schemas";
 import { and, desc, eq } from "drizzle-orm";
 import { UserTipo } from "../users/dtos/userDto";
+import { OcorrenciaStatus } from "../ocorrencias/dtos/createocorrenciaDto";
 
 @Injectable()
 export class AtribuicaoTecnicoRepository {
@@ -19,8 +20,9 @@ export class AtribuicaoTecnicoRepository {
     ) {
         try {
 
-            // Verifica se a ocorrência existe
-            await this.ocorrenciaRepository.verificaOcorrenciaExiste(idOcor);
+            // Verifica se a ocorrência existe e pode receber um técnico
+
+            await this.verificaOcorrenciaPodeReceberTecnico(idOcor)
 
             // Verifica se o tecnico existe
             await this.verificaTecnicoExiste(dto.id_user)
@@ -198,6 +200,7 @@ export class AtribuicaoTecnicoRepository {
 
 
 
+    // ##### Métodos de validação #####
 
 
 
@@ -214,7 +217,7 @@ export class AtribuicaoTecnicoRepository {
 
         if (!usuario) {
             throw new NotFoundException(
-                'Usuário não encontrada'
+                'Usuário não encontrado'
             );
         }
 
@@ -249,6 +252,33 @@ export class AtribuicaoTecnicoRepository {
                 'Este técnico já está vinculado à ocorrência'
             );
         }
+    }
+
+    async verificaOcorrenciaPodeReceberTecnico(idOcor: number) {
+
+        const [ocorrencia] = await this.db
+            .select({
+                id_ocor: ocorrencias.id_ocor,
+                ocor_status: ocorrencias.ocor_status,
+            })
+            .from(ocorrencias)
+            .where(eq(ocorrencias.id_ocor, idOcor));
+
+        if (!ocorrencia) {
+            throw new NotFoundException('Ocorrência não encontrada');
+        }
+        if (
+            ocorrencia.ocor_status !== OcorrenciaStatus.ABERTA &&
+            ocorrencia.ocor_status !== OcorrenciaStatus.EM_ANDAMENTO
+        ) {
+            throw new BadRequestException(
+                'A ocorrência não pode receber um técnico neste momento'
+            );
+        }
+
+
+
+        return ocorrencia;
     }
 
 
