@@ -7,7 +7,7 @@ import { UserRepositorio } from '../users/userRepositorio';
 import { ConfigModule } from '@nestjs/config';
 import jwtConfig from './config/jwt.config';
 import { JwtModule } from '@nestjs/jwt';
-import { MailModule } from '../mail/mail.module';
+import { MailModule } from '../email/mail.module';
 
 
 @Global()

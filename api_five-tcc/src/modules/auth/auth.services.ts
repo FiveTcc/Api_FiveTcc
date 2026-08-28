@@ -7,7 +7,7 @@ import { HashingService } from "./hashing/hashing.service";
 import jwtConfig from "./config/jwt.config";
 import { JwtService } from "@nestjs/jwt";
 import { Roles } from "./decorators/roles.decorator";
-import { MailService } from '../mail/mail.sevice';
+import { MailService } from '../email/mail.sevice';
 import { User } from "src/db/schemas";
 
 
@@ -112,7 +112,7 @@ export class AuthServices {
                 type: 'password_reset'
             }
             , {
-                secret: process.env.JWT_SECRET,
+                 secret: process.env.JWT_RESET_SECRET,
                 expiresIn: '15m'
             },
         );
@@ -139,7 +139,7 @@ export class AuthServices {
 
         try {
 
-            payload = this.jwtSevices.verifyAsync(
+            payload = await this.jwtSevices.verifyAsync(
                 token,
                 {
                     secret: process.env.JWT_RESET_SECRET,
@@ -153,7 +153,7 @@ export class AuthServices {
 
         }
 
-        if (payload.type !== 'password-reset') {
+        if (payload.type !== 'password_reset') {
 
             throw new UnauthorizedException(
                 'Token inválido',

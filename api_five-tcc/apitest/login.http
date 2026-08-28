@@ -45,7 +45,7 @@ POST {{baseUrl}}/auth/redefinir-senha
 Content-Type: application/json
 
 {
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjI2LCJlbWFpbCI6ImJyYXlhbnN0aWxvc0BnbWFpbC5jb20iLCJ0eXBlIjoicGFzc3dvcmRfcmVzZXQiLCJpYXQiOjE3ODc4Nzk4OTIsImV4cCI6MTc4Nzg4MDc5Mn0.lwMIq8x5J8sMmhL2fs5ixRAd6vZy8iXGo_DNq0FkvM0",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjI2LCJlbWFpbCI6ImJyYXlhbnN0aWxvc0BnbWFpbC5jb20iLCJ0eXBlIjoicGFzc3dvcmRfcmVzZXQiLCJpYXQiOjE3ODc5NTk3MDUsImV4cCI6MTc4Nzk2MDYwNX0.zp5lvS2-6M7kjFMYwnvtTug_tvhjvfoGPfPy3oH2diQ",
     "novaSenha": "NovaSenha123!"
 }
 

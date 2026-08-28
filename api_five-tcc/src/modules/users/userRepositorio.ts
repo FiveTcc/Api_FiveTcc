@@ -219,17 +219,17 @@ export class UserRepositorio {
     }
 
     async atualizarSenha(
-         id_user: number,
-  senhaHash: string,
-    ){
+        id_user: number,
+        senhaHash: string,
+    ) {
         await this.db
-        .update(User)
-        .set({
-            user_senha: senhaHash,
-        })
-        .where(
-            eq(User.id_user ,id_user)
-        )
+            .update(User)
+            .set({
+                user_senha: senhaHash,
+            })
+            .where(
+                eq(User.id_user, id_user)
+            )
 
     }
 
