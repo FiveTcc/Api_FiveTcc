@@ -1,4 +1,6 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+
 import { UserModule } from './modules/users/userModule';
 import { DatabaseModule } from './db/database/database.module';
 import { AuthModule } from './modules/auth/auth.module';
@@ -14,7 +16,13 @@ import { ChatModule } from './modules/chat/chat.module';
 
 
 @Module({
-  imports: [UserModule, DatabaseModule, AuthModule,
+  imports: [
+    
+     ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+
+    UserModule, DatabaseModule, AuthModule,
     AmbienteModule, ComponenteModule, ComponenteTipoModule,
     OcorrenciaModule, DashboardModule, AtribuicaoTecnicoModule,
     RelatorioModule, NotificacaoModule, ChatModule],

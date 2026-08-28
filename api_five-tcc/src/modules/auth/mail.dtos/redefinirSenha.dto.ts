@@ -1,0 +1,18 @@
+import {
+  IsNotEmpty,
+  IsString,
+  MinLength,
+} from 'class-validator';
+
+export class RedefinirSenhaDto {
+
+  @IsNotEmpty()
+  @IsString()
+  token!: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @MinLength(6)
+  novaSenha!: string;
+
+}

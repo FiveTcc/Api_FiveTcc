@@ -23,3 +23,41 @@ Content-Type: application/json
 #   "user_email": "tecnico@gmail.com",
 #   "user_senha": "Tecnico!197"
 # }
+
+### ======================================================
+### SOLICITAR RECUPERAÇÃO DE SENHA
+### ======================================================
+
+POST {{baseUrl}}/auth/recuperar-senha
+Content-Type: application/json
+
+{
+    "email": "brayanstilos@gmail.com"
+}
+
+
+### ======================================================
+### REDEFINIR SENHA
+### ======================================================
+### Cole aqui o token recebido no e-mail
+
+POST {{baseUrl}}/auth/redefinir-senha
+Content-Type: application/json
+
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjI2LCJlbWFpbCI6ImJyYXlhbnN0aWxvc0BnbWFpbC5jb20iLCJ0eXBlIjoicGFzc3dvcmRfcmVzZXQiLCJpYXQiOjE3ODc4Nzk4OTIsImV4cCI6MTc4Nzg4MDc5Mn0.lwMIq8x5J8sMmhL2fs5ixRAd6vZy8iXGo_DNq0FkvM0",
+    "novaSenha": "NovaSenha123!"
+}
+
+
+### ======================================================
+### LOGIN COM A NOVA SENHA
+### ======================================================
+
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+    "user_email": "brayanstilos@gmail.com",
+    "user_senha": "NovaSenha123!"
+}

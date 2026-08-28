@@ -7,6 +7,7 @@ import { UserRepositorio } from '../users/userRepositorio';
 import { ConfigModule } from '@nestjs/config';
 import jwtConfig from './config/jwt.config';
 import { JwtModule } from '@nestjs/jwt';
+import { MailModule } from '../mail/mail.module';
 
 
 @Global()
@@ -17,7 +18,8 @@ import { JwtModule } from '@nestjs/jwt';
       isGlobal: true,
    }),
        ConfigModule.forFeature(jwtConfig),
-       JwtModule.registerAsync(jwtConfig.asProvider())
+       JwtModule.registerAsync(jwtConfig.asProvider()),
+       MailModule
     ],
     controllers: [AuthController],
     providers: [ 
