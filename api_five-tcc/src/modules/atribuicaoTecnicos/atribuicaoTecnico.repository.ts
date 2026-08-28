@@ -260,9 +260,25 @@ export class AtribuicaoTecnicoRepository {
         try {
             const vinculo = await this.db
                 .select({
-                    id_ocor_user: ocorrencias_user.id_ocor_user,
+                    vinculo: ocorrencias_user.id_ocor_user,
+                    ocorrencia: ocorrencias.id_ocor,
+                    tecnico: User.user_nome
                 })
                 .from(ocorrencias_user)
+                .innerJoin(
+                    ocorrencias,
+                    eq(
+                        ocorrencias_user.ocorrencia_id,
+                        ocorrencias.id_ocor,
+                    ),
+                )
+                .innerJoin(
+                    User,
+                    eq(
+                        ocorrencias_user.user_id,
+                        User.id_user,
+                    ),
+                )
 
             return vinculo;
         } catch (error) {
