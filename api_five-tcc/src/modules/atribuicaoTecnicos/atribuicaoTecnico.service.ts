@@ -20,4 +20,14 @@ export class AtribuicaoTecnicoService {
         return this.atribuicaoTecnicoRepository.listarOcorrenciaDoTecnico(idUser);
     }
 
+     async desvincularTecnico(idOcorUser: number) {
+        return this.atribuicaoTecnicoRepository.desvincularTecnico(idOcorUser);
+    }
+
+    
+     async listarVinculos() {
+        return this.atribuicaoTecnicoRepository.listarVinculos();
+    }
+
+
 }

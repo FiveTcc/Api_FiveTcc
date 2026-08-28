@@ -1,7 +1,7 @@
 import { BadRequestException, Inject, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { DRIZZLE } from "src/db/database/database.constants";
 import type { DrizzleDB } from "src/db/types/drizzleDB";
-import { AtribuirTecnicoDto } from "./dtos/atribuirTecnicoDtos";
+import { AtribuirTecnicoDto, TipoAtuacao } from "./dtos/atribuirTecnicoDtos";
 import { OcorrenciaRepository } from "../ocorrencias/ocorrencia.repository";
 import { Ambientes, Componentes, ocorrencias, ocorrencias_user, User } from "src/db/schemas";
 import { and, desc, eq } from "drizzle-orm";
@@ -38,7 +38,8 @@ export class AtribuicaoTecnicoRepository {
                 .values({
                     ocorrencia_id: idOcor,
                     user_id: dto.id_user,
-                    ocor_user_tipo: 1,
+                    ocor_user_tipo: dto.tipo_atuacao ?? TipoAtuacao.RESPONSAVEL,
+                    ocor_user_obs: dto.observacoes,
                 });
 
             return {
@@ -196,6 +197,84 @@ export class AtribuicaoTecnicoRepository {
         }
     }
 
+    async desvincularTecnico(idOcorUser: number) {
+        try {
+            // Busca o vínculo
+            const [vinculo] = await this.db
+                .select({
+                    id_ocor_user: ocorrencias_user.id_ocor_user,
+                    ocorrencia_id: ocorrencias_user.ocorrencia_id,
+                    user_id: ocorrencias_user.user_id,
+                })
+                .from(ocorrencias_user)
+                .where(
+                    eq(
+                        ocorrencias_user.id_ocor_user,
+                        idOcorUser
+                    )
+                );
+
+            // Verifica se o vínculo existe
+            if (!vinculo) {
+                throw new NotFoundException(
+                    'Vínculo entre técnico e ocorrência não encontrado'
+                );
+            }
+
+            // Verifica se a ocorrência pode sofrer alteração
+            await this.verificaOcorrenciaPodeDesvincularTecnico(
+                vinculo.ocorrencia_id
+            );
+
+            // Remove o vínculo
+            await this.db
+                .delete(ocorrencias_user)
+                .where(
+                    eq(
+                        ocorrencias_user.id_ocor_user,
+                        idOcorUser
+                    )
+                );
+
+            return {
+                message: 'Técnico desvinculado da ocorrência com sucesso'
+            };
+
+        } catch (error) {
+
+            if (
+                error instanceof NotFoundException ||
+                error instanceof BadRequestException
+            ) {
+                throw error;
+            }
+
+            throw new InternalServerErrorException(
+                'Erro ao desvincular técnico da ocorrência'
+            );
+        }
+    }
+
+
+    async listarVinculos() {
+        try {
+            const vinculo = await this.db
+                .select({
+                    id_ocor_user: ocorrencias_user.id_ocor_user,
+                })
+                .from(ocorrencias_user)
+
+            return vinculo;
+        } catch (error) {
+
+            throw new InternalServerErrorException(
+                'Erro ao listar vinculos'
+            );
+        }
+
+    }
+
+
 
 
 
@@ -276,10 +355,38 @@ export class AtribuicaoTecnicoRepository {
             );
         }
 
+        return ocorrencia;
+    }
 
+    async verificaOcorrenciaPodeDesvincularTecnico(idOcor: number) {
+        const [ocorrencia] = await this.db
+            .select({
+                id_ocor: ocorrencias.id_ocor,
+                ocor_status: ocorrencias.ocor_status,
+            })
+            .from(ocorrencias)
+            .where(
+                eq(ocorrencias.id_ocor, idOcor)
+            );
+
+        if (!ocorrencia) {
+            throw new NotFoundException(
+                'Ocorrência não encontrada'
+            );
+        }
+
+        if (
+            ocorrencia.ocor_status === OcorrenciaStatus.CONCLUIDA ||
+            ocorrencia.ocor_status === OcorrenciaStatus.CANCELADA
+        ) {
+            throw new BadRequestException(
+                'Não é possível desvincular um técnico de uma ocorrência concluída ou cancelada'
+            );
+        }
 
         return ocorrencia;
     }
+
 
 
 }

@@ -47,4 +47,19 @@ export class AtribuicaoController {
     return this.atribuicaoService.listarOcorrenciaDoTecnico(idUser);
   }
 
+  @Delete('/:idOcorUser/desvincular')
+  async desvincularTecnico(
+    @Param('idOcorUser', ParseIntPipe) idOcorUser: number
+  ) {
+    return this.atribuicaoService.desvincularTecnico(idOcorUser);
+  }
+
+
+
+   // Listar ocorrências do técnico
+  @Get('listarVinculos')
+  async listarVinculos() {
+    return this.atribuicaoService.listarVinculos();
+  }
+
 }

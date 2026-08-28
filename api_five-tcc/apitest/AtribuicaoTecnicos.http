@@ -1,17 +1,30 @@
 @baseUrl = http://localhost:3000
 
 
-POST {{baseUrl}}/atribuicaoTecnicos/6/vincularTecnico
+POST {{baseUrl}}/atribuicaoTecnicos/30/vincularTecnico
 Content-Type: application/json
 
 {
-  "id_user": 3
+  "id_user": 8,
+  "observacoes": "Verificar o equipamento.",
+  "tipo_atuacao": 1
 }
 
 ###
 
-GET {{baseUrl}}/atribuicaoTecnicos/ocorrencia/6/tecnicos
+GET {{baseUrl}}/atribuicaoTecnicos/ocorrencia/22/tecnicos
 
 ###
 
-GET {{baseUrl}}/atribuicaoTecnicos/tecnico/2/ocorrencias
+GET {{baseUrl}}/atribuicaoTecnicos/tecnico/8/ocorrencias
+
+###
+DELETE {{baseUrl}}/atribuicaoTecnicos/31/desvincular
+
+###
+
+
+
+
+// Não considerar, apenas para um teste específico
+GET {{baseUrl}}/atribuicaoTecnicos/listarVinculos
