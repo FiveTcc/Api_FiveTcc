@@ -119,7 +119,7 @@ export class AuthServices {
 
         console.log('TOKEN DE RECUPERAÇÃO:', token);
 
-        const linkRecuperacao = `${process.env.FRONTEND_URL}/redefinir-senha?token=${token}`;
+        const linkRecuperacao = `${process.env.FRONTEND_URL}/nova-senha?token=${token}`;
 
         await this.mailService.enviarRecuperacao(
             user.user_email,
