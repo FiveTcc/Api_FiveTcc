@@ -49,11 +49,11 @@ PATCH {{baseUrl}}/ocorrencias/encerrarOcorrencia/45
 
 
 ###
-PATCH {{baseUrl}}/ocorrencias/cancelarOcorrencia/187756
+PATCH {{baseUrl}}/ocorrencias/cancelarOcorrencia/16
 
 ###
 
-PATCH {{baseUrl}}/ocorrencias/alterarStatus/70
+PATCH {{baseUrl}}/ocorrencias/alterarStatus/16
 Content-Type: application/json
 
 {

@@ -1,24 +1,39 @@
-import { Injectable } from "@nestjs/common";
-import { DashboardRepository } from "./dashboard.repository";
+import { Injectable } from '@nestjs/common';
+
+import { DashboardRepository } from './dashboard.repository';
+import { DashboardFiltroDto } from './dto/dashboard.filtroDto';
 
 @Injectable()
 export class DashboardService {
-    constructor( private readonly dashboardRepository: DashboardRepository) { }
+    constructor(
+        private readonly dashboardRepository: DashboardRepository,
+    ) { }
 
-    async dashboardTotal() {
-        return await this.dashboardRepository.dashboardTotal();
+    async resumo(filtro: DashboardFiltroDto) {
+        const resultado =
+            await this.dashboardRepository.resumo(filtro);
+
+        return resultado;
     }
 
-    async dashboardUsuarios() {
-        return await this.dashboardRepository.dashboardUsuarios();
+    async distribuicao() {
+        const resultado =
+            await this.dashboardRepository.distribuicao();
+
+        return {
+            ocorrencias: resultado,
+        };
     }
 
-    async dashboardAmbientes() {
-        return await this.dashboardRepository.dashboardAmbientes();
+    async resumoUsuarios() {
+        return this.dashboardRepository.resumoUsuarios();
     }
 
-    async dashboardComponentes() {
-        return await this.dashboardRepository.dashboardComponentes();
+    async resumoAmbientes() {
+        return this.dashboardRepository.resumoAmbientes();
     }
 
+    async resumoComponentes() {
+        return this.dashboardRepository.resumoComponentes();
+    }
 }

@@ -1,79 +1,193 @@
-import { Inject, Injectable } from "@nestjs/common";
-import { sql } from "drizzle-orm";
-import { DRIZZLE } from "src/db/database/database.constants";
-import { Ambientes, Componentes, User } from "src/db/schemas";
-import type { DrizzleDB } from "src/db/types/drizzleDB";
+import { Inject, Injectable } from '@nestjs/common';
+import { sql } from 'drizzle-orm';
+
+import { DRIZZLE } from 'src/db/database/database.constants';
+import {
+    Ambientes,
+    Componentes,
+    ocorrencias,
+    User,
+} from 'src/db/schemas';
+
+import type { DrizzleDB } from 'src/db/types/drizzleDB';
+import { DashboardFiltroDto } from './dto/dashboard.filtroDto';
 
 @Injectable()
 export class DashboardRepository {
-    constructor(@Inject(DRIZZLE) private readonly db: DrizzleDB) { }
+    constructor(
+        @Inject(DRIZZLE)
+        private readonly db: DrizzleDB,
+    ) { }
 
-    async dashboardTotal() {
-        const [usuarios, ambientes, componentes] = await Promise.all
-        ([
-            this.dashboardUsuarios(),
-            this.dashboardAmbientes(),
-            this.dashboardComponentes(),
+    async resumo(filtro: DashboardFiltroDto) {
+        const [
+            usuarios,
+            ambientes,
+            componentes,
+            //ocorrencias,
+        ] = await Promise.all([
+            this.resumoUsuarios(),
+            this.resumoAmbientes(),
+            this.resumoComponentes(),
+           // this.resumoOcorrencias(filtro),
         ]);
 
         return {
-            ...usuarios,
-            ...ambientes,
-            ...componentes,
+            usuarios,
+            ambientes,
+            componentes,
+           // ocorrencias,
         };
     }
 
-    async dashboardUsuarios() {
+    async distribuicao() {
         const [resultado] = await this.db
             .select({
                 total: sql<number>`COUNT(*)`,
-                ativos: sql<number>`COALESCE(SUM(user_ativo = 1), 0)`,
-                inativos: sql<number>`COALESCE(SUM(user_ativo = 0), 0)`,
+
+                abertas: sql<number>`
+                    COALESCE(
+                        SUM(
+                            ${ocorrencias.ocor_status} = 'Aberta'
+                        ),
+                        0
+                    )
+                `,
+
+                andamento: sql<number>`
+                    COALESCE(
+                        SUM(
+                            ${ocorrencias.ocor_status} = 'Em andamento'
+                        ),
+                        0
+                    )
+                `,
+
+                concluidas: sql<number>`
+                    COALESCE(
+                        SUM(
+                            ${ocorrencias.ocor_status} = 'Concluida'
+                        ),
+                        0
+                    )
+                `,
+
+                canceladas: sql<number>`
+                    COALESCE(
+                        SUM(
+                            ${ocorrencias.ocor_status} = 'Cancelada'
+                        ),
+                        0
+                    )
+                `,
+
+                indefinidas: sql<number>`
+                    COALESCE(
+                        SUM(
+                            ${ocorrencias.ocor_status} NOT IN (
+                                'Aberta',
+                                'Em andamento',
+                                'Concluida',
+                                'Cancelada'
+                            )
+                        ),
+                        0
+                    )
+                `,
+            })
+            .from(ocorrencias);
+
+        return {
+            total: Number(resultado.total),
+            abertas: Number(resultado.abertas),
+            andamento: Number(resultado.andamento),
+            concluidas: Number(resultado.concluidas),
+            canceladas: Number(resultado.canceladas),
+            indefinidas: Number(resultado.indefinidas),
+        };
+    }
+
+    async resumoUsuarios() {
+        const [resultado] = await this.db
+            .select({
+                total: sql<number>`COUNT(*)`,
+
+                ativos: sql<number>`
+                    COALESCE(
+                        SUM(user_ativo = 1),
+                        0
+                    )
+                `,
+
+                inativos: sql<number>`
+                    COALESCE(
+                        SUM(user_ativo = 0),
+                        0
+                    )
+                `,
             })
             .from(User);
 
         return {
-            usuarios: {
-                total: Number(resultado.total),
-                ativos: Number(resultado.ativos),
-                inativos: Number(resultado.inativos),
-            },
+            total: Number(resultado.total),
+            ativos: Number(resultado.ativos),
+            inativos: Number(resultado.inativos),
         };
     }
 
-    async dashboardAmbientes() {
+    async resumoAmbientes() {
         const [resultado] = await this.db
             .select({
                 total: sql<number>`COUNT(*)`,
-                ativos: sql<number>`COALESCE(SUM(amb_ativo = 1), 0)`,
-                inativos: sql<number>`COALESCE(SUM(amb_ativo = 0), 0)`,
+
+                ativos: sql<number>`
+                    COALESCE(
+                        SUM(amb_ativo = 1),
+                        0
+                    )
+                `,
+
+                inativos: sql<number>`
+                    COALESCE(
+                        SUM(amb_ativo = 0),
+                        0
+                    )
+                `,
             })
             .from(Ambientes);
 
         return {
-            ambientes: {
-                total: Number(resultado.total),
-                ativos: Number(resultado.ativos),
-                inativos: Number(resultado.inativos),
-            },
+            total: Number(resultado.total),
+            ativos: Number(resultado.ativos),
+            inativos: Number(resultado.inativos),
         };
     }
 
-    async dashboardComponentes() {
+    async resumoComponentes() {
         const [resultado] = await this.db
             .select({
                 total: sql<number>`COUNT(*)`,
-                ativos: sql<number>`COALESCE(SUM(compo_ativo = 1), 0)`,
-                inativos: sql<number>`COALESCE(SUM(compo_ativo = 0), 0)`,
+
+                ativos: sql<number>`
+                    COALESCE(
+                        SUM(compo_ativo = 1),
+                        0
+                    )
+                `,
+
+                inativos: sql<number>`
+                    COALESCE(
+                        SUM(compo_ativo = 0),
+                        0
+                    )
+                `,
             })
             .from(Componentes);
 
         return {
-            componentes: {
-                total: Number(resultado.total),
-                ativos: Number(resultado.ativos),
-                inativos: Number(resultado.inativos),
-            },
+            total: Number(resultado.total),
+            ativos: Number(resultado.ativos),
+            inativos: Number(resultado.inativos),
         };
     }
 }
