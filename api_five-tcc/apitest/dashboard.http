@@ -1,4 +1,15 @@
 @baseUrl = http://localhost:3000
 
 
-GET {{baseUrl}}/dashboard/ocorrencias
+GET {{baseUrl}}/dashboard/ocorrencias/distribuicaoOcorrencias?inicio=2026-09-01&fim=2026-09-02
+
+
+### Dashboard Professor
+GET {{baseUrl}}/dashboard/professor
+
+### Dashboard Adm
+GET {{baseUrl}}/dashboard/administrador
+
+### Dashboard Tecnico
+GET {{baseUrl}}/dashboard/professor
+
