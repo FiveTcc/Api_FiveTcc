@@ -121,13 +121,45 @@ export class DashboardService {
         };
     }
 
-    async tecnico(
-        usuarioId: number,
+      async tecnico(
+        id: number,
         filtro: DashboardFiltroDto,
     ) {
         const periodo = this.validarPeriodo(filtro);
 
-        // consultas específicas do técnico
+        const [
+            distribuicaoStatus,
+            atividadesRecentes,
+        ] = await Promise.all([
+            this.dashboardRepository.distribuicaoOcorrenciasTecnico(
+                id,
+                periodo,
+            ),
+
+            this.dashboardRepository.ocorrenciasRecentesTecnico(
+                id,
+                periodo,
+            ),
+        ]);
+
+        return {
+            cards: {
+                minhasOcorrencias: distribuicaoStatus.total,
+                abertas: distribuicaoStatus.abertas,
+                emAndamento: distribuicaoStatus.andamento,
+                concluidas: distribuicaoStatus.concluidas,
+            },
+
+            distribuicaoStatus: {
+                total: distribuicaoStatus.total,
+                abertas: distribuicaoStatus.abertas,
+                andamento: distribuicaoStatus.andamento,
+                concluidas: distribuicaoStatus.concluidas,
+                canceladas: distribuicaoStatus.canceladas,
+            },
+
+            atividadesRecentes,
+        };
     }
 
 }

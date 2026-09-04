@@ -14,6 +14,7 @@ export enum OcorrenciaPrioridade {
     BAIXA = 'baixa',
     MEDIA = 'media',
     ALTA = 'alta',
+    CRITICA = 'critica'
 }
 
 export class CreateOcorrenciaDto {

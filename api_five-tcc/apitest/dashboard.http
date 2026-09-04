@@ -7,9 +7,12 @@ GET {{baseUrl}}/dashboard/ocorrencias/distribuicaoOcorrencias?inicio=2026-09-01&
 ### Dashboard Professor
 GET {{baseUrl}}/dashboard/professor
 
+
 ### Dashboard Adm
 GET {{baseUrl}}/dashboard/administrador
 
+
 ### Dashboard Tecnico
-GET {{baseUrl}}/dashboard/professor
+GET {{baseUrl}}/dashboard/tecnico
+
 

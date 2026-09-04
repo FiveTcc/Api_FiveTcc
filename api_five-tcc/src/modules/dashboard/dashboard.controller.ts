@@ -2,7 +2,7 @@ import {
     Controller,
     Get,
     Query,
-    Req,
+    Param,
 } from '@nestjs/common';
 
 import { DashboardService } from './dashboard.service';
@@ -13,15 +13,7 @@ export class DashboardController {
     constructor(
         private readonly dashboardService: DashboardService,
     ) {}
-
-    @Get('resumo')
-    async resumo(
-        @Query() filtro: DashboardFiltroDto,
-    ) {
-        return this.dashboardService.resumo(filtro);
-    }
-
-
+    
     @Get('administrador')
     administrador(
         @Query() filtro: DashboardFiltroDto,
@@ -36,13 +28,13 @@ export class DashboardController {
         return this.dashboardService.professor(filtro);
     }
 
-    @Get('tecnico')
+    @Get('tecnico/:id')
     tecnico(
         @Query() filtro: DashboardFiltroDto,
-        @Req() req,
+        @Param('id') id: number,
     ) {
         return this.dashboardService.tecnico(
-            req.user.id,
+            id,
             filtro,
         );
     }

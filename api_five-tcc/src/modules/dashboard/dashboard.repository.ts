@@ -20,7 +20,7 @@ export class DashboardRepository {
     constructor(
         @Inject(DRIZZLE)
         private readonly db: DrizzleDB,
-    ) {}
+    ) { }
 
     // =========================================================
     // USUÁRIOS
@@ -328,14 +328,14 @@ export class DashboardRepository {
     // =========================================================
 
     async distribuicaoOcorrenciasTecnico(
-        usuarioId: number,
+        id: number,
         periodo: PeriodoDashboard,
     ) {
 
         const condicoes: SQL[] = [
             eq(
                 ocorrencias_user.user_id,
-                usuarioId,
+                id,
             ),
         ];
 
@@ -425,14 +425,14 @@ export class DashboardRepository {
     // =========================================================
 
     async ocorrenciasRecentesTecnico(
-        usuarioId: number,
+        id: number,
         periodo: PeriodoDashboard,
     ) {
 
         const condicoes: SQL[] = [
             eq(
                 ocorrencias_user.user_id,
-                usuarioId,
+                id,
             ),
         ];
 
