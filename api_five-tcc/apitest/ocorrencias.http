@@ -11,14 +11,14 @@ GET  {{baseUrl}}/ocorrencias/listarOcorrenciaId/10
 
 POST {{baseUrl}}/ocorrencias/abrirOcorrencia
 Content-Type: application/json
-Authorization: {{Token}}
+Authorization: Bearer: {{Token}}
 
 {
   "ocor_nome": "roteador",
   "ocor_prioridade": "alta",
   "ocor_obs": "Não liga",
-  "componente_id": 3,
-  "ambiente_id": 2
+  "componente_id": 2,
+  "ambiente_id": 1
 }
 
 ###
