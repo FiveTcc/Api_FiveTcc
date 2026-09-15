@@ -1,4 +1,4 @@
-import { Controller, Get, Param, ParseIntPipe, Patch, Query, ParseEnumPipe, BadRequestException } from "@nestjs/common";
+import { Controller, Get, Param, ParseIntPipe, Patch, Query, ParseEnumPipe, BadRequestException, Req, UseGuards } from "@nestjs/common";
 import { OcorrenciaService } from "./ocorrencia.service"
 import { Post, Body } from "@nestjs/common";
 import { CreateOcorrenciaDto, OcorrenciaStatus, OcorrenciaPrioridade } from "./dtos/createocorrenciaDto";
@@ -7,7 +7,12 @@ import { AssociateOcorCompDto } from "./dtos/associate.ocorCompDto";
 import { AssociateOcorAmbDto } from "./dtos/associate.ocorAmbDto";
 import { AdicionarObservacaoDto } from "./dtos/add.ocorrenciaObsDto";
 import { AlterarOcorrenciaPrioridadeDto } from "./dtos/alter.ocorPriorDto";
+import type { Request } from "express";
+import { AuthTokenGuard } from "../auth/guards/auth-token.guad";
 
+
+
+@UseGuards(AuthTokenGuard)
 @Controller('ocorrencias')
 export class OcorrenciaController {
     constructor(private readonly ocorrenciaService: OcorrenciaService) { }
@@ -29,9 +34,13 @@ export class OcorrenciaController {
     // Rota para abrir ocorrência
     @Post('/abrirOcorrencia')
     async abrirOcorrencia(
-        @Body() dto: CreateOcorrenciaDto
+        @Body() dto: CreateOcorrenciaDto,
+        @Req() req: Request,
     ) {
-        return await this.ocorrenciaService.abrirOcorrencia(dto);
+        return await this.ocorrenciaService.abrirOcorrencia(
+            dto,
+            req['user'].id_user,
+        );
     }
 
     // Rota para editar ocorrência

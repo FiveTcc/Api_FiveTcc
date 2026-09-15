@@ -1,0 +1,2 @@
+ALTER TABLE `ocorrencias` ADD `id_user` int NOT NULL;--> statement-breakpoint
+ALTER TABLE `ocorrencias` ADD CONSTRAINT `ocorrencias_id_user_users_id_user_fk` FOREIGN KEY (`id_user`) REFERENCES `users`(`id_user`) ON DELETE no action ON UPDATE no action;

@@ -1,4 +1,6 @@
 @baseUrl = http://localhost:3000
+@Token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjI2LCJlbWFpbCI6ImJyYXlhbnN0aWxvc0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3ODk0MzM5OTAsImV4cCI6MTc4OTQzNzU5MCwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDozMDAwIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDozMDAwIn0.L7KBaiagl9K9hzD2iSceX8Ka8oFdlUxqa-Q9LIGW-d0
+
 
 GET {{baseUrl}}/ocorrencias/listarOcorrencia
 
@@ -9,6 +11,7 @@ GET  {{baseUrl}}/ocorrencias/listarOcorrenciaId/10
 
 POST {{baseUrl}}/ocorrencias/abrirOcorrencia
 Content-Type: application/json
+Authorization: {{Token}}
 
 {
   "ocor_nome": "roteador",

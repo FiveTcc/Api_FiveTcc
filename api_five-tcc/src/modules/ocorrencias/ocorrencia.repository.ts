@@ -54,7 +54,7 @@ export class OcorrenciaRepository {
     }
 
 
-    async abrirOcorrencia(dto: CreateOcorrenciaDto) {
+    async abrirOcorrencia(dto: CreateOcorrenciaDto , idUser : number) {
         try {
 
             // Verifica se o componente existe
@@ -72,6 +72,7 @@ export class OcorrenciaRepository {
                     ocor_obs: dto.ocor_obs,
                     componente_id: dto.componente_id,
                     ambiente_id: dto.ambiente_id,
+                    id_user: idUser
                 });
 
             return {

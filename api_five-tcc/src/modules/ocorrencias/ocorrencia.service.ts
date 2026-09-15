@@ -18,8 +18,8 @@ export class OcorrenciaService {
     }
 
     // Método para criar ocorrência
-    async abrirOcorrencia(dto: CreateOcorrenciaDto) {
-        return await this.ocorrenciaRepository.abrirOcorrencia(dto);
+    async abrirOcorrencia(dto: CreateOcorrenciaDto , idUser: number) {
+        return await this.ocorrenciaRepository.abrirOcorrencia(dto, idUser);
     }
 
     // Método para editar ocorrência

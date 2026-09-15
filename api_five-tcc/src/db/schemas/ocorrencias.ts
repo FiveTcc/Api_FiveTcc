@@ -8,6 +8,7 @@ import {mysqlTable,
 import { sql } from 'drizzle-orm';
 import {Ambientes} from "./Ambiente";
 import { Componentes } from './componentes';
+import { User } from './User';
 
 export const ocorrencias = mysqlTable('ocorrencias',{
 id_ocor: int('id_ocorrencia').autoincrement().primaryKey(),
@@ -20,7 +21,9 @@ criado_em: datetime("criado_em").notNull().default(sql`CURRENT_TIMESTAMP`),
 encerrado_em: datetime("encerrado_em"),
 ocor_obs: varchar('ocorre_obs', { length: 255 }),
 componente_id: int('componente_id').notNull().references(() => Componentes.id_compo),  
-ambiente_id: int('ambiente_id').notNull().references(() => Ambientes.id_amb)
+ambiente_id: int('ambiente_id').notNull().references(() => Ambientes.id_amb),
+id_user: int('id_user').notNull().references(() => User.id_user)
+
 });
 
 export type ocorrencias = typeof ocorrencias.$inferSelect;
