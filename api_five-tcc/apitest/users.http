@@ -1,8 +1,5 @@
 @baseUrl = http://localhost:3000
-@Token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjI2LCJlbWFpbCI6ImJyYXlhbnN0aWxvc0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3ODk0MzM5OTAsImV4cCI6MTc4OTQzNzU5MCwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDozMDAwIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDozMDAwIn0.L7KBaiagl9K9hzD2iSceX8Ka8oFdlUxqa-Q9LIGW-d0
-### ======================================================
-### USUÁRIOS
-### ======================================================
+@Token = 
 
 ### Listar todos os usuarios
 GET {{baseUrl}}/usuarios/listarUser
@@ -64,3 +61,41 @@ Content-Type: application/json
   "user_email": "admin@gmail.com",
   "user_telefone": "(18) 99999-9999"
 }
+
+
+
+
+
+
+
+
+
+
+### Cadastrar usuario
+POST {{baseUrl}}/usuarios/cadastrarUser
+Authorization: Bearer {{Token}}
+Content-Type: application/json
+
+{
+  "user_nome": "Mauricio",
+  "user_email": "admin@teste.com",
+  "user_senha": "SuaSenha123@",
+  "user_tel": "(18)99165-3675",
+  "user_tipo": "admin"
+}
+
+
+### Professor
+### Cadastrar usuario
+POST {{baseUrl}}/usuarios/cadastrarUser
+Authorization: Bearer {{Token}}
+Content-Type: application/json
+
+{
+  "user_nome": "Professor",
+  "user_email": "professor@gmail.com",
+  "user_senha": "Professor!234",
+  "user_tel": "(18)99478-3674",
+  "user_tipo": "professor"
+}
+  

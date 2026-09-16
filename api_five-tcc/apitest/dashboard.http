@@ -1,18 +1,28 @@
 @baseUrl = http://localhost:3000
+@Token = 
+{
+  "user_email": "admin@teste.com",
+  "user_senha": "SuaSenha123@"
+}
 
+### Login como Tecnico
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
 
-GET {{baseUrl}}/dashboard/ocorrencias/distribuicaoOcorrencias?inicio=2026-09-01&fim=2026-09-02
+{
+  "user_email": "maumau@gmail.com",
+  "user_senha": "Mau0609!"
+}
 
+### Login como Professor
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
 
-### Dashboard Professor
-GET {{baseUrl}}/dashboard/professor
+{
+  "user_email": "professor@gmail.com",
+  "user_senha": "Professor!234"
+}
 
-
-### Dashboard Adm
-GET {{baseUrl}}/dashboard/administrador
-
-
-### Dashboard Tecnico
-GET {{baseUrl}}/dashboard/tecnico
-
-
+### Dashboard
+GET {{baseUrl}}/dashboard
+Authorization: Bearer {{Token}}

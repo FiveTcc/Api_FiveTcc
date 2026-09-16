@@ -1,7 +1,5 @@
 @baseUrl = http://localhost:3000
-@Token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiYWRtQDFnbWFpbC5jb20iLCJpYXQiOjE3ODcwOTc4MzksImV4cCI6MTc4NzEwMTQzOSwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDozMDAwIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDozMDAwIn0.VIDj-d10xty7NRQJPEA_B2TKqBX8PiUEUHjUPkTy8sc
-
-### ======================================================
+@Token = 
 ### AMBIENTES
 ### ======================================================
 

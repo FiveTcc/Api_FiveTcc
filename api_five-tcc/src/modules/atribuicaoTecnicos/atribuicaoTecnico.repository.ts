@@ -5,7 +5,7 @@ import { AtribuirTecnicoDto, TipoAtuacao } from "./dtos/atribuirTecnicoDtos";
 import { OcorrenciaRepository } from "../ocorrencias/ocorrencia.repository";
 import { Ambientes, Componentes, ocorrencias, ocorrencias_user, User } from "src/db/schemas";
 import { and, desc, eq } from "drizzle-orm";
-import { UserTipo } from "../users/dtos/userDto";
+import { UserTipo } from "../common/enums/userTipo.enum";
 import { OcorrenciaStatus } from "../ocorrencias/dtos/createocorrenciaDto";
 
 @Injectable()

@@ -1,165 +1,96 @@
-import {
-    BadRequestException,
-    Injectable,
-} from '@nestjs/common';
-
+import { Injectable, BadRequestException } from '@nestjs/common';
+import { UserTipo } from '../common/enums/userTipo.enum'; 
 import { DashboardRepository } from './dashboard.repository';
-import { DashboardFiltroDto } from './dto/dashboard.filtroDto';
-
-export interface PeriodoDashboard {
-    inicio?: Date;
-    fim?: Date;
-}
 
 @Injectable()
 export class DashboardService {
-    constructor(
-        private readonly dashboardRepository: DashboardRepository,
-    ) {}
+  constructor(private readonly dashboardRepository: DashboardRepository) {}
 
-    async resumo(filtro: DashboardFiltroDto) {
-        const periodo = this.validarPeriodo(filtro);
-
-        const [
-            usuarios,
-            ambientes,
-            componentes,
-            ocorrencias,
-        ] = await Promise.all([
-            this.dashboardRepository.resumoUsuarios(),
-            this.dashboardRepository.resumoAmbientes(),
-            this.dashboardRepository.resumoComponentes(),
-            this.dashboardRepository.distribuicaoOcorrencias(periodo),
-        ]);
-
-        return {
-            usuarios,
-            ambientes,
-            componentes,
-            ocorrencias,
-        };
+  async getDashboardData(userId: number, tipo: UserTipo) {
+    switch (tipo) {
+      case UserTipo.ADMINISTRADOR:
+        return this.getAdminDashboard();
+      case UserTipo.TECNICO:
+        return this.getTecnicoDashboard(userId);
+      case UserTipo.PROFESSOR:
+        return this.getProfessorDashboard(userId);
+      default:
+        throw new BadRequestException('Nível de acesso não suportado');
     }
+  }
 
-    private validarPeriodo(
-        filtro: DashboardFiltroDto,
-    ): PeriodoDashboard {
-        const inicio = filtro.inicio
-            ? new Date(filtro.inicio)
-            : undefined;
+  // ---------- Administrador: visão geral do sistema ----------
+  private async getAdminDashboard() {
+    const [
+      ocorrenciasAbertas,
+      ocorrenciasEncerradas,
+      tempoMedioAtendimento,
+      ocorrenciasPorPrioridade,
+      topTecnicos,
+      ambientesComMaisProblemas,
+      componentesComMaisFalhas,
+    ] = await Promise.all([
+      this.dashboardRepository.countOcorrenciasAbertas(),
+      this.dashboardRepository.countOcorrenciasEncerradas(),
+      this.dashboardRepository.getTempoMedioAtendimento(),
+      this.dashboardRepository.getOcorrenciasPorPrioridade(),
+      this.dashboardRepository.getTopTecnicos(),
+      this.dashboardRepository.getAmbientesComMaisProblemas(),
+      this.dashboardRepository.getComponentesComMaisFalhas(),
+    ]);
 
-        const fim = filtro.fim
-            ? new Date(filtro.fim)
-            : undefined;
+    return {
+      escopo: 'administrador' as const,
+      ocorrenciasAbertas,
+      ocorrenciasEncerradas,
+      tempoMedioAtendimento,
+      ocorrenciasPorPrioridade,
+      topTecnicos,
+      ambientesComMaisProblemas,
+      componentesComMaisFalhas,
+    };
+  }
 
-        if (inicio && fim && inicio > fim) {
-            throw new BadRequestException(
-                'A data inicial não pode ser maior que a data final.',
-            );
-        }
+  // ---------- Técnico: visão focada no próprio trabalho ----------
+  private async getTecnicoDashboard(tecnicoId: number) {
+    const [
+      minhasAbertas,
+      minhasEncerradas,
+      tempoMedioProprio,
+      minhasPorPrioridade,
+      ultimasAtribuidas,
+    ] = await Promise.all([
+      this.dashboardRepository.countOcorrenciasAbertasPorTecnico(tecnicoId),
+      this.dashboardRepository.countOcorrenciasEncerradasPorTecnico(tecnicoId),
+      this.dashboardRepository.getTempoMedioAtendimentoPorTecnico(tecnicoId),
+      this.dashboardRepository.getOcorrenciasPorPrioridadePorTecnico(tecnicoId),
+      this.dashboardRepository.getUltimasOcorrenciasAtribuidas(tecnicoId),
+    ]);
 
-        if (fim) {
-            fim.setHours(23, 59, 59, 999);
-        }
+    return {
+      escopo: 'tecnico' as const,
+      minhasAbertas,
+      minhasEncerradas,
+      tempoMedioProprio,
+      minhasPorPrioridade,
+      ultimasAtribuidas,
+    };
+  }
 
-        return {
-            inicio,
-            fim,
-        };
-    }
+  // ---------- Professor / usuário comum: só as próprias ocorrências ----------
+  private async getProfessorDashboard(usuarioId: number) {
+    const [minhasOcorrenciasAbertas, statusResumo, ultimasOcorrencias] =
+      await Promise.all([
+        this.dashboardRepository.countOcorrenciasAbertasPorUsuario(usuarioId),
+        this.dashboardRepository.getResumoStatusPorUsuario(usuarioId),
+        this.dashboardRepository.getUltimasOcorrenciasPorUsuario(usuarioId),
+      ]);
 
-
-    async administrador(filtro: DashboardFiltroDto) {
-        const periodo = this.validarPeriodo(filtro);
-
-        const [
-            usuarios,
-            ambientes,
-            componentes,
-            ocorrencias,
-            atividades,
-        ] = await Promise.all([
-            this.dashboardRepository.resumoUsuarios(),
-            this.dashboardRepository.resumoAmbientes(),
-            this.dashboardRepository.resumoComponentes(),
-            this.dashboardRepository.distribuicaoOcorrencias(periodo),
-            this.dashboardRepository.ocorrenciasRecentes(periodo),
-        ]);
-
-        return {
-            usuarios,
-            ambientes,
-            componentes,
-            ocorrencias,
-            atividadesRecentes: atividades,
-        };
-    }
-
-    async professor(filtro: DashboardFiltroDto) {
-        const periodo = this.validarPeriodo(filtro);
-
-        const [
-            ocorrencias,
-            atividades,
-        ] = await Promise.all([
-            this.dashboardRepository.distribuicaoOcorrencias(periodo),
-            this.dashboardRepository.ocorrenciasRecentes(periodo),
-        ]);
-
-        return {
-            cards: {
-                abertas: ocorrencias.abertas,
-                prioridadeMaxima:
-                    await this.dashboardRepository
-                        .ocorrenciasPrioridadeMaxima(periodo),
-                resolvidas: ocorrencias.concluidas,
-                total: ocorrencias.total,
-            },
-
-            distribuicaoStatus: ocorrencias,
-
-            atividadesRecentes: atividades,
-        };
-    }
-
-      async tecnico(
-        id: number,
-        filtro: DashboardFiltroDto,
-    ) {
-        const periodo = this.validarPeriodo(filtro);
-
-        const [
-            distribuicaoStatus,
-            atividadesRecentes,
-        ] = await Promise.all([
-            this.dashboardRepository.distribuicaoOcorrenciasTecnico(
-                id,
-                periodo,
-            ),
-
-            this.dashboardRepository.ocorrenciasRecentesTecnico(
-                id,
-                periodo,
-            ),
-        ]);
-
-        return {
-            cards: {
-                minhasOcorrencias: distribuicaoStatus.total,
-                abertas: distribuicaoStatus.abertas,
-                emAndamento: distribuicaoStatus.andamento,
-                concluidas: distribuicaoStatus.concluidas,
-            },
-
-            distribuicaoStatus: {
-                total: distribuicaoStatus.total,
-                abertas: distribuicaoStatus.abertas,
-                andamento: distribuicaoStatus.andamento,
-                concluidas: distribuicaoStatus.concluidas,
-                canceladas: distribuicaoStatus.canceladas,
-            },
-
-            atividadesRecentes,
-        };
-    }
-
+    return {
+      escopo: 'professor' as const,
+      minhasOcorrenciasAbertas,
+      statusResumo,
+      ultimasOcorrencias,
+    };
+  }
 }

@@ -10,11 +10,7 @@ import {
 } from 'class-validator';
 import { Transform } from 'class-transformer';
 
-export enum UserTipo {
-    ADMIN = 'admin',
-    TECNICO = 'tecnico',
-    FUNCIONARIO = 'funcionario',
-}
+import { UserTipo } from 'src/modules/common/enums/userTipo.enum';
 
 export class CreateUserDto {
 

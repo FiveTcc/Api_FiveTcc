@@ -1,508 +1,197 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { and, desc, eq, gte, lte, sql, type SQL } from 'drizzle-orm';
-
-import { DRIZZLE } from 'src/db/database/database.constants';
-
-import {
-    Ambientes,
-    Componentes,
-    ocorrencias,
-    ocorrencias_user,
-    User,
-} from 'src/db/schemas';
-
-import type { DrizzleDB } from 'src/db/types/drizzleDB';
-
-import type { PeriodoDashboard } from './dashboard.service';
+import { Injectable, Inject } from '@nestjs/common';
+import { eq, and, sql, desc } from 'drizzle-orm';
+import { ocorrencias, ocorrencias_user  } from 'src/db/schemas'; 
+import { DRIZZLE } from "src/db/database/database.constants";
+import type { DrizzleDB } from "src/db/types/drizzleDB";
 
 @Injectable()
 export class DashboardRepository {
-    constructor(
-        @Inject(DRIZZLE)
-        private readonly db: DrizzleDB,
-    ) { }
-
-    // =========================================================
-    // USUÁRIOS
-    // =========================================================
-
-    async resumoUsuarios() {
-
-        const [resultado] = await this.db
-            .select({
-                total: sql<number>`COUNT(*)`,
-
-                ativos: sql<number>`
-                    COALESCE(
-                        SUM(user_ativo = 1),
-                        0
-                    )
-                `,
-
-                inativos: sql<number>`
-                    COALESCE(
-                        SUM(user_ativo = 0),
-                        0
-                    )
-                `,
-            })
-            .from(User);
-
-        return {
-            total: Number(resultado.total),
-            ativos: Number(resultado.ativos),
-            inativos: Number(resultado.inativos),
-        };
-    }
-
-    // =========================================================
-    // AMBIENTES
-    // =========================================================
-
-    async resumoAmbientes() {
-
-        const [resultado] = await this.db
-            .select({
-                total: sql<number>`COUNT(*)`,
-
-                ativos: sql<number>`
-                    COALESCE(
-                        SUM(amb_ativo = 1),
-                        0
-                    )
-                `,
-
-                inativos: sql<number>`
-                    COALESCE(
-                        SUM(amb_ativo = 0),
-                        0
-                    )
-                `,
-            })
-            .from(Ambientes);
-
-        return {
-            total: Number(resultado.total),
-            ativos: Number(resultado.ativos),
-            inativos: Number(resultado.inativos),
-        };
-    }
-
-    // =========================================================
-    // COMPONENTES
-    // =========================================================
-
-    async resumoComponentes() {
-
-        const [resultado] = await this.db
-            .select({
-                total: sql<number>`COUNT(*)`,
-
-                ativos: sql<number>`
-                    COALESCE(
-                        SUM(compo_ativo = 1),
-                        0
-                    )
-                `,
-
-                inativos: sql<number>`
-                    COALESCE(
-                        SUM(compo_ativo = 0),
-                        0
-                    )
-                `,
-            })
-            .from(Componentes);
-
-        return {
-            total: Number(resultado.total),
-            ativos: Number(resultado.ativos),
-            inativos: Number(resultado.inativos),
-        };
-    }
-
-    // =========================================================
-    // DISTRIBUIÇÃO DAS OCORRÊNCIAS
-    // =========================================================
-
-    async distribuicaoOcorrencias(
-        periodo: PeriodoDashboard,
-    ) {
-
-        const condicoes: SQL[] = [];
-
-        if (periodo.inicio) {
-            condicoes.push(
-                gte(
-                    ocorrencias.criado_em,
-                    periodo.inicio,
-                ),
-            );
-        }
-
-        if (periodo.fim) {
-            condicoes.push(
-                lte(
-                    ocorrencias.criado_em,
-                    periodo.fim,
-                ),
-            );
-        }
-
-        const [resultado] = await this.db
-            .select({
-                total: sql<number>`
-                    COUNT(*)
-                `,
-
-                abertas: sql<number>`
-                    COALESCE(
-                        SUM(
-                            ${ocorrencias.ocor_status} = 'Aberta'
-                        ),
-                        0
-                    )
-                `,
-
-                andamento: sql<number>`
-                    COALESCE(
-                        SUM(
-                            ${ocorrencias.ocor_status} = 'Em andamento'
-                        ),
-                        0
-                    )
-                `,
-
-                concluidas: sql<number>`
-                    COALESCE(
-                        SUM(
-                            ${ocorrencias.ocor_status} = 'Concluida'
-                        ),
-                        0
-                    )
-                `,
-
-                canceladas: sql<number>`
-                    COALESCE(
-                        SUM(
-                            ${ocorrencias.ocor_status} = 'Cancelada'
-                        ),
-                        0
-                    )
-                `,
-            })
-            .from(ocorrencias)
-            .where(
-                condicoes.length > 0
-                    ? and(...condicoes)
-                    : undefined,
-            );
-
-        return {
-            total: Number(resultado.total),
-            abertas: Number(resultado.abertas),
-            andamento: Number(resultado.andamento),
-            concluidas: Number(resultado.concluidas),
-            canceladas: Number(resultado.canceladas),
-        };
-    }
-
-    // =========================================================
-    // OCORRÊNCIAS POR PRIORIDADE MÁXIMA
-    // =========================================================
-
-    async ocorrenciasPrioridadeMaxima(
-        periodo: PeriodoDashboard,
-    ) {
-
-        const condicoes: SQL[] = [
-            eq(
-                ocorrencias.ocor_prioridade,
-                'Critica',
-            ),
-        ];
-
-        if (periodo.inicio) {
-            condicoes.push(
-                gte(
-                    ocorrencias.criado_em,
-                    periodo.inicio,
-                ),
-            );
-        }
-
-        if (periodo.fim) {
-            condicoes.push(
-                lte(
-                    ocorrencias.criado_em,
-                    periodo.fim,
-                ),
-            );
-        }
-
-        const [resultado] = await this.db
-            .select({
-                total: sql<number>`COUNT(*)`,
-            })
-            .from(ocorrencias)
-            .where(and(...condicoes));
-
-        return Number(resultado.total);
-    }
-
-    // =========================================================
-    // ATIVIDADES RECENTES
-    // =========================================================
-
-    async ocorrenciasRecentes(
-        periodo: PeriodoDashboard,
-    ) {
-
-        const condicoes: SQL[] = [];
-
-        if (periodo.inicio) {
-            condicoes.push(
-                gte(
-                    ocorrencias.criado_em,
-                    periodo.inicio,
-                ),
-            );
-        }
-
-        if (periodo.fim) {
-            condicoes.push(
-                lte(
-                    ocorrencias.criado_em,
-                    periodo.fim,
-                ),
-            );
-        }
-
-        return this.db
-            .select({
-                id: ocorrencias.id_ocor,
-
-                nome: ocorrencias.ocor_nome,
-
-                componente: Componentes.compo_nome,
-
-                ambiente: Ambientes.amb_nome,
-
-                prioridade: ocorrencias.ocor_prioridade,
-
-                criadoEm: ocorrencias.criado_em,
-            })
-            .from(ocorrencias)
-
-            .innerJoin(
-                Componentes,
-                eq(
-                    ocorrencias.componente_id,
-                    Componentes.id_compo,
-                ),
-            )
-
-            .innerJoin(
-                Ambientes,
-                eq(
-                    ocorrencias.ambiente_id,
-                    Ambientes.id_amb,
-                ),
-            )
-
-            .where(
-                condicoes.length > 0
-                    ? and(...condicoes)
-                    : undefined,
-            )
-
-            .orderBy(
-                desc(ocorrencias.criado_em),
-            )
-
-            .limit(5);
-    }
-
-    // =========================================================
-    // OCORRÊNCIAS DO TÉCNICO
-    // =========================================================
-
-    async distribuicaoOcorrenciasTecnico(
-        id: number,
-        periodo: PeriodoDashboard,
-    ) {
-
-        const condicoes: SQL[] = [
-            eq(
-                ocorrencias_user.user_id,
-                id,
-            ),
-        ];
-
-        if (periodo.inicio) {
-            condicoes.push(
-                gte(
-                    ocorrencias.criado_em,
-                    periodo.inicio,
-                ),
-            );
-        }
-
-        if (periodo.fim) {
-            condicoes.push(
-                lte(
-                    ocorrencias.criado_em,
-                    periodo.fim,
-                ),
-            );
-        }
-
-        const [resultado] = await this.db
-            .select({
-                total: sql<number>`
-                    COUNT(DISTINCT ${ocorrencias.id_ocor})
-                `,
-
-                abertas: sql<number>`
-                    COALESCE(
-                        SUM(
-                            ${ocorrencias.ocor_status} = 'Aberta'
-                        ),
-                        0
-                    )
-                `,
-
-                andamento: sql<number>`
-                    COALESCE(
-                        SUM(
-                            ${ocorrencias.ocor_status} = 'Em andamento'
-                        ),
-                        0
-                    )
-                `,
-
-                concluidas: sql<number>`
-                    COALESCE(
-                        SUM(
-                            ${ocorrencias.ocor_status} = 'Concluida'
-                        ),
-                        0
-                    )
-                `,
-
-                canceladas: sql<number>`
-                    COALESCE(
-                        SUM(
-                            ${ocorrencias.ocor_status} = 'Cancelada'
-                        ),
-                        0
-                    )
-                `,
-            })
-            .from(ocorrencias_user)
-
-            .innerJoin(
-                ocorrencias,
-                eq(
-                    ocorrencias_user.ocorrencia_id,
-                    ocorrencias.id_ocor,
-                ),
-            )
-
-            .where(and(...condicoes));
-
-        return {
-            total: Number(resultado.total),
-            abertas: Number(resultado.abertas),
-            andamento: Number(resultado.andamento),
-            concluidas: Number(resultado.concluidas),
-            canceladas: Number(resultado.canceladas),
-        };
-    }
-
-    // =========================================================
-    // ATIVIDADES RECENTES DO TÉCNICO
-    // =========================================================
-
-    async ocorrenciasRecentesTecnico(
-        id: number,
-        periodo: PeriodoDashboard,
-    ) {
-
-        const condicoes: SQL[] = [
-            eq(
-                ocorrencias_user.user_id,
-                id,
-            ),
-        ];
-
-        if (periodo.inicio) {
-            condicoes.push(
-                gte(
-                    ocorrencias.criado_em,
-                    periodo.inicio,
-                ),
-            );
-        }
-
-        if (periodo.fim) {
-            condicoes.push(
-                lte(
-                    ocorrencias.criado_em,
-                    periodo.fim,
-                ),
-            );
-        }
-
-        return this.db
-            .select({
-                id: ocorrencias.id_ocor,
-
-                nome: ocorrencias.ocor_nome,
-
-                componente: Componentes.compo_nome,
-
-                ambiente: Ambientes.amb_nome,
-
-                prioridade: ocorrencias.ocor_prioridade,
-
-                status: ocorrencias.ocor_status,
-
-                criadoEm: ocorrencias.criado_em,
-            })
-
-            .from(ocorrencias_user)
-
-            .innerJoin(
-                ocorrencias,
-                eq(
-                    ocorrencias_user.ocorrencia_id,
-                    ocorrencias.id_ocor,
-                ),
-            )
-
-            .innerJoin(
-                Componentes,
-                eq(
-                    ocorrencias.componente_id,
-                    Componentes.id_compo,
-                ),
-            )
-
-            .innerJoin(
-                Ambientes,
-                eq(
-                    ocorrencias.ambiente_id,
-                    Ambientes.id_amb,
-                ),
-            )
-
-            .where(and(...condicoes))
-
-            .orderBy(
-                desc(ocorrencias.criado_em),
-            )
-
-            .limit(5);
-    }
+  constructor(@Inject(DRIZZLE)private readonly db: DrizzleDB) {}
+
+  // ===================== Métricas gerais (Admin) =====================
+
+  async countOcorrenciasAbertas() {
+    const [row] = await this.db
+      .select({ total: sql<number>`count(*)` })
+      .from(ocorrencias)
+      .where(eq(ocorrencias.ocor_status, 'Aberta'));
+    return row.total;
+  }
+
+  async countOcorrenciasEncerradas() {
+    const [row] = await this.db
+      .select({ total: sql<number>`count(*)` })
+      .from(ocorrencias)
+      .where(eq(ocorrencias.ocor_status, 'Concluida'));
+    return row.total;
+  }
+
+  async getTempoMedioAtendimento() {
+    const [row] = await this.db
+      .select({
+        mediaHoras: sql<number>`avg(timestampdiff(hour, ${ocorrencias.criado_em}, ${ocorrencias.encerrado_em}))`,
+      })
+      .from(ocorrencias)
+      .where(eq(ocorrencias.ocor_status, 'Concluida'));
+    return row.mediaHoras ?? 0;
+  }
+
+  async getOcorrenciasPorPrioridade() {
+    return this.db
+      .select({
+        prioridade: ocorrencias.ocor_prioridade,
+        total: sql<number>`count(*)`,
+      })
+      .from(ocorrencias)
+      .groupBy(ocorrencias.ocor_prioridade);
+  }
+
+  async getTopTecnicos(limit = 5) {
+    return this.db
+      .select({
+        tecnicoId: ocorrencias_user.user_id,
+        totalAtendimentos: sql<number>`count(*)`,
+      })
+      .from(ocorrencias_user)
+      .groupBy(ocorrencias_user.user_id)
+      .orderBy(desc(sql`count(*)`))
+      .limit(limit);
+  }
+
+  async getAmbientesComMaisProblemas(limit = 5) {
+    return this.db
+      .select({
+        ambienteId: ocorrencias.ambiente_id,
+        totalOcorrencias: sql<number>`count(*)`,
+      })
+      .from(ocorrencias)
+      .groupBy(ocorrencias.ambiente_id)
+      .orderBy(desc(sql`count(*)`))
+      .limit(limit);
+  }
+
+  async getComponentesComMaisFalhas(limit = 5) {
+    return this.db
+      .select({
+        componenteId: ocorrencias.componente_id,
+        totalFalhas: sql<number>`count(*)`,
+      })
+      .from(ocorrencias)
+      .groupBy(ocorrencias.componente_id)
+      .orderBy(desc(sql`count(*)`))
+      .limit(limit);
+  }
+
+  // ===================== Métricas do técnico =====================
+
+  async countOcorrenciasAbertasPorTecnico(tecnicoId: number) {
+    const [row] = await this.db
+      .select({ total: sql<number>`count(*)` })
+      .from(ocorrencias_user)
+      .innerJoin(ocorrencias, eq(ocorrencias.id_ocor, ocorrencias_user.ocorrencia_id))
+      .where(
+        and(
+          eq(ocorrencias_user.user_id, tecnicoId),
+          eq(ocorrencias.ocor_status, 'Aberta'),
+        ),
+      );
+    return row.total;
+  }
+
+  async countOcorrenciasEncerradasPorTecnico(tecnicoId: number) {
+    const [row] = await this.db
+      .select({ total: sql<number>`count(*)` })
+      .from(ocorrencias_user)
+      .innerJoin(ocorrencias, eq(ocorrencias.id_ocor, ocorrencias_user.ocorrencia_id))
+      .where(
+        and(
+          eq(ocorrencias_user.user_id, tecnicoId),
+          eq(ocorrencias.ocor_status, 'Concluida'),
+        ),
+      );
+    return row.total;
+  }
+
+  async getTempoMedioAtendimentoPorTecnico(tecnicoId: number) {
+    const [row] = await this.db
+      .select({
+        mediaHoras: sql<number>`avg(timestampdiff(hour, ${ocorrencias.criado_em}, ${ocorrencias.encerrado_em}))`,
+      })
+      .from(ocorrencias_user)
+      .innerJoin(ocorrencias, eq(ocorrencias.id_ocor, ocorrencias_user.ocorrencia_id))
+      .where(
+        and(
+          eq(ocorrencias_user.user_id, tecnicoId),
+          eq(ocorrencias.ocor_status, 'Concluida'),
+        ),
+      );
+    return row.mediaHoras ?? 0;
+  }
+
+  async getOcorrenciasPorPrioridadePorTecnico(tecnicoId: number) {
+    return this.db
+      .select({
+        prioridade: ocorrencias.ocor_prioridade,
+        total: sql<number>`count(*)`,
+      })
+      .from(ocorrencias_user)
+      .innerJoin(ocorrencias, eq(ocorrencias.id_ocor, ocorrencias_user.ocorrencia_id))
+      .where(eq(ocorrencias_user.user_id, tecnicoId))
+      .groupBy(ocorrencias.ocor_prioridade);
+  }
+
+  async getUltimasOcorrenciasAtribuidas(tecnicoId: number, limit = 5) {
+    return this.db
+      .select({
+        id: ocorrencias.id_ocor,
+        status: ocorrencias.ocor_status,
+        prioridade: ocorrencias.ocor_prioridade,
+        criadoEm: ocorrencias.criado_em,
+      })
+      .from(ocorrencias_user)
+      .innerJoin(ocorrencias, eq(ocorrencias.id_ocor, ocorrencias_user.ocorrencia_id))
+      .where(eq(ocorrencias_user.user_id, tecnicoId))
+      .orderBy(desc(ocorrencias.criado_em))
+      .limit(limit);
+  }
+
+  // ===================== Métricas do professor/usuário comum =====================
+
+  async countOcorrenciasAbertasPorUsuario(usuarioId: number) {
+    const [row] = await this.db
+      .select({ total: sql<number>`count(*)` })
+      .from(ocorrencias)
+      .where(
+        and(
+          eq(ocorrencias.id_user, usuarioId),
+          eq(ocorrencias.ocor_status, 'Aberta'),
+        ),
+      );
+    return row.total;
+  }
+
+  async getResumoStatusPorUsuario(usuarioId: number) {
+    return this.db
+      .select({
+        status: ocorrencias.ocor_status,
+        total: sql<number>`count(*)`,
+      })
+      .from(ocorrencias)
+      .where(eq(ocorrencias.id_user, usuarioId))
+      .groupBy(ocorrencias.ocor_status);
+  }
+
+  async getUltimasOcorrenciasPorUsuario(usuarioId: number, limit = 5) {
+    return this.db
+      .select({
+        id: ocorrencias.id_ocor,
+        status: ocorrencias.ocor_status,
+        prioridade: ocorrencias.ocor_prioridade,
+        criadoEm: ocorrencias.criado_em,
+      })
+      .from(ocorrencias)
+      .where(eq(ocorrencias.id_user, usuarioId))
+      .orderBy(desc(ocorrencias.criado_em))
+      .limit(limit);
+  }
 }
