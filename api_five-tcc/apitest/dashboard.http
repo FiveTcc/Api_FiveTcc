@@ -1,8 +1,12 @@
 @baseUrl = http://localhost:3000
 @Token = 
+### Login como Admin
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
 {
-  "user_email": "admin@teste.com",
-  "user_senha": "SuaSenha123@"
+  "user_email": "adm@1gmail.com",
+  "user_senha": "Adm!2000"
 }
 
 ### Login como Tecnico

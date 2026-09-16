@@ -5,7 +5,7 @@ GET {{baseUrl}}/ocorrencias/listarOcorrencia
 Authorization: Bearer: {{Token}}
 
 ###
-GET  {{baseUrl}}/ocorrencias/listarOcorrenciaId/10
+GET  {{baseUrl}}/ocorrencias/listarOcorrenciaId/7
 
 ###
 
