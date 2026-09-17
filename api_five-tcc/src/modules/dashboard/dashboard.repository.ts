@@ -155,7 +155,7 @@ export class DashboardRepository {
       .limit(limit);
   }
 
-  // ===================== Métricas do professor/usuário comum =====================
+  // ===================== Métricas do funcionario/usuário comum =====================
 
   async countOcorrenciasAbertasPorUsuario(usuarioId: number) {
     const [row] = await this.db
@@ -184,6 +184,7 @@ export class DashboardRepository {
   async getUltimasOcorrenciasPorUsuario(usuarioId: number, limit = 5) {
     return this.db
       .select({
+        nome: ocorrencias.ocor_nome,
         id: ocorrencias.id_ocor,
         status: ocorrencias.ocor_status,
         prioridade: ocorrencias.ocor_prioridade,

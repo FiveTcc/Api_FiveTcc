@@ -1,12 +1,13 @@
 @baseUrl = http://localhost:3000
-@Token = 
+@Token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjQ0LCJlbWFpbCI6ImRpb2dpdG9nb2lzQGdtYWlsLmNvbSIsInJvbGUiOiJmdW5jaW9uYXJpbyIsImlhdCI6MTc4OTYwODU4NSwiZXhwIjoxNzg5NjEyMTg1LCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjMwMDAiLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjMwMDAifQ.o2E6X-wJe7muJWeZjdYfrfoOapTzGVVzBVVyG8E-rV0
+
 ### Login como Admin
 POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "user_email": "adm@1gmail.com",
-  "user_senha": "Adm!2000"
+  "user_email": "brayanstilos@gmail.com",
+   "user_senha": "Bra3500#"
 }
 
 ### Login como Tecnico
@@ -18,13 +19,13 @@ Content-Type: application/json
   "user_senha": "Mau0609!"
 }
 
-### Login como Professor
+### Login como funcionario
 POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "user_email": "professor@gmail.com",
-  "user_senha": "Professor!234"
+  "user_email": "diogitogois@gmail.com",
+  "user_senha": "Diogo!234"
 }
 
 ### Dashboard

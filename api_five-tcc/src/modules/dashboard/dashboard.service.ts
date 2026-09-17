@@ -12,8 +12,8 @@ export class DashboardService {
         return this.getAdminDashboard();
       case UserTipo.TECNICO:
         return this.getTecnicoDashboard(userId);
-      case UserTipo.PROFESSOR:
-        return this.getProfessorDashboard(userId);
+      case UserTipo.FUNCIONARIO:
+        return this.getFuncionarioDashboard(userId);
       default:
         throw new BadRequestException('Nível de acesso não suportado');
     }
@@ -77,8 +77,8 @@ export class DashboardService {
     };
   }
 
-  // ---------- Professor / usuário comum: só as próprias ocorrências ----------
-  private async getProfessorDashboard(usuarioId: number) {
+  // ---------- Funcionário: só as próprias ocorrências ----------
+  private async getFuncionarioDashboard(usuarioId: number) {
     const [minhasOcorrenciasAbertas, statusResumo, ultimasOcorrencias] =
       await Promise.all([
         this.dashboardRepository.countOcorrenciasAbertasPorUsuario(usuarioId),
@@ -87,7 +87,7 @@ export class DashboardService {
       ]);
 
     return {
-      escopo: 'professor' as const,
+      escopo: 'funcionario' as const,
       minhasOcorrenciasAbertas,
       statusResumo,
       ultimasOcorrencias,

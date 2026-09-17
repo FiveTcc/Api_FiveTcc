@@ -10,7 +10,7 @@ import { DashboardService } from './dashboard.service';
 export class DashboardController {
   constructor(private readonly dashboardService: DashboardService) {}
 
-  @Roles('admin','tecnico','professor')
+  @Roles('admin','tecnico','funcionario')
   @Get()
   async getDashboard(@Req() req: Request) {
     return this.dashboardService.getDashboardData(
