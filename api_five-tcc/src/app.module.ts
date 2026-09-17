@@ -13,6 +13,7 @@ import { AtribuicaoTecnicoModule } from './modules/atribuicaoTecnicos/atribuicao
 import { RelatorioModule } from './modules/relatorios/relatorio.module';
 import { NotificacaoModule } from './modules/notificacao/notificacao.module';
 import { ChatModule } from './modules/chat/chat.module';
+import { CloudinaryModule } from './modules/cloudinary/cloudinary.module'
 
 
 @Module({
@@ -25,7 +26,7 @@ import { ChatModule } from './modules/chat/chat.module';
     UserModule, DatabaseModule, AuthModule,
     AmbienteModule, ComponenteModule, ComponenteTipoModule,
     OcorrenciaModule, DashboardModule, AtribuicaoTecnicoModule,
-    RelatorioModule, NotificacaoModule, ChatModule],
+    RelatorioModule, NotificacaoModule, ChatModule , CloudinaryModule ],
   controllers: [],
   providers: [],
 })

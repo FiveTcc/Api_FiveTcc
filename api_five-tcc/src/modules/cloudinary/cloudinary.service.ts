@@ -5,19 +5,8 @@ import {
 } from '@nestjs/common';
 import { v2 as cloudinary } from 'cloudinary';
 import { Readable } from 'stream';
+import { UploadedFileType } from '../common/types/uploaded-file.type'
 
-type UploadedFile = {
-    buffer: Buffer;
-    originalname?: string;
-    mimetype?: string;
-    size?: number;
-    fieldname?: string;
-    encoding?: string;
-    destination?: string;
-    filename?: string;
-    path?: string;
-    stream?: NodeJS.ReadableStream;
-};
 
 @Injectable()
 export class CloudinaryService {
@@ -39,7 +28,7 @@ export class CloudinaryService {
         });
     }
 
-    async uploadImagem(arquivo: UploadedFile, pasta: string) {
+    async uploadImagem(arquivo: UploadedFileType, pasta: string) {
         try {
             if (!arquivo || !arquivo.buffer || arquivo.buffer.length === 0) {
                 throw new BadRequestException('Arquivo de imagem inválido ou vazio.');
