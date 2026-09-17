@@ -233,4 +233,18 @@ export class UserRepositorio {
 
     }
 
+    async atualizarFotoPerfil(id_user: number, user_imagem: string) {
+        await this.db
+            .update(User)
+            .set({
+                user_imagem,
+            })
+            .where(eq(User.id_user, id_user));
+
+        return {
+            id_user,
+            user_imagem,
+        };
+    }
+
 }

@@ -29,6 +29,13 @@
       "when": 1789433743950,
       "tag": "0003_great_stepford_cuckoos",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1789608727317,
+      "tag": "0004_add-imagem",
+      "breakpoints": true
     }
   ]
 }

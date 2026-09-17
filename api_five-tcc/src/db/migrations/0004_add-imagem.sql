@@ -1,0 +1,1 @@
+ALTER TABLE `users` ADD `user_imagem` varchar(500);

@@ -12,6 +12,10 @@ export const User = mysqlTable("users", {
     id_user: int("id_user").primaryKey().autoincrement(),
     user_nome: varchar("user_nome", { length: 100 }).notNull(),
     user_email: varchar("user_email", { length: 255 }).unique().notNull(),
+
+    // teste de imagen
+    user_imagem: varchar('user_imagem', { length: 500, }),
+
     user_tel: varchar("user_telefone", { length: 20 }).notNull(),
     user_tipo: varchar("user_tipo", { length: 20 }).notNull(),
     user_senha: varchar("user_senha", { length: 80 }).notNull(),

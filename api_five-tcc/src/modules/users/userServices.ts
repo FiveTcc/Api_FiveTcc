@@ -69,6 +69,10 @@ export class UserServices {
     return await this.userRepositorio.atualizarPerfil(id, dto);
   }
 
+async atualizarFotoPerfil(id: number , dto : AtualizarPerfilDto){
+  return await this.atualizarFotoPerfil(id , dto)
+}
+
 }
 
 
