@@ -1,4 +1,4 @@
-import { Controller, Get, ParseIntPipe, Param, Post, Body, Put, Patch, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, ParseIntPipe, Param, Post, Body, Put, Patch, UseGuards, Req, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { CreateUserDto } from './dtos/userDto';
 import { UpdateUserDto } from './dtos/userUpdateDto';
 import { AtualizarPerfilDto } from './dtos/userDtoPefil';
@@ -6,13 +6,17 @@ import { UserServices } from './userServices';
 import { AuthTokenGuard } from '../auth/guards/auth-token.guad';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 
 @UseGuards(AuthTokenGuard, RolesGuard) // Aplica o guard de autenticação a todas as rotas deste controlador 
-//@Roles('admin', 'tecnico', 'funcionario') // Aplica o decorator de roles a todas as rotas deste controlador, permitindo apenas usuários com a role 'admin'
+@Roles('admin', 'tecnico', 'funcionario') // Aplica o decorator de roles a todas as rotas deste controlador, permitindo apenas usuários com a role 'admin'
 @Controller('usuarios')
 export class UserController {
-    constructor(private readonly useSerevices: UserServices) { }
+    constructor(private readonly useSerevices: UserServices,
+        private readonly CloudinaryService: CloudinaryService
+    ) { }
 
     // Rota para listar todos os usuários 
     @Get('/listarUser')
@@ -32,7 +36,7 @@ export class UserController {
     async cadastrarUser(@Body() CriarUserDto: CreateUserDto) {
         return await this.useSerevices.CadastrarUser(CriarUserDto);
     }
-    
+
     // Rota para atualizar um usuário existente
     @Roles('admin')
     @Put('/atualizarUser/:id')
@@ -76,6 +80,15 @@ export class UserController {
     }
 
 
+    // Rota add foto / atualizar
+    @Post(':id/foto')
+    @UseInterceptors(FileInterceptor('foto'))
+    async adicionarFoto(
+        @Param('id', ParseIntPipe) id: number,
+        @UploadedFile() foto: Express.Multer.File,
+    ) {
+        return this.useSerevices.adicionarFoto(id, foto);
+    }
 
 }
 

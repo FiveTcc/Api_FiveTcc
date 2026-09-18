@@ -1,14 +1,22 @@
-import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dtos/userDto'
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { CreateUserDto } from './dtos/userDto';
 import { UpdateUserDto } from './dtos/userUpdateDto';
 import { AtualizarPerfilDto } from './dtos/userDtoPefil';
 import { UserRepositorio } from './userRepositorio';
 import { BcryptService } from '../auth/hashing/bcrypt.services';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
 
 @Injectable()
 export class UserServices {
-  constructor(private readonly userRepositorio: UserRepositorio,
-    private readonly BcryptService: BcryptService) { }
+  constructor(
+    private readonly userRepositorio: UserRepositorio,
+    private readonly BcryptService: BcryptService,
+    private readonly cloudinaryService: CloudinaryService,
+  ) {}
 
   // Método para listar todos os usuários
   async ListarUser() {
@@ -69,10 +77,32 @@ export class UserServices {
     return await this.userRepositorio.atualizarPerfil(id, dto);
   }
 
-async atualizarFotoPerfil(id: number , dto : AtualizarPerfilDto){
-  return await this.atualizarFotoPerfil(id , dto)
-}
+  async atualizarFotoPerfil(id: number, dto: AtualizarPerfilDto) {
+    return await this.userRepositorio.atualizarPerfil(id, dto);
+  }
 
+  async adicionarFoto(id: number, foto: Express.Multer.File) {
+    const usuario = await this.userRepositorio.ListarUserId(id);
+
+    if (!usuario || usuario.length === 0) {
+      throw new NotFoundException('Usuário não encontrado.');
+    }
+
+    if (!foto) {
+      throw new BadRequestException('Nenhuma foto foi enviada.');
+    }
+
+    const imagem = await this.cloudinaryService.uploadImagem(
+      foto,
+      `nos/usuarios/${id}`,
+    );
+
+    return await this.userRepositorio.atualizarFotoPerfil(
+      id,
+      imagem.secure_url,
+      imagem.public_id,
+    );
+  }
 }
 
 

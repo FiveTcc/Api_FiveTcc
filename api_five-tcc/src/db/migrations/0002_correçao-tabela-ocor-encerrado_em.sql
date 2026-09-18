@@ -1,1 +1,0 @@
-ALTER TABLE `ocorrencias` MODIFY COLUMN `encerrado_em` datetime;

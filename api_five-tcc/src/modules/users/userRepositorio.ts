@@ -233,17 +233,19 @@ export class UserRepositorio {
 
     }
 
-    async atualizarFotoPerfil(id_user: number, user_imagem: string) {
+    async atualizarFotoPerfil(id_user: number, user_imagem_url: string, user_imagem_public_id?: string) {
         await this.db
             .update(User)
             .set({
-                user_imagem,
+                user_imagem_url,
+                user_imagem_public_id: user_imagem_public_id ?? null,
             })
             .where(eq(User.id_user, id_user));
 
         return {
             id_user,
-            user_imagem,
+            user_imagem_url,
+            user_imagem_public_id: user_imagem_public_id ?? null,
         };
     }
 

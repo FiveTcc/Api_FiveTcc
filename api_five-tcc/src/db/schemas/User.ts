@@ -14,7 +14,8 @@ export const User = mysqlTable("users", {
     user_email: varchar("user_email", { length: 255 }).unique().notNull(),
 
     // teste de imagen
-    user_imagem: varchar('user_imagem', { length: 500, }),
+    user_imagem_url: varchar('user_imagem_url', { length: 500, }),
+    user_imagem_public_id: varchar('user_imagem_public_id', {length: 255,}),
 
     user_tel: varchar("user_telefone", { length: 20 }).notNull(),
     user_tipo: varchar("user_tipo", { length: 20 }).notNull(),

@@ -2,6 +2,8 @@ CREATE TABLE `users` (
 	`id_user` int AUTO_INCREMENT NOT NULL,
 	`user_nome` varchar(100) NOT NULL,
 	`user_email` varchar(255) NOT NULL,
+	`user_imagem_url` varchar(500),
+	`user_imagem_public_id` varchar(255),
 	`user_telefone` varchar(20) NOT NULL,
 	`user_tipo` varchar(20) NOT NULL,
 	`user_senha` varchar(80) NOT NULL,
@@ -47,13 +49,15 @@ CREATE TABLE `componentes_tipo` (
 CREATE TABLE `ocorrencias` (
 	`id_ocorrencia` int AUTO_INCREMENT NOT NULL,
 	`ocorre_nome` varchar(100) NOT NULL,
-	`ocorre_status` tinyint NOT NULL,
+	`ocorre_status` varchar(50) NOT NULL,
 	`ocorre_prioridade` varchar(10) NOT NULL,
 	`atualizado_em` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	`criado_em` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`encerrado_em` datetime,
 	`ocorre_obs` varchar(255),
 	`componente_id` int NOT NULL,
 	`ambiente_id` int NOT NULL,
+	`id_user` int NOT NULL,
 	CONSTRAINT `ocorrencias_id_ocorrencia` PRIMARY KEY(`id_ocorrencia`)
 );
 --> statement-breakpoint
@@ -72,5 +76,6 @@ ALTER TABLE `componentes` ADD CONSTRAINT `componentes_id_amb_ambientes_id_amb_fk
 ALTER TABLE `componentes` ADD CONSTRAINT `componentes_compo_tipo_id_componentes_tipo_id_compo_tipo_fk` FOREIGN KEY (`compo_tipo_id`) REFERENCES `componentes_tipo`(`id_compo_tipo`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `ocorrencias` ADD CONSTRAINT `ocorrencias_componente_id_componentes_id_compo_fk` FOREIGN KEY (`componente_id`) REFERENCES `componentes`(`id_compo`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `ocorrencias` ADD CONSTRAINT `ocorrencias_ambiente_id_ambientes_id_amb_fk` FOREIGN KEY (`ambiente_id`) REFERENCES `ambientes`(`id_amb`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE `ocorrencias` ADD CONSTRAINT `ocorrencias_id_user_users_id_user_fk` FOREIGN KEY (`id_user`) REFERENCES `users`(`id_user`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `ocorrencias_user` ADD CONSTRAINT `ocorrencias_user_user_id_users_id_user_fk` FOREIGN KEY (`user_id`) REFERENCES `users`(`id_user`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `ocorrencias_user` ADD CONSTRAINT `ocorrencias_user_ocorrencia_id_ocorrencias_id_ocorrencia_fk` FOREIGN KEY (`ocorrencia_id`) REFERENCES `ocorrencias`(`id_ocorrencia`) ON DELETE no action ON UPDATE no action;

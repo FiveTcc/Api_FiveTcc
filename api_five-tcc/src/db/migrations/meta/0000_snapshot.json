@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "3fe44888-6556-455c-86c9-6e72b9d03796",
+  "id": "86db5851-f722-4b42-a9d1-03e855df4140",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "users": {
@@ -26,6 +26,20 @@
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true,
+          "autoincrement": false
+        },
+        "user_imagem_url": {
+          "name": "user_imagem_url",
+          "type": "varchar(500)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "user_imagem_public_id": {
+          "name": "user_imagem_public_id",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false,
           "autoincrement": false
         },
         "user_telefone": {
@@ -351,7 +365,7 @@
         },
         "ocorre_status": {
           "name": "ocorre_status",
-          "type": "tinyint",
+          "type": "varchar(50)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -379,6 +393,13 @@
           "autoincrement": false,
           "default": "CURRENT_TIMESTAMP"
         },
+        "encerrado_em": {
+          "name": "encerrado_em",
+          "type": "datetime",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
         "ocorre_obs": {
           "name": "ocorre_obs",
           "type": "varchar(255)",
@@ -395,6 +416,13 @@
         },
         "ambiente_id": {
           "name": "ambiente_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "id_user": {
+          "name": "id_user",
           "type": "int",
           "primaryKey": false,
           "notNull": true,
@@ -425,6 +453,19 @@
           ],
           "columnsTo": [
             "id_amb"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "ocorrencias_id_user_users_id_user_fk": {
+          "name": "ocorrencias_id_user_users_id_user_fk",
+          "tableFrom": "ocorrencias",
+          "tableTo": "users",
+          "columnsFrom": [
+            "id_user"
+          ],
+          "columnsTo": [
+            "id_user"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"

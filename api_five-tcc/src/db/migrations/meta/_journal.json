@@ -5,36 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1786410321468,
-      "tag": "0000_Atualizaçao_componetes_teste_3",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1786667413203,
-      "tag": "0001_volatile_nekra",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1787102826040,
-      "tag": "0002_correçao-tabela-ocor-encerrado_em",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "5",
-      "when": 1789433743950,
-      "tag": "0003_great_stepford_cuckoos",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "5",
-      "when": 1789608727317,
-      "tag": "0004_add-imagem",
+      "when": 1789687491781,
+      "tag": "0000_friendly_deadpool",
       "breakpoints": true
     }
   ]
