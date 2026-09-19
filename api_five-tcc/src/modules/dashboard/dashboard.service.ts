@@ -6,53 +6,50 @@ import { DashboardRepository } from './dashboard.repository';
 export class DashboardService {
   constructor(private readonly dashboardRepository: DashboardRepository) {}
 
-  async getDashboardData(userId: number, tipo: UserTipo) {
+  async dashboardData(userId: number, tipo: UserTipo) {
     switch (tipo) {
       case UserTipo.ADMINISTRADOR:
-        return this.getAdminDashboard();
+        return this.adminDashboard();
       case UserTipo.TECNICO:
-        return this.getTecnicoDashboard(userId);
+        return this.tecnicoDashboard(userId);
       case UserTipo.FUNCIONARIO:
-        return this.getFuncionarioDashboard(userId);
+        return this.funcionarioDashboard(userId);
       default:
         throw new BadRequestException('Nível de acesso não suportado');
     }
   }
 
   // ---------- Administrador: visão geral do sistema ----------
-  private async getAdminDashboard() {
+  private async adminDashboard() {
     const [
       ocorrenciasAbertas,
-      ocorrenciasEncerradas,
-      tempoMedioAtendimento,
-      ocorrenciasPorPrioridade,
-      topTecnicos,
-      ambientesComMaisProblemas,
-      componentesComMaisFalhas,
+      ocorrenciasResolvidas,
+      ocorrenciasCriticas,
+      ocorrenciasTotal,
+      ocorrenciasPorStatus,
+      atividadesRecentes,
     ] = await Promise.all([
       this.dashboardRepository.countOcorrenciasAbertas(),
-      this.dashboardRepository.countOcorrenciasEncerradas(),
-      this.dashboardRepository.getTempoMedioAtendimento(),
-      this.dashboardRepository.getOcorrenciasPorPrioridade(),
-      this.dashboardRepository.getTopTecnicos(),
-      this.dashboardRepository.getAmbientesComMaisProblemas(),
-      this.dashboardRepository.getComponentesComMaisFalhas(),
+      this.dashboardRepository.countOcorrenciasResolvidas(),
+      this.dashboardRepository.countOcorrenciasCriticas(),
+      this.dashboardRepository.countOcorrenciasTotal(),
+      this.dashboardRepository.countOcorrenciasPorStatus(),
+      this.dashboardRepository.atividadesRecentes(),
     ]);
 
     return {
       escopo: 'administrador' as const,
       ocorrenciasAbertas,
-      ocorrenciasEncerradas,
-      tempoMedioAtendimento,
-      ocorrenciasPorPrioridade,
-      topTecnicos,
-      ambientesComMaisProblemas,
-      componentesComMaisFalhas,
+      ocorrenciasResolvidas,
+      ocorrenciasCriticas,
+      ocorrenciasTotal,
+      ocorrenciasPorStatus,
+      atividadesRecentes,
     };
   }
 
   // ---------- Técnico: visão focada no próprio trabalho ----------
-  private async getTecnicoDashboard(tecnicoId: number) {
+  private async tecnicoDashboard(tecnicoId: number) {
     const [
       minhasAbertas,
       minhasEncerradas,
@@ -78,7 +75,7 @@ export class DashboardService {
   }
 
   // ---------- Funcionário: só as próprias ocorrências ----------
-  private async getFuncionarioDashboard(usuarioId: number) {
+  private async funcionarioDashboard(usuarioId: number) {
     const [minhasOcorrenciasAbertas, statusResumo, ultimasOcorrencias] =
       await Promise.all([
         this.dashboardRepository.countOcorrenciasAbertasPorUsuario(usuarioId),

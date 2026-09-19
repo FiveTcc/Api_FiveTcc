@@ -1,13 +1,13 @@
 @baseUrl = http://localhost:3000
-@Token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjQ0LCJlbWFpbCI6ImRpb2dpdG9nb2lzQGdtYWlsLmNvbSIsInJvbGUiOiJmdW5jaW9uYXJpbyIsImlhdCI6MTc4OTYwODU4NSwiZXhwIjoxNzg5NjEyMTg1LCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjMwMDAiLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjMwMDAifQ.o2E6X-wJe7muJWeZjdYfrfoOapTzGVVzBVVyG8E-rV0
+@Token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsImVtYWlsIjoibWlkQGdtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4OTc3MjUwMiwiZXhwIjoxNzg5Nzc2MTAyLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjMwMDAiLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjMwMDAifQ.hVcxakNlYeDyL0fdaql9eptV57-okb--DISvn8kZFjk
 
-### Login como Admin
-POST {{baseUrl}}/auth/login
+
+### Login como Administrador
 Content-Type: application/json
 
 {
-  "user_email": "brayanstilos@gmail.com",
-   "user_senha": "Bra3500#"
+  "user_email": "mid@gmail.com",
+  "user_senha": "12345*Aa"
 }
 
 ### Login como Tecnico

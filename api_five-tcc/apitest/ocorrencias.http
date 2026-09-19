@@ -1,11 +1,12 @@
 @baseUrl = http://localhost:3000
-@Token = 
+@Token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsImVtYWlsIjoibWlkQGdtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4OTc3MjUwMiwiZXhwIjoxNzg5Nzc2MTAyLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjMwMDAiLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjMwMDAifQ.hVcxakNlYeDyL0fdaql9eptV57-okb--DISvn8kZFjk
 
 GET {{baseUrl}}/ocorrencias/listarOcorrencia
 Authorization: Bearer: {{Token}}
 
 ###
 GET  {{baseUrl}}/ocorrencias/listarOcorrenciaId/7
+Authorization: Bearer: {{Token}}
 
 ###
 
@@ -14,10 +15,10 @@ Content-Type: application/json
 Authorization: Bearer: {{Token}}
 
 {
-  "ocor_nome": "roteador",
-  "ocor_prioridade": "alta",
+  "ocor_nome": "PC 5 não liga",
+  "ocor_prioridade": "baixa",
   "ocor_obs": "Não liga",
-  "componente_id": 2,
+  "componente_id": 6,
   "ambiente_id": 1
 }
 
@@ -25,6 +26,7 @@ Authorization: Bearer: {{Token}}
 
 PATCH {{baseUrl}}/ocorrencias/editarOcorrencia/3
 Content-Type: application/json
+Authorization: Bearer: {{Token}}
 
 {
   "ocor_nome": "Computador não liga",
@@ -38,6 +40,7 @@ Content-Type: application/json
 
 PATCH {{baseUrl}}/ocorrencias/editarOcorrencia/6
 Content-Type: application/json
+Authorization: Bearer: {{Token}}
 
 {
   "ocor_nome": "Computador não liga",
@@ -49,22 +52,24 @@ Content-Type: application/json
 
 ###
 PATCH {{baseUrl}}/ocorrencias/encerrarOcorrencia/45
-
+Authorization: Bearer: {{Token}}
 
 ###
 PATCH {{baseUrl}}/ocorrencias/cancelarOcorrencia/16
+Authorization: Bearer: {{Token}}
 
 ###
 
-PATCH {{baseUrl}}/ocorrencias/alterarStatus/16
+PATCH {{baseUrl}}/ocorrencias/alterarStatus/3
+Authorization: Bearer: {{Token}}
 Content-Type: application/json
 
 {
-    "novoStatus": "concluida"
+    "novoStatus": "em andamento"
 }
 
 ###
-PATCH {{baseUrl}}/ocorrencias/10/adicionarObservacao
+PATCH {{baseUrl}}/ocorrencias/3/adicionarObservacao
 Content-Type: application/json
 
 {
@@ -91,24 +96,30 @@ Content-Type: application/json
 
 ### Filtrar ocorrências por ambiente
 GET {{baseUrl}}/ocorrencias/buscarPorAmbiente?nomeAmb=Sala de TI
+Authorization: Bearer: {{Token}}
 
 
 ### Filtrar ocorrências por componente
 GET {{baseUrl}}/ocorrencias/buscarPorComponente?nomeComp=Computador
+Authorization: Bearer: {{Token}}
 
 
 ### Filtrar ocorrências por nome
 GET {{baseUrl}}/ocorrencias/buscarPorNome?nomeOcor=Computador
+Authorization: Bearer: {{Token}}
 
 
 ### Filtrar ocorrências por status
 GET {{baseUrl}}/ocorrencias/buscarPorStatus?status=concluida
+Authorization: Bearer: {{Token}}
 
 
 ### Filtrar ocorrências por prioridade
 GET {{baseUrl}}/ocorrencias/buscarPorPrioridade?prioridade=baixa
+Authorization: Bearer: {{Token}}
 
 
 ### Filtrar ocorrências por período
 GET {{baseUrl}}/ocorrencias/buscarPorPeriodo?dataInicio=2026-08-01&dataFim=2026-08-26
+Authorization: Bearer: {{Token}}
 

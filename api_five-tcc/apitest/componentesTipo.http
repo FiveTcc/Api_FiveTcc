@@ -18,7 +18,7 @@ POST {{baseUrl}}/componentes-tipo/cadastrarComponenteTipo
 Content-Type: application/json
 
 {
-  "compo_tipo": "hardware"
+  "compo_tipo": "rede"
 }
 
 
@@ -32,5 +32,5 @@ Content-Type: application/json
 
 
 ### Excluir tipo de componente
-DELETE {{baseUrl}}/componentes-tipo/excluirComponenteTipo/1
+DELETE {{baseUrl}}/componentes-tipo/excluirComponenteTipo/3
 

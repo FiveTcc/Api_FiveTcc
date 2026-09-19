@@ -12,8 +12,8 @@ export class DashboardController {
 
   @Roles('admin','tecnico','funcionario')
   @Get()
-  async getDashboard(@Req() req: Request) {
-    return this.dashboardService.getDashboardData(
+  async dashboard(@Req() req: Request) {
+    return this.dashboardService.dashboardData(
       req['user'].id_user,
       req['user'].role,
     );

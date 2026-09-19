@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:3000
-@Token = 
+@Token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsImVtYWlsIjoibWlkQGdtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4OTc3MjUwMiwiZXhwIjoxNzg5Nzc2MTAyLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjMwMDAiLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjMwMDAifQ.hVcxakNlYeDyL0fdaql9eptV57-okb--DISvn8kZFjk
 ### AMBIENTES
 ### ======================================================
 
@@ -16,11 +16,11 @@ Authorization: Bearer: {{Token}}
 Content-Type: application/json
 
 {
-  "amb_nome": "Sala 8",
-  "amb_tipo": "Sala",
+  "amb_nome": "Laboratório 8",
+  "amb_tipo": "laboratorio",
   "amb_andar": "1º",
   "amb_bloco": "A",
-  "amb_obs": "Sala de aula" 
+  "amb_obs": "ladoratório de informática" 
 }
  
 ### Atualizar ambiente

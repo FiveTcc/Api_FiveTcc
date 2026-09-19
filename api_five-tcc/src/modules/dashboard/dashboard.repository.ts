@@ -18,7 +18,15 @@ export class DashboardRepository {
     return row.total;
   }
 
-  async countOcorrenciasEncerradas() {
+  async countOcorrenciasCriticas() {
+    const [row] = await this.db
+      .select({ total: sql<number>`count(*)` })
+      .from(ocorrencias)
+      .where(eq(ocorrencias.ocor_prioridade, 'Critica'));
+    return row.total;
+  }
+
+  async countOcorrenciasResolvidas() {
     const [row] = await this.db
       .select({ total: sql<number>`count(*)` })
       .from(ocorrencias)
@@ -26,59 +34,34 @@ export class DashboardRepository {
     return row.total;
   }
 
-  async getTempoMedioAtendimento() {
+  async countOcorrenciasTotal() {
     const [row] = await this.db
-      .select({
-        mediaHoras: sql<number>`avg(timestampdiff(hour, ${ocorrencias.criado_em}, ${ocorrencias.encerrado_em}))`,
-      })
-      .from(ocorrencias)
-      .where(eq(ocorrencias.ocor_status, 'Concluida'));
-    return row.mediaHoras ?? 0;
+      .select({ total: sql<number>`count(*)` })
+      .from(ocorrencias);
+    return row.total;
   }
 
-  async getOcorrenciasPorPrioridade() {
+  async countOcorrenciasPorStatus() {
     return this.db
       .select({
-        prioridade: ocorrencias.ocor_prioridade,
+        status: ocorrencias.ocor_status,
         total: sql<number>`count(*)`,
       })
       .from(ocorrencias)
-      .groupBy(ocorrencias.ocor_prioridade);
+      .groupBy(ocorrencias.ocor_status);
   }
 
-  async getTopTecnicos(limit = 5) {
+  async atividadesRecentes(limit = 5) {
     return this.db
       .select({
-        tecnicoId: ocorrencias_user.user_id,
-        totalAtendimentos: sql<number>`count(*)`,
-      })
-      .from(ocorrencias_user)
-      .groupBy(ocorrencias_user.user_id)
-      .orderBy(desc(sql`count(*)`))
-      .limit(limit);
-  }
-
-  async getAmbientesComMaisProblemas(limit = 5) {
-    return this.db
-      .select({
-        ambienteId: ocorrencias.ambiente_id,
-        totalOcorrencias: sql<number>`count(*)`,
+        nome: ocorrencias.ocor_nome,
+        id: ocorrencias.id_ocor,
+        status: ocorrencias.ocor_status,
+        prioridade: ocorrencias.ocor_prioridade,
+        criadoEm: ocorrencias.criado_em,
       })
       .from(ocorrencias)
-      .groupBy(ocorrencias.ambiente_id)
-      .orderBy(desc(sql`count(*)`))
-      .limit(limit);
-  }
-
-  async getComponentesComMaisFalhas(limit = 5) {
-    return this.db
-      .select({
-        componenteId: ocorrencias.componente_id,
-        totalFalhas: sql<number>`count(*)`,
-      })
-      .from(ocorrencias)
-      .groupBy(ocorrencias.componente_id)
-      .orderBy(desc(sql`count(*)`))
+      .orderBy(desc(ocorrencias.criado_em))
       .limit(limit);
   }
 
