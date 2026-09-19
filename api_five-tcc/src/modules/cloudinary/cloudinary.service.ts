@@ -20,6 +20,13 @@ export class CloudinaryService {
         const apiKey = process.env.CLOUDINARY_API_KEY;
         const apiSecret = process.env.CLOUDINARY_API_SECRET;
 
+        console.log('========== CLOUDINARY ==========');
+    console.log('Cloud Name:', cloudName);
+    console.log('API Key:', apiKey);
+    console.log('Secret:', apiSecret ? 'CONFIGURADO' : 'NÃO CONFIGURADO');
+    console.log('================================');
+
+
         if (!cloudName || !apiKey || !apiSecret) {
             this.enabled = false;
             this.logger.warn(

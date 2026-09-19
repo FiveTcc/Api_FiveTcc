@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:3000
-@Token = 
+@Token =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiYnJheWFuc3RpbG9zQGdtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4OTc3MTY3OSwiZXhwIjoxNzg5Nzc1Mjc5LCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjMwMDAiLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjMwMDAifQ.YIPTvBgRsje1uOa1xsMeFwiw9GyA4tJbrweACgIU8o0
 
 ### Listar todos os usuarios
 GET {{baseUrl}}/usuarios/listarUser
@@ -63,14 +63,6 @@ Content-Type: application/json
 }
 
 
-
-
-
-
-
-
-
-
 ### Cadastrar usuario
 POST {{baseUrl}}/usuarios/cadastrarUser
 Authorization: Bearer {{Token}}
@@ -98,4 +90,17 @@ Content-Type: application/json
   "user_tel": "(18)99478-3674",
   "user_tipo": "professor"
 }
+
+
+### Adicionar foto de perfil
+POST {{baseUrl}}/usuarios/1/foto
+Authorization: Bearer {{Token}}
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
+
+------WebKitFormBoundary
+Content-Disposition: form-data; name="foto"; filename="mid.jpg"
+Content-Type: image/jpeg
+
+< ../imagen/mid.jpg
+------WebKitFormBoundary--
   

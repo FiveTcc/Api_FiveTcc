@@ -87,6 +87,15 @@ export class UserController {
         @Param('id', ParseIntPipe) id: number,
         @UploadedFile() foto: Express.Multer.File,
     ) {
+        console.log('========== FOTO RECEBIDA ==========');
+    console.log({
+        id,
+        originalname: foto?.originalname,
+        mimetype: foto?.mimetype,
+        size: foto?.size,
+        buffer: foto?.buffer?.length,
+    });
+    console.log('===================================');
         return this.useSerevices.adicionarFoto(id, foto);
     }
 
