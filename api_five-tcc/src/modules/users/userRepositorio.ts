@@ -166,6 +166,7 @@ export class UserRepositorio {
                     user_telefone: User.user_tel,
                     user_tipo: User.user_tipo,
                     user_ativo: User.user_ativo,
+                    user_imagem: User.user_imagem_url
 
                 })
                 .from(User)

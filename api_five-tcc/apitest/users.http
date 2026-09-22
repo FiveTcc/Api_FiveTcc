@@ -1,6 +1,5 @@
 @baseUrl = http://localhost:3000
-@Token =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiYnJheWFuc3RpbG9zQGdtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4OTc3MTY3OSwiZXhwIjoxNzg5Nzc1Mjc5LCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjMwMDAiLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjMwMDAifQ.YIPTvBgRsje1uOa1xsMeFwiw9GyA4tJbrweACgIU8o0
-
+@Token =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiYnJheWFuc3RpbG9zQGdtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc5MDAzOTQ4MiwiZXhwIjoxNzkwMDQzMDgyLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjMwMDAiLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjMwMDAifQ.LIaXFNFKI7S6MFG7b2v3UArJhfVXmEby8dC3J91UF_U
 ### Listar todos os usuarios
 GET {{baseUrl}}/usuarios/listarUser
 Authorization: Bearer {{Token}}
@@ -93,14 +92,14 @@ Content-Type: application/json
 
 
 ### Adicionar foto de perfil
-POST {{baseUrl}}/usuarios/1/foto
+### Adicionar / atualizar foto de perfil
+POST {{baseUrl}}/usuarios/Pefilfoto
 Authorization: Bearer {{Token}}
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
 
 ------WebKitFormBoundary
-Content-Disposition: form-data; name="foto"; filename="mid.jpg"
+Content-Disposition: form-data; name="foto"; filename="diogo.jpeg"
 Content-Type: image/jpeg
 
-< ../imagen/mid.jpg
+< ../imagen/diogo.jpeg
 ------WebKitFormBoundary--
-  

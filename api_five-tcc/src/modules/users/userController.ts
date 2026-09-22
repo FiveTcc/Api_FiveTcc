@@ -57,7 +57,6 @@ export class UserController {
     }
 
     // Rota para Visualizar Perfil do usuário logado
-
     @Get('/perfilUser')
     async visualizarPerfilUser(@Req() req: Request) {
         return this.useSerevices.visualizarPerfilUser(
@@ -66,7 +65,6 @@ export class UserController {
     }
 
     // Rota para atualizar perfil
-
     @Patch('perfilUpdate')
     @UseGuards(AuthTokenGuard)
     async atualizarPerfil(
@@ -81,22 +79,17 @@ export class UserController {
 
 
     // Rota add foto / atualizar
-    @Post(':id/foto')
+    @Post('/Pefilfoto')
     @UseInterceptors(FileInterceptor('foto'))
     async adicionarFoto(
-        @Param('id', ParseIntPipe) id: number,
+         @Req() req: Request,
         @UploadedFile() foto: Express.Multer.File,
     ) {
-        console.log('========== FOTO RECEBIDA ==========');
-    console.log({
-        id,
-        originalname: foto?.originalname,
-        mimetype: foto?.mimetype,
-        size: foto?.size,
-        buffer: foto?.buffer?.length,
-    });
-    console.log('===================================');
-        return this.useSerevices.adicionarFoto(id, foto);
+    
+    
+        return this.useSerevices.adicionarFoto(
+            req['user'].id_user, 
+            foto);
     }
 
 }
