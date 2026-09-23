@@ -1,10 +1,15 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UseGuards } from "@nestjs/common";
 import { ComponenteService } from "./componente.service";
 import { CreateComponenteDto } from "./dtos/create.componenteDto";
 import { UpdateComponenteDto } from "./dtos/updatecomponente";
 import { AssociateCompAmbDto } from "./dtos/associate.compAmbDto";
 import { DefineTipoComponenteDto } from "./dtos/define.tipoComponenteDto";
+import { AuthTokenGuard } from '../auth/guards/auth-token.guad';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../auth/decorators/roles.decorator';
 
+@UseGuards(AuthTokenGuard, RolesGuard) // Aplica o guard de autenticação a todas as rotas deste controlador 
+@Roles('admin', 'tecnico', 'funcionario') // Aplica o decorator de roles a todas as rotas deste controlador, permitindo apenas usuários com a role 'admin'
 @Controller('componentes')
 export class ComponenteController {
     constructor(private readonly componenteService: ComponenteService) { }
@@ -65,14 +70,14 @@ export class ComponenteController {
         return await this.componenteService.associarCompAmb(id, AssociateCompAmbDto.id_amb);
     }
 
-    // Rota para alterar tipo do componente
-    @Patch(':id/alterarTipoComponente')
-    async alterarTipoComponente(
-        @Param('id', ParseIntPipe) id: number,
-        @Body() DefineTipoComponenteDto: DefineTipoComponenteDto
-    ) {
-        return await this.componenteService.alterarTipoComponente(id, DefineTipoComponenteDto.compo_tipo_id)
-    }
+    // // Rota para alterar tipo do componente
+    // @Patch(':id/alterarTipoComponente')
+    // async alterarTipoComponente(
+    //     @Param('id', ParseIntPipe) id: number,
+    //     @Body() DefineTipoComponenteDto: DefineTipoComponenteDto
+    // ) {
+    //     return await this.componenteService.alterarTipoComponente(id, DefineTipoComponenteDto.compo_tipo_id)
+    // }
 
     // ##### Rotas de Filtros #####
 

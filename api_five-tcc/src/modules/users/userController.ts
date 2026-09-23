@@ -19,6 +19,7 @@ export class UserController {
     ) { }
 
     // Rota para listar todos os usuários 
+    @Roles('admin')
     @Get('/listarUser')
     async listarUser() {
         return await this.useSerevices.ListarUser();
@@ -26,12 +27,14 @@ export class UserController {
     }
 
     // Rota para listar um usuário por ID
+    @Roles('admin')
     @Get('/listarUserId/:id')
     async listarUserPorId(@Param('id', ParseIntPipe) id: number) {
         return await this.useSerevices.ListarUserId(id);
     }
 
     // Rota para cadastrar um novo usuário
+    @Roles('admin')
     @Post('/cadastrarUser')
     async cadastrarUser(@Body() CriarUserDto: CreateUserDto) {
         return await this.useSerevices.CadastrarUser(CriarUserDto);
@@ -45,12 +48,14 @@ export class UserController {
     }
 
     // Rota para Atualizar o status de um usuário existente (inativar/ativar)
+    @Roles('admin')
     @Patch('/inativarUser/:id')
     async atualizarStatusUser(@Param('id', ParseIntPipe) id: number,) {
         return await this.useSerevices.AtualizarStatusUser(id,);
     }
 
     // Rota para listar os usuários desativados
+    @Roles('admin')
     @Get('/listarStatusUser')
     async listarStatusUser() {
         return await this.useSerevices.listarStatusUser();

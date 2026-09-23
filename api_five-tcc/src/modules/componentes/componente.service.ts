@@ -42,10 +42,10 @@ export class ComponenteService {
         return await this.componenteRepository.associarCompAmb(id, idAmb)
     }
 
-    // Método para alterar tipo de componente
-    async alterarTipoComponente(id: number, compoTipoId: number) {
-        return await this.componenteRepository.alterarTipoComponente(id, compoTipoId)
-    }
+    // // Método para alterar tipo de componente
+    // async alterarTipoComponente(id: number, compoTipoId: number) {
+    //     return await this.componenteRepository.alterarTipoComponente(id, compoTipoId)
+    // }
 
     // ##### Filtros #####
 

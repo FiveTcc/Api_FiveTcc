@@ -158,7 +158,7 @@ export class AmbienteRepository {
   }
 
 
-  // Método de verificar se a ocorrência existe
+  // Método de verificar se o ambiente existe
       async verificaAmbienteExiste(id: number) {
   
           const [ambiente] = await this.db

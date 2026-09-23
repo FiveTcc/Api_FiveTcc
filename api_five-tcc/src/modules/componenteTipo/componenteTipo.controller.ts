@@ -1,8 +1,13 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, UseGuards } from "@nestjs/common";
 import { ComponenteTipoService } from "./componenteTipo.service";
 import { UpdateComponenteTipoDto } from "./dtos/update.componenteTipoDto";
 import { CreateComponenteTipoDto } from "./dtos/create.componenteTipoDto";
+import { AuthTokenGuard } from '../auth/guards/auth-token.guad';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../auth/decorators/roles.decorator';
 
+@UseGuards(AuthTokenGuard, RolesGuard) // Aplica o guard de autenticação a todas as rotas deste controlador 
+@Roles('admin', 'tecnico', 'funcionario') // Aplica o decorator de roles a todas as rotas deste controlador, permitindo apenas usuários com a role 'admin'
 @Controller('componentes-tipo')
 export class ComponenteTipoController {
     constructor(private readonly componenteTipoService: ComponenteTipoService) { }

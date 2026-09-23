@@ -162,33 +162,33 @@ export class ComponenteRepository {
       }
    }
 
-   async alterarTipoComponente(id: number, compoTipoId: number) {
-      try {
-         // verifica se componente existe
-         await this.verificaComponenteExiste(id);
-         // verifica se o tipo de componente existe
-         await this.componenteTipoRepository.verificaTipoComponenteExiste(compoTipoId);
+   // async alterarTipoComponente(id: number, compoTipoId: number) {
+   //    try {
+   //       // verifica se componente existe
+   //       await this.verificaComponenteExiste(id);
+   //       // verifica se o tipo de componente existe
+   //       await this.componenteTipoRepository.verificaTipoComponenteExiste(compoTipoId);
 
-         await this.db
-            .update(Componentes)
-            .set({
-               compo_tipo_id: compoTipoId,
-            })
-            .where(eq(Componentes.id_compo, id));
+   //       await this.db
+   //          .update(Componentes)
+   //          .set({
+   //             compo_tipo_id: compoTipoId,
+   //          })
+   //          .where(eq(Componentes.id_compo, id));
 
-         return {
-            message: 'Tipo do componente atualizado com sucesso',
-         };
-      } catch (error) {
-         if (error instanceof NotFoundException) {
-            throw error;
-         }
+   //       return {
+   //          message: 'Tipo do componente atualizado com sucesso',
+   //       };
+   //    } catch (error) {
+   //       if (error instanceof NotFoundException) {
+   //          throw error;
+   //       }
 
-         throw new InternalServerErrorException(
-            'Erro ao definir o tipo do componente',
-         );
-      }
-   }
+   //       throw new InternalServerErrorException(
+   //          'Erro ao definir o tipo do componente',
+   //       );
+   //    }
+   // }
 
 
    // ##### Filtros de Componentes #####
