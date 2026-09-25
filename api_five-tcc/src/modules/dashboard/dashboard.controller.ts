@@ -6,11 +6,11 @@ import { DashboardService } from './dashboard.service';
 
 
 @UseGuards(AuthTokenGuard, RolesGuard)
+@Roles('admin','tecnico','funcionario')
 @Controller('dashboard')
 export class DashboardController {
   constructor(private readonly dashboardService: DashboardService) {}
 
-  @Roles('admin','tecnico','funcionario')
   @Get()
   async dashboard(@Req() req: Request) {
     return this.dashboardService.dashboardData(

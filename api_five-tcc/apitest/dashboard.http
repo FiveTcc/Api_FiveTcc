@@ -3,6 +3,7 @@
 
 
 ### Login como Administrador
+POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {

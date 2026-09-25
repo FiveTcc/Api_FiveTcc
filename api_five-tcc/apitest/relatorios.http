@@ -1,0 +1,98 @@
+### Variáveis
+@baseUrl = http://localhost:3000
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjQsImVtYWlsIjoibWlkdGVzdGVAZ21haWwuY29tIiwicm9sZSI6InRlY25pY28iLCJpYXQiOjE3OTAzNzkyOTQsImV4cCI6MTc5MDM4Mjg5NCwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDozMDAwIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDozMDAwIn0.IdJGUsFrLi20w--Th5wZGFHwkUA5p7t4pAYV-l4CdPI
+### Login como Administrador
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "user_email": "mid@gmail.com",
+  "user_senha": "12345*Aa"
+}
+
+### Login como tecnico
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "user_email": "midteste@gmail.com",
+  "user_senha": "12345*Aa"
+}
+
+   
+
+### 1. Relatório em JSON - sem filtros
+GET {{baseUrl}}/relatorios
+Authorization: Bearer {{token}}
+
+### 2. Relatório com todos os filtros
+GET {{baseUrl}}/relatorios?data_inicial=2026-08-01&data_final=2026-09-25&status=concluida&prioridade=alta&ambiente=3&agruparPor=tecnico
+Authorization: Bearer {{token}}
+
+### 3. Filtro por status e período
+GET {{baseUrl}}/relatorios?data_inicial=2026-09-01&data_final=2026-09-25&status=aberta
+Authorization: Bearer {{token}}
+
+### 4. Agrupado por prioridade
+GET {{baseUrl}}/relatorios?agruparPor=prioridade
+Authorization: Bearer {{token}}
+
+### 5. Agrupado por ambiente
+GET {{baseUrl}}/relatorios?agruparPor=ambiente
+Authorization: Bearer {{token}}
+
+### 6. Agrupado por data
+GET {{baseUrl}}/relatorios?agruparPor=data
+Authorization: Bearer {{token}}
+
+### 7. Filtro por técnico específico
+GET {{baseUrl}}/relatorios?tecnico=2
+Authorization: Bearer {{token}}
+
+### 8. Filtro por ambiente específico
+GET {{baseUrl}}/relatorios?ambiente=5
+Authorization: Bearer {{token}}
+
+### 9. Exportar Excel (sem filtros)
+GET {{baseUrl}}/relatorios/exportar?formato=xlsx
+Authorization: Bearer {{token}}
+
+### 10. Exportar Excel com filtro de ambiente
+GET {{baseUrl}}/relatorios/exportar?formato=xlsx&ambiente=5
+Authorization: Bearer {{token}}
+
+### 11. Exportar PDF (sem filtros)
+GET {{baseUrl}}/relatorios/exportar?formato=pdf
+Authorization: Bearer {{token}}
+
+### 12. Exportar PDF com período
+GET {{baseUrl}}/relatorios/exportar?formato=pdf&data_inicial=2026-08-01&data_final=2026-09-25
+Authorization: Bearer {{token}}
+
+### 13. Validação - status inválido (espera 400)
+GET {{baseUrl}}/relatorios?status=invalido
+Authorization: Bearer {{token}}
+
+### 14. Validação - prioridade inválida (espera 400)
+GET {{baseUrl}}/relatorios?prioridade=urgente
+Authorization: Bearer {{token}}
+
+### 15. Validação - agruparPor inválido (espera 400)
+GET {{baseUrl}}/relatorios?agruparPor=inexistente
+Authorization: Bearer {{token}}
+
+### 16. Validação - ambiente não numérico (espera 400)
+GET {{baseUrl}}/relatorios?ambiente=abc
+Authorization: Bearer {{token}}
+
+### 17. Validação - data inválida (espera 400)
+GET {{baseUrl}}/relatorios?data_inicial=25-09-2026
+Authorization: Bearer {{token}}
+
+### 18. Sem token (espera 401)
+GET {{baseUrl}}/relatorios
+
+
+### Relatório completo em PDF - últimos 30 dias, todos os filtros preenchidos
+GET {{baseUrl}}/relatorios/exportar?data_inicial=2026-08-27&data_final=2026-09-25&formato=pdf
+Authorization: Bearer {{token}}
