@@ -63,7 +63,7 @@ export class OcorrenciaRepository {
             // Verifica se o ambiente existe
             await this.ambienteRepository.verificaAmbienteExiste(dto.ambiente_id)
 
-            await this.db
+            const [resultado] = await this.db
                 .insert(ocorrencias)
                 .values({
                     ocor_nome: dto.ocor_nome,
@@ -75,9 +75,17 @@ export class OcorrenciaRepository {
                     id_user: idUser
                 });
 
-            return {
+            const idOcorrencia = Number(resultado.insertId);
+
+            const [ocorrenciaCriada] = await this.db
+                .select()
+                .from(ocorrencias)
+                .where(eq(ocorrencias.id_ocor, idOcorrencia));
+
+            return ocorrenciaCriada ?? {
+                id_ocor: idOcorrencia,
                 message: 'Ocorrencia aberta com sucesso'
-            }
+            };
         } catch (error) {
 
             if (

@@ -8,6 +8,13 @@
       "when": 1789687491781,
       "tag": "0000_friendly_deadpool",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1790291264078,
+      "tag": "0001_criaçao_tabela_notificaçao",
+      "breakpoints": true
     }
   ]
 }

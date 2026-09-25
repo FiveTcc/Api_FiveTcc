@@ -17,4 +17,5 @@ export * from './ocorrencias';
 // tabela de ocorrencias_user
 export * from './ocorrencias_user';
 
-
+// tabela de notificacoes
+export * from './notificacoes' 

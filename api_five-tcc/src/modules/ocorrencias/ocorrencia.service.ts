@@ -2,10 +2,14 @@ import { Injectable } from "@nestjs/common";
 import { OcorrenciaRepository } from "./ocorrencia.repository";
 import { CreateOcorrenciaDto, OcorrenciaStatus, OcorrenciaPrioridade } from "./dtos/createocorrenciaDto";
 import { UpdateOcorrenciaDto } from "./dtos/update.ocorrenciaDto";
+import { NotificacaoService } from "../notificacao/notificacao.service";
+import { TipoNotificacao } from "../notificacao/dto/criar-notificacao.dto";
 
 @Injectable()
 export class OcorrenciaService {
-    constructor(private readonly ocorrenciaRepository: OcorrenciaRepository) { }
+    constructor(private readonly ocorrenciaRepository: OcorrenciaRepository,
+        private readonly notificacaoService: NotificacaoService
+    ) { }
 
     // Método para listar ocorrência
     async listarOcorrencia() {
@@ -18,8 +22,22 @@ export class OcorrenciaService {
     }
 
     // Método para criar ocorrência
-    async abrirOcorrencia(dto: CreateOcorrenciaDto , idUser: number) {
-        return await this.ocorrenciaRepository.abrirOcorrencia(dto, idUser);
+    async abrirOcorrencia(dto: CreateOcorrenciaDto, idUser: number) {
+
+        const ocorrencia = await this.ocorrenciaRepository.abrirOcorrencia(
+            dto,
+            idUser
+        );
+
+        await this.notificacaoService.criar({
+            id_user: idUser,
+            titulo: "Nova ocorrência",
+            mensagem: "Uma nova ocorrência foi registrada.",
+            tipo: TipoNotificacao.NOVA_OCORRENCIA,
+            id_ocorrencia: ocorrencia.id_ocor,
+        });
+
+        return ocorrencia;
     }
 
     // Método para editar ocorrência
@@ -85,7 +103,7 @@ export class OcorrenciaService {
 
     // ##### Filtros de Ocorrências #####
 
-     // Filtro por nome
+    // Filtro por nome
     async filtrarPorNome(nomeOcor: string) {
         return await this.ocorrenciaRepository.filtrarPorNome(nomeOcor);
     }
