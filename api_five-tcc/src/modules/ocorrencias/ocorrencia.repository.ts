@@ -498,6 +498,7 @@ export class OcorrenciaRepository {
     private selecionarOcorrencia() {
         return {
             ocorrencia: {
+                id_user: ocorrencias.id_user,
                 id_ocor: ocorrencias.id_ocor,
                 ocor_nome: ocorrencias.ocor_nome,
                 ocor_status: ocorrencias.ocor_status,

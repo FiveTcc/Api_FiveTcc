@@ -1,6 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import type { TDocumentDefinitions } from 'pdfmake/interfaces';
 import * as path from 'path';
+import * as fs from 'fs';
+
+
+
+const logoPath = path.join(
+  process.cwd(),
+  'src/assets/logo_sem_fundo.png',
+);
+
+const logoBase64 = fs
+  .readFileSync(logoPath)
+  .toString('base64');
+
+const logoDataUri = `data:image/png;base64,${logoBase64}`;
+
+
 
 const PdfPrinter = require('pdfmake/src/printer');
 
@@ -25,12 +41,26 @@ export class PdfExporter {
 
     const docDefinition: TDocumentDefinitions = {
       content: [
-        { text: 'Relatório de Ocorrências', style: 'titulo' },
+
+        {
+          image: logoDataUri,
+          width: 160,
+          alignment: 'center',
+          margin: [0, 0, 0, 8],
+        },
+
+        {
+          text: 'Relatório de Ocorrências',
+          style: 'titulo',
+          alignment: 'center',
+        },
+
         {
           text: `Gerado em ${new Date().toLocaleString('pt-BR')}`,
           style: 'subtitulo',
+          alignment: 'center',
         },
-        { text: 'Resumo', style: 'secao', margin: [0, 15, 0, 5] },
+
         {
           table: {
             widths: ['*', 'auto'],

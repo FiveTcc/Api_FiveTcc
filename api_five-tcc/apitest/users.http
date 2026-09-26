@@ -6,7 +6,7 @@ GET {{baseUrl}}/usuarios/listarUser
 Authorization: Bearer {{Token}}
 
 ### Listar todos os usuarios por ID
-GET {{baseUrl}}/usuarios/listarUserId/1
+GET {{baseUrl}}/usuarios/listarUserId/4
 
 
 ### Cadastrar usuario

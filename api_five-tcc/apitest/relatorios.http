@@ -1,6 +1,7 @@
 ### Variáveis
 @baseUrl = http://localhost:3000
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjQsImVtYWlsIjoibWlkdGVzdGVAZ21haWwuY29tIiwicm9sZSI6InRlY25pY28iLCJpYXQiOjE3OTAzNzkyOTQsImV4cCI6MTc5MDM4Mjg5NCwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDozMDAwIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDozMDAwIn0.IdJGUsFrLi20w--Th5wZGFHwkUA5p7t4pAYV-l4CdPI
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjQsImVtYWlsIjoibWlkdGVzdGVAZ21haWwuY29tIiwicm9sZSI6InRlY25pY28iLCJpYXQiOjE3OTAzODYyMTIsImV4cCI6MTc5MDM4OTgxMiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDozMDAwIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDozMDAwIn0.Zx2nrhL45GUMGJ4Wqc0jRJVfJG6s3wN2WbnPGnznV2w
+
 ### Login como Administrador
 POST {{baseUrl}}/auth/login
 Content-Type: application/json
@@ -94,5 +95,5 @@ GET {{baseUrl}}/relatorios
 
 
 ### Relatório completo em PDF - últimos 30 dias, todos os filtros preenchidos
-GET {{baseUrl}}/relatorios/exportar?data_inicial=2026-08-27&data_final=2026-09-25&formato=pdf
+GET {{baseUrl}}/relatorios/exportar?data_inicial=2026-08-27&data_final=2026-09-25&tecnico=4&formato=pdf
 Authorization: Bearer {{token}}
