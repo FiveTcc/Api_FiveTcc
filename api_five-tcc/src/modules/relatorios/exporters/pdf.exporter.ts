@@ -33,7 +33,7 @@ const fonts = {
 export class PdfExporter {
   async gerar(dados: {
     filtros: any;
-    resumo: { total: number; abertas: number; concluidas: number; tempoMedioHoras: number };
+    resumo: { total: number; abertas: number; emAndamento: number; concluidas: number; canceladas: number; tempoMedioHoras: number };
     agrupamento?: any[];
     linhas: any[];
   }) {
@@ -61,13 +61,33 @@ export class PdfExporter {
           alignment: 'center',
         },
 
+        { text: 'Visão executiva', style: 'secao', margin: [0, 15, 0, 5] },
+        {
+          table: {
+            headerRows: 1,
+            widths: ['*', '*', '*', '*' ],
+            body: [
+              ['Ocorrências', 'Ambientes', 'Tipos de problema', 'Dias com pico'],
+              ...dados.linhas.map((l) => [
+                l.status,
+                l.prioridade,
+                l.ambiente ?? '-',
+                l.componente ?? '-',
+              ]),
+            ],
+          },
+        },
+
+
         {
           table: {
             widths: ['*', 'auto'],
             body: [
               ['Total de ocorrências', String(dados.resumo.total)],
               ['Abertas', String(dados.resumo.abertas)],
+              ['Em Andamento', String(dados.resumo.emAndamento)],
               ['Concluídas', String(dados.resumo.concluidas)],
+              ['Canceladas', String(dados.resumo.canceladas)],
               ['Tempo médio de atendimento (h)', String(dados.resumo.tempoMedioHoras)],
             ],
           },
@@ -76,11 +96,10 @@ export class PdfExporter {
         {
           table: {
             headerRows: 1,
-            widths: ['auto', 'auto', 'auto', '*', '*'],
+            widths: ['auto', 'auto', '*', '*'],
             body: [
-              ['ID', 'Status', 'Prioridade', 'Ambiente', 'Componente'],
+              ['Status', 'Prioridade', 'Ambiente', 'Componente'],
               ...dados.linhas.map((l) => [
-                String(l.id),
                 l.status,
                 l.prioridade,
                 l.ambiente ?? '-',

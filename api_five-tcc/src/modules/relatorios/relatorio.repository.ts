@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { and, eq, gte, lte, sql, SQL } from 'drizzle-orm';
+import { and, desc, eq, gte, lte, sql, SQL } from 'drizzle-orm';
 import { DRIZZLE } from 'src/db/database/database.constants';
 import type { DrizzleDB } from 'src/db/types/drizzleDB';
 import {
@@ -25,7 +25,9 @@ export class RelatorioRepository {
       condicoes.push(gte(ocorrencias.criado_em, new Date(filtro.data_inicial)));
     }
     if (filtro.data_final) {
-      condicoes.push(lte(ocorrencias.criado_em, new Date(filtro.data_final)));
+      const fim = new Date(filtro.data_final);
+      fim.setHours(23, 59, 59, 999);
+      condicoes.push(lte(ocorrencias.criado_em, fim));
     }
     if (filtro.status) {
       condicoes.push(eq(ocorrencias.ocor_status, STATUS_MAP[filtro.status]));
@@ -41,12 +43,29 @@ export class RelatorioRepository {
   }
 
   // Busca as ocorrências detalhadas para montar as linhas do relatório.
+  // Os técnicos vinculados vêm agregados numa string só (via subquery com
+  // GROUP_CONCAT), evitando que uma ocorrência com vários técnicos apareça
+  // duplicada — uma linha por técnico.
   async buscarOcorrencias(filtro: FilterRelatorioDto) {
     const condicoes = this.montarCondicoes(filtro);
 
+    const tecnicosAgrupados = this.db
+      .select({
+        ocorrencia_id: ocorrencias_user.ocorrencia_id,
+        tecnicos: sql<string>`GROUP_CONCAT(DISTINCT ${User.user_nome} SEPARATOR ', ')`.as(
+          'tecnicos',
+        ),
+      })
+      .from(ocorrencias_user)
+      .innerJoin(User, eq(User.id_user, ocorrencias_user.user_id))
+      .groupBy(ocorrencias_user.ocorrencia_id)
+      .as('tecnicos_agrupados');
+
     const query = this.db
       .select({
-        id: ocorrencias.id_ocor,
+        nome: ocorrencias.ocor_nome,
+        criado_por: User.user_nome,
+        tecnico_responsavel: tecnicosAgrupados.tecnicos,
         status: ocorrencias.ocor_status,
         prioridade: ocorrencias.ocor_prioridade,
         criado_em: ocorrencias.criado_em,
@@ -55,13 +74,25 @@ export class RelatorioRepository {
         componente: Componentes.compo_nome,
       })
       .from(ocorrencias)
+      .leftJoin(User, eq(ocorrencias.id_user, User.id_user))
+      .leftJoin(tecnicosAgrupados, eq(tecnicosAgrupados.ocorrencia_id, ocorrencias.id_ocor))
       .leftJoin(Ambientes, eq(ocorrencias.ambiente_id, Ambientes.id_amb))
-      .leftJoin(Componentes, eq(ocorrencias.componente_id, Componentes.id_compo));
+      .leftJoin(Componentes, eq(ocorrencias.componente_id, Componentes.id_compo))
+      .orderBy(desc(ocorrencias.criado_em));
 
     if (filtro.tecnico) {
-      return query
-        .innerJoin(ocorrencias_user, eq(ocorrencias_user.ocorrencia_id, ocorrencias.id_ocor))
-        .where(and(...condicoes, eq(ocorrencias_user.user_id, filtro.tecnico)));
+      // Filtro por técnico específico: checa existência via EXISTS,
+      // sem juntar ocorrencias_user de novo (evita duplicar linhas).
+      return query.where(
+        and(
+          ...condicoes,
+          sql`EXISTS (
+            SELECT 1 FROM ocorrencias_user
+            WHERE ocorrencias_user.ocorrencia_id = ocorrencias.id_ocorrencia
+            AND ocorrencias_user.user_id = ${filtro.tecnico}
+          )`,
+        ),
+      );
     }
 
     return condicoes.length ? query.where(and(...condicoes)) : query;

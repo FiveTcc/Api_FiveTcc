@@ -11,7 +11,7 @@ export class RelatorioService {
     private readonly repository: RelatorioRepository,
     private readonly excelExporter: ExcelExporter,
     private readonly pdfExporter: PdfExporter,
-  ) {}
+  ) { }
 
   // Monta o relatório (linhas + resumo + agrupamento, se pedido).
   // Aplica a restrição do técnico antes de qualquer consulta.
@@ -65,8 +65,10 @@ export class RelatorioService {
   // Resumo calculado em cima das linhas já filtradas, sem nova consulta.
   private calcularResumo(linhas: Awaited<ReturnType<RelatorioRepository['buscarOcorrencias']>>) {
     const total = linhas.length;
-    const concluidas = linhas.filter((o) => o.status === 'Concluida').length;
-    const abertas = linhas.filter((o) => o.status === 'Aberta').length;
+    const abertas = linhas.filter((o) => o.status === 'aberta').length;
+    const emAndamento = linhas.filter((o) => o.status === 'em andamento').length;
+    const concluidas = linhas.filter((o) => o.status === 'concluida').length;
+    const canceladas = linhas.filter((o) => o.status === 'cancelada').length;
 
     const encerradas = linhas.filter(
       (o): o is typeof o & { encerrado_em: Date } => o.encerrado_em !== null,
@@ -74,15 +76,17 @@ export class RelatorioService {
 
     const tempoMedioHoras = encerradas.length
       ? encerradas.reduce((soma, o) => {
-          const horas = (o.encerrado_em.getTime() - o.criado_em.getTime()) / (1000 * 60 * 60);
-          return soma + horas;
-        }, 0) / encerradas.length
+        const horas = (o.encerrado_em.getTime() - o.criado_em.getTime()) / (1000 * 60 * 60);
+        return soma + horas;
+      }, 0) / encerradas.length
       : 0;
 
     return {
       total,
       abertas,
       concluidas,
+      emAndamento,
+      canceladas,
       tempoMedioHoras: Number(tempoMedioHoras.toFixed(1)),
     };
   }
