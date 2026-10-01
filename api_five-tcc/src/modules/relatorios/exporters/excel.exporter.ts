@@ -5,7 +5,7 @@ import * as ExcelJS from 'exceljs';
 export class ExcelExporter {
   async gerar(dados: {
     filtros: any;
-    resumo: { total: number; abertas: number; concluidas: number; tempoMedioHoras: number };
+    resumo: { total: number; abertas: number; concluidas: number; tempoMedioHoras: number | null };
     agrupamento?: any[];
     linhas: any[];
   }) {
