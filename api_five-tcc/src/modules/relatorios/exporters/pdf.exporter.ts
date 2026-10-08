@@ -92,9 +92,26 @@ const norm = (s?: string | null) =>
 
 const TZ = 'America/Sao_Paulo';
 
-const fmtData = (d?: Date | string | null) =>
-  d ? new Date(d).toLocaleDateString('pt-BR', { timeZone: TZ }) : '-';
+const dois = (n: number) => String(n).padStart(2, '0');
 
+// O banco guarda a hora local (ex.: 22:30) e o Node a lê como UTC.
+// Por isso a data é formatada em UTC, sem conversão de fuso.
+const fmtData = (d?: Date | string | null) => {
+  if (!d) return '-';
+  const dt = new Date(d);
+  if (Number.isNaN(dt.getTime())) return '-';
+  return `${dois(dt.getUTCDate())}/${dois(dt.getUTCMonth() + 1)}/${dt.getUTCFullYear()}`;
+};
+
+// Data e hora de abertura/encerramento da ocorrência
+const fmtMomento = (d?: Date | string | null) => {
+  if (!d) return '-';
+  const dt = new Date(d);
+  if (Number.isNaN(dt.getTime())) return '-';
+  return `${fmtData(dt)} ${dois(dt.getUTCHours())}:${dois(dt.getUTCMinutes())}`;
+};
+
+// "Gerado em" é o instante real de agora, então usa o fuso de Brasília.
 const fmtDataHora = (d: Date) =>
   d.toLocaleString('pt-BR', { timeZone: TZ });
 
@@ -141,7 +158,7 @@ export class PdfExporter {
         pdfDoc.on('end', () =>
           resolve({
             buffer: Buffer.concat(chunks),
-            nomeArquivo: `relatorio-ocorrencias-${agora.toISOString().slice(0, 10)}.pdf`,
+            nomeArquivo: `relatorio-ocorrencias-${agora.toLocaleDateString('en-CA', { timeZone: TZ })}.pdf`,
             contentType: 'application/pdf',
           }),
         );
@@ -310,8 +327,8 @@ export class PdfExporter {
             l.ambiente ?? '-',
             l.componente ?? '-',
             l.tecnicos ?? '-',
-            fmtData(l.criadoEm),
-            fmtData(l.encerradoEm),
+            fmtMomento(l.criadoEm),
+            fmtMomento(l.encerradoEm),
           ]),
         ],
       },
