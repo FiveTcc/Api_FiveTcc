@@ -62,6 +62,7 @@ export interface RelatorioLinha {
   prioridade: string;
   ambiente?: string | null;
   componente?: string | null;
+  criadoPor?: string | null;
   tecnicos?: string | null;
   criadoEm?: Date | string | null;
   encerradoEm?: Date | string | null;
@@ -312,11 +313,11 @@ export class PdfExporter {
       table: {
         headerRows: 1,
         dontBreakRows: true,
-        widths: ['auto', '*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+        widths: ['auto', '*', 'auto', 'auto', 'auto', 'auto', 'auto','auto', 'auto', 'auto'],
         body: [
           [
             cab('Nº'), cab('Título'), cab('Status'), cab('Prioridade'),
-            cab('Ambiente'), cab('Componente'), cab('Técnico(s)'),
+            cab('Ambiente'), cab('Componente'), cab('Criado Por'), cab('Técnico(s) atributo(s)'),
             cab('Abertura'), cab('Encerramento'),
           ],
           ...linhas.map((l): TableCell[] => [
@@ -326,6 +327,7 @@ export class PdfExporter {
             { text: l.prioridade, fillColor: COR_PRIORIDADE[norm(l.prioridade)] },
             l.ambiente ?? '-',
             l.componente ?? '-',
+            l.criadoPor ?? '-',
             l.tecnicos ?? '-',
             fmtMomento(l.criadoEm),
             fmtMomento(l.encerradoEm),
