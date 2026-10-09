@@ -317,7 +317,7 @@ export class PdfExporter {
         body: [
           [
             cab('Nº'), cab('Título'), cab('Status'), cab('Prioridade'),
-            cab('Ambiente'), cab('Componente'), cab('Criado Por'), cab('Técnico(s) atributo(s)'),
+            cab('Ambiente'), cab('Componente'), cab('Criado Por'), cab('Técnico(s) Atribuído(s)'),
             cab('Abertura'), cab('Encerramento'),
           ],
           ...linhas.map((l): TableCell[] => [

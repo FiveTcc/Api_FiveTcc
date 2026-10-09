@@ -14,6 +14,7 @@ const COR = {
   borda: 'FFD1D5DB',
   cinza: 'FF6B7280',
   texto: 'FF1F2937',
+  fundoFiltro: 'FFF3F4F6',
 };
 
 // chaves normalizadas (minúsculas, sem acento) — mesmas cores do PDF
@@ -38,7 +39,6 @@ const BORDA: Partial<ExcelJS.Borders> = {
   bottom: LADO,
   right: LADO,
 };
-const BRANCO_MEDIO = { style: 'medium' as const, color: { argb: COR.branco } };
 
 const ROTULOS_AGRUPAMENTO: Record<string, string> = {
   status: 'Status',
@@ -51,30 +51,13 @@ const ROTULOS_AGRUPAMENTO: Record<string, string> = {
 
 const TZ = 'America/Sao_Paulo';
 
-// ---- Medidas padrão ----
-const COLUNAS = 24; // grade da aba "Relatório"
-const LARGURA_COLUNA = 9;
+// ---- Medidas padrão (iguais em todas as planilhas) ----
 const LOGO_PX = 64;
 const INDENT_TITULO = 10; // recuo do título para não ficar sobre o logo
-const LINHA_SECAO = 6; // (aba Agrupamento) título de seção
-const LINHA_TABELA = 7; // (aba Agrupamento) cabeçalho da tabela
+const LINHA_SECAO = 6; // título da seção
+const LINHA_TABELA = 7; // cabeçalho da tabela principal
 const ALTURA_LINHA = 20;
 const ALTURA_CABECALHO = 22;
-const TOP_RANKING = 5;
-
-// Colunas do detalhamento (mesma ordem do PDF), mapeadas na grade de 24 colunas.
-const COLUNAS_DETALHE = [
-  { titulo: 'Nº', de: 1, ate: 1 },
-  { titulo: 'Título', de: 2, ate: 5 },
-  { titulo: 'Status', de: 6, ate: 7 },
-  { titulo: 'Prioridade', de: 8, ate: 9 },
-  { titulo: 'Ambiente', de: 10, ate: 12 },
-  { titulo: 'Componente', de: 13, ate: 14 },
-  { titulo: 'Criado por', de: 15, ate: 17 },
-  { titulo: 'Técnico(s)', de: 18, ate: 20 },
-  { titulo: 'Abertura', de: 21, ate: 22 },
-  { titulo: 'Encerramento', de: 23, ate: 24 },
-];
 
 const rodapeImpressao = (geradoEm: string) =>
   `&L&8N.O.S • Gerado em ${geradoEm}&R&8Página &P de &N`;
@@ -86,7 +69,7 @@ const preencher = (cell: ExcelJS.Cell, argb: string) => {
   cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb } };
 };
 
-// Estilo dos cabeçalhos de tabela da aba Agrupamento (azul, texto branco).
+// Estilo dos cabeçalhos de tabela (azul, texto branco, centralizado).
 const estilizarCabecalho = (row: ExcelJS.Row) => {
   row.height = ALTURA_CABECALHO;
   row.eachCell((cell) => {
@@ -97,41 +80,27 @@ const estilizarCabecalho = (row: ExcelJS.Row) => {
   });
 };
 
-interface OpcoesBloco {
-  valor?: ExcelJS.CellValue;
-  fonte?: Partial<ExcelJS.Font>;
-  fundo?: string;
-  borda?: Partial<ExcelJS.Borders>;
-  alinhamento?: Partial<ExcelJS.Alignment>;
-  numFmt?: string;
-}
-
-// Estiliza a célula principal e só depois mescla a área, para que as
-// células mescladas herdem o mesmo estilo.
-const bloco = (
-  aba: ExcelJS.Worksheet,
-  l1: number,
-  c1: number,
-  l2: number,
-  c2: number,
-  o: OpcoesBloco,
-) => {
-  const cell = aba.getCell(l1, c1);
-  if (o.valor !== undefined) cell.value = o.valor;
-  if (o.fonte) cell.font = o.fonte;
-  if (o.fundo) preencher(cell, o.fundo);
-  if (o.borda) cell.border = o.borda;
-  if (o.alinhamento) cell.alignment = o.alinhamento;
-  if (o.numFmt) cell.numFmt = o.numFmt;
-  if (l1 !== l2 || c1 !== c2) aba.mergeCells(l1, c1, l2, c2);
-};
-
 // O banco guarda a hora local (ex.: 22:30) e o Node a lê como UTC.
 // O ExcelJS grava pelos campos UTC, então basta repassar a data sem ajuste.
 const paraExcel = (d?: Date | string | null): Date | null => {
   if (!d) return null;
   const data = new Date(d);
   return Number.isNaN(data.getTime()) ? null : data;
+};
+
+// Só a data (Excel: dd/mm/aaaa)
+const soData = (d?: Date | string | null): Date | null => {
+  const dt = paraExcel(d);
+  return dt
+    ? new Date(Date.UTC(dt.getUTCFullYear(), dt.getUTCMonth(), dt.getUTCDate()))
+    : null;
+};
+
+// Só a hora, como fração do dia (Excel: hh:mm). Os segundos são descartados,
+// igual ao PDF.
+const soHora = (d?: Date | string | null): number | null => {
+  const dt = paraExcel(d);
+  return dt ? (dt.getUTCHours() * 60 + dt.getUTCMinutes()) / 1440 : null;
 };
 
 const formatarDia = (valor: unknown): string => {
@@ -143,7 +112,7 @@ const formatarDia = (valor: unknown): string => {
   return `${dia}/${mes}/${ano}`;
 };
 
-// Valores da aba de agrupamento: nulos viram "-", totais viram número
+// Valores da planilha de agrupamento: nulos viram "-", totais viram número
 // (o MySQL pode devolver count(*) como string) e datas viram dd/mm/aaaa.
 const formatarCelula = (chave: string, valor: unknown): string | number => {
   if (valor === null || valor === undefined) return '-';
@@ -155,18 +124,9 @@ const formatarCelula = (chave: string, valor: unknown): string | number => {
   return String(valor);
 };
 
-// Quantas linhas um texto ocupa numa área mesclada (estimativa para a altura da linha).
-const linhasNecessarias = (texto: string, colunasMescladas: number) => {
-  const capacidade = Math.max(
-    1,
-    Math.floor(colunasMescladas * LARGURA_COLUNA * 0.85),
-  );
-  return Math.max(1, Math.ceil(texto.length / capacidade));
-};
-
-// Faixa do topo: logo + título + subtítulo + linha azul.
+// Faixa do topo, igual em todas as planilhas: logo + título + subtítulo + linha azul.
 // As células da faixa ficam brancas, o que esconde a grade atrás do logo.
-// As colunas da aba precisam estar com a largura definida ANTES de chamar.
+// As colunas da planilha precisam estar com a largura definida ANTES de chamar.
 const montarTopo = (
   workbook: ExcelJS.Workbook,
   aba: ExcelJS.Worksheet,
@@ -234,10 +194,99 @@ const tituloSecao = (
   aba.getRow(linha).height = ALTURA_LINHA;
 };
 
+interface OpcoesAba {
+  nome: string; // nome da planilha
+  titulo: string; // título da seção e do subtítulo
+  origem: string; // "Gerado em ... por ..."
+  geradoEm: string;
+  tabela: string; // nome da tabela nativa (único no arquivo)
+  colunas: string[];
+  larguras: number[];
+  linhas: ExcelJS.CellValue[][];
+  orientacao?: 'portrait' | 'landscape';
+  centralizadas?: number[]; // colunas centralizadas (começando em 1)
+}
+
+// Cria uma planilha com a faixa do topo + uma tabela nativa do Excel.
+// Devolve a planilha para quem quiser aplicar formatações extras.
+const criarAbaTabela = (
+  workbook: ExcelJS.Workbook,
+  o: OpcoesAba,
+): ExcelJS.Worksheet => {
+  const aba = workbook.addWorksheet(o.nome, {
+    properties: { tabColor: { argb: COR.primaria } },
+    views: [{ state: 'frozen', ySplit: LINHA_TABELA }],
+    pageSetup: {
+      orientation: o.orientacao ?? 'portrait',
+      fitToPage: true,
+      fitToWidth: 1,
+      fitToHeight: 0,
+      printTitlesRow: `${LINHA_TABELA}:${LINHA_TABELA}`,
+    },
+    headerFooter: { oddFooter: rodapeImpressao(o.geradoEm) },
+  });
+  o.larguras.forEach((w, i) => {
+    aba.getColumn(i + 1).width = w;
+  });
+
+  // A faixa do topo ocupa pelo menos 3 colunas, para o título caber.
+  const ultima = Math.max(o.colunas.length, 3);
+  montarTopo(workbook, aba, `${o.titulo}  •  ${o.origem}`, ultima);
+  tituloSecao(aba, LINHA_SECAO, o.titulo, ultima);
+
+  // Sem linhas, o ExcelJS não gera uma tabela válida: só cabeçalho + aviso.
+  if (!o.linhas.length) {
+    aba.getRow(LINHA_TABELA).values = o.colunas;
+    estilizarCabecalho(aba.getRow(LINHA_TABELA));
+    const aviso = aba.getCell(`A${LINHA_TABELA + 1}`);
+    aviso.value = 'Sem dados para os filtros informados.';
+    aviso.font = { italic: true, color: { argb: COR.cinza } };
+    return aba;
+  }
+
+  aba.addTable({
+    name: o.tabela,
+    ref: `A${LINHA_TABELA}`,
+    headerRow: true,
+    totalsRow: false,
+    style: { theme: 'TableStyleMedium2', showRowStripes: true },
+    columns: o.colunas.map((name) => ({ name, filterButton: true })),
+    rows: o.linhas,
+  });
+
+  // Cabeçalho na cor da marca (sobrepõe o azul padrão da tabela)
+  estilizarCabecalho(aba.getRow(LINHA_TABELA));
+
+  const centro = o.centralizadas ?? [];
+  o.linhas.forEach((valores, i) => {
+    const row = aba.getRow(LINHA_TABELA + 1 + i);
+
+    // Altura conforme o texto que mais quebra em várias linhas
+    const quebras = valores.map((v, c) =>
+      typeof v === 'string'
+        ? Math.ceil(v.length / Math.max(1, Math.floor(o.larguras[c] * 0.9)))
+        : 1,
+    );
+    row.height = ALTURA_LINHA + (Math.max(1, ...quebras) - 1) * 13;
+
+    for (let c = 1; c <= o.colunas.length; c++) {
+      const cell = row.getCell(c);
+      cell.border = BORDA;
+      cell.alignment = {
+        vertical: 'middle',
+        horizontal: centro.includes(c) ? 'center' : 'left',
+        wrapText: true,
+      };
+    }
+  });
+
+  return aba;
+};
+
 @Injectable()
 export class ExcelExporter {
   // Recebe o MESMO objeto do PDF (RelatorioDados); o agrupamento é opcional
-  // e só gera uma aba extra quando o usuário pede "agruparPor".
+  // e só gera uma planilha extra quando o usuário pede "agruparPor".
   async gerar(dados: RelatorioDados & { agrupamento?: any[] }) {
     const workbook = new ExcelJS.Workbook();
     workbook.creator = 'N.O.S';
@@ -247,7 +296,42 @@ export class ExcelExporter {
     const geradoEm = agora.toLocaleString('pt-BR', { timeZone: TZ });
     const origem = `Gerado em ${geradoEm} por ${dados.geradoPor.nome} (${dados.geradoPor.perfil})`;
 
-    this.montarRelatorio(workbook, dados, origem, geradoEm);
+    this.montarResumo(workbook, dados, origem, geradoEm);
+    this.montarOcorrencias(workbook, dados.linhas, origem, geradoEm);
+
+    const rk = dados.rankings;
+    if (rk?.ambientes) {
+      this.montarRanking(workbook, origem, geradoEm, {
+        nome: 'Ambientes',
+        titulo: 'Ambientes com mais ocorrências',
+        tabela: 'TabelaAmbientes',
+        rotuloNome: 'Ambiente',
+        rotuloTotal: 'Ocorrências',
+        itens: rk.ambientes,
+      });
+    }
+    if (rk?.componentes) {
+      this.montarRanking(workbook, origem, geradoEm, {
+        nome: 'Componentes',
+        titulo: 'Componentes com mais falhas',
+        tabela: 'TabelaComponentes',
+        rotuloNome: 'Componente',
+        rotuloTotal: 'Falhas',
+        itens: rk.componentes,
+      });
+    }
+    // O service só envia este ranking quando o relatório é gerado por admin.
+    if (rk?.tecnicos) {
+      this.montarRanking(workbook, origem, geradoEm, {
+        nome: 'Técnicos',
+        titulo: 'Técnicos com mais atendimentos',
+        tabela: 'TabelaTecnicos',
+        rotuloNome: 'Técnico',
+        rotuloTotal: 'Atendimentos',
+        itens: rk.tecnicos,
+      });
+    }
+
     if (dados.agrupamento?.length) {
       this.montarAgrupamento(workbook, dados.agrupamento, origem, geradoEm);
     }
@@ -262,248 +346,171 @@ export class ExcelExporter {
     };
   }
 
-  // ---------- Aba "Relatório" (mesmo esquema do PDF) ----------
-  private montarRelatorio(
+  // ---------- Planilha Resumo: filtros + indicadores + por prioridade ----------
+  private montarResumo(
     workbook: ExcelJS.Workbook,
     dados: RelatorioDados,
     origem: string,
     geradoEm: string,
   ) {
-    const aba = workbook.addWorksheet('Relatório', {
+    const aba = workbook.addWorksheet('Resumo', {
       properties: { tabColor: { argb: COR.primaria } },
       pageSetup: {
-        orientation: 'landscape',
+        orientation: 'portrait',
         fitToPage: true,
         fitToWidth: 1,
         fitToHeight: 0,
       },
       headerFooter: { oddFooter: rodapeImpressao(geradoEm) },
     });
-    aba.columns = Array.from({ length: COLUNAS }, () => ({
-      width: LARGURA_COLUNA,
-    }));
+    aba.columns = [{ width: 34 }, { width: 22 }, { width: 22 }];
 
-    // Linhas 1 a 5: faixa do topo
-    montarTopo(workbook, aba, origem, COLUNAS);
+    montarTopo(workbook, aba, `Resumo  •  ${origem}`, 3);
 
-    let linha = 6;
-
-    // ----- Filtros (linha de texto, igual ao PDF) -----
+    const r = dados.resumo;
     const f = dados.filtros ?? {};
+
+    // ----- Filtros aplicados (linhas 6 a 11) -----
+    tituloSecao(aba, LINHA_SECAO, 'Filtros aplicados', 3);
+
     const periodo =
       f.inicio || f.fim
         ? `${f.inicio ? formatarDia(f.inicio) : '-'} a ${f.fim ? formatarDia(f.fim) : '-'}`
         : 'Todo o período';
 
-    const filtros = [
-      `Período: ${periodo}`,
-      `Ambiente: ${f.ambiente ?? 'Todos'}`,
-      `Status: ${f.status ?? 'Todos'}`,
-      `Prioridade: ${f.prioridade ?? 'Todas'}`,
-      `Técnico: ${f.tecnico ?? 'Todos'}`,
-    ].join('   |   ');
-
-    aba.getRow(linha).height = ALTURA_LINHA;
-    bloco(aba, linha, 1, linha, COLUNAS, {
-      valor: filtros,
-      fonte: { size: 9, color: { argb: COR.cinza } },
-      alinhamento: { vertical: 'middle', horizontal: 'left', indent: 1 },
-    });
-    linha++;
-    aba.getRow(linha).height = 8;
-    linha++;
-
-    // ----- Resumo: cartões -----
-    tituloSecao(aba, linha, 'Resumo', COLUNAS);
-    linha++;
-
-    const r = dados.resumo;
-    const semTempo = r.concluidas === 0 || r.tempoMedioHoras == null;
-    const cards: { rotulo: string; valor: number | string; numFmt?: string }[] = [
-      { rotulo: 'Total', valor: r.total },
-      { rotulo: 'Abertas', valor: r.abertas },
-      { rotulo: 'Em andamento', valor: r.emAndamento },
-      { rotulo: 'Concluídas', valor: r.concluidas },
-      { rotulo: 'Canceladas', valor: r.canceladas },
-      {
-        rotulo: 'Tempo médio',
-        valor: semTempo ? '—' : (r.tempoMedioHoras as number),
-        numFmt: semTempo ? undefined : '0.0 "h"',
-      },
+    const filtros: [string, string][] = [
+      ['Período', periodo],
+      ['Ambiente', f.ambiente ?? 'Todos'],
+      ['Status', f.status ?? 'Todos'],
+      ['Prioridade', f.prioridade ?? 'Todas'],
+      ['Técnico', f.tecnico ?? 'Todos'],
     ];
 
-    aba.getRow(linha).height = 32;
-    aba.getRow(linha + 1).height = 18;
-    const largCard = COLUNAS / cards.length; // 4 colunas por cartão
-    cards.forEach((c, i) => {
-      const c1 = 1 + i * largCard;
-      const c2 = c1 + largCard - 1;
-      bloco(aba, linha, c1, linha, c2, {
-        valor: c.valor,
-        fonte: { size: 18, bold: true, color: { argb: COR.primaria } },
-        borda: { top: LADO, left: LADO, right: LADO },
-        alinhamento: { vertical: 'middle', horizontal: 'center' },
-        numFmt: c.numFmt,
-      });
-      bloco(aba, linha + 1, c1, linha + 1, c2, {
-        valor: c.rotulo,
-        fonte: { size: 9, color: { argb: COR.cinza } },
-        borda: { left: LADO, right: LADO, bottom: LADO },
-        alinhamento: { vertical: 'middle', horizontal: 'center' },
-      });
-    });
-    linha += 2;
-
-    // ----- Por prioridade (mesmo texto do PDF) -----
-    if (dados.porPrioridade) {
-      const texto = Object.entries(dados.porPrioridade)
-        .map(([prioridade, qtd]) => `${prioridade}: ${qtd}`)
-        .join('   •   ');
-      aba.getRow(linha).height = ALTURA_LINHA + 4;
-      bloco(aba, linha, 1, linha, COLUNAS, {
-        valor: `Por prioridade — ${texto}`,
-        fonte: { size: 10, color: { argb: COR.texto } },
-        alinhamento: { vertical: 'middle', horizontal: 'left' },
-      });
-      linha++;
-    }
-
-    aba.getRow(linha).height = 10;
-    linha++;
-
-    // ----- Análises: rankings lado a lado -----
-    linha = this.montarRankings(aba, linha, dados.rankings);
-
-    aba.getRow(linha).height = 10;
-    linha++;
-
-    // ----- Detalhamento -----
-    this.montarDetalhe(aba, linha, dados.linhas);
-  }
-
-  // Tabelas lado a lado, dividindo a largura em partes iguais
-  // (3 tabelas para admin, 2 para técnico, que não recebe o ranking de técnicos).
-  private montarRankings(
-    aba: ExcelJS.Worksheet,
-    inicio: number,
-    rk?: RelatorioDados['rankings'],
-  ): number {
-    if (!rk) return inicio;
-
-    const tabelas = [
-      { titulo: 'Ambientes com mais ocorrências', itens: rk.ambientes },
-      { titulo: 'Componentes com mais falhas', itens: rk.componentes },
-      { titulo: 'Técnicos com mais atendimentos', itens: rk.tecnicos },
-    ].filter(
-      (t): t is { titulo: string; itens: RankingItem[] } => t.itens !== undefined,
-    );
-
-    if (!tabelas.length) return inicio;
-
-    let linha = inicio;
-    tituloSecao(aba, linha, 'Análises', COLUNAS);
-    linha++;
-
-    const largura = COLUNAS / tabelas.length; // 8 ou 12 colunas por tabela
-    const faixa = (k: number) => ({ c1: 1 + k * largura, c2: (k + 1) * largura });
-
-    // Cabeçalhos
-    aba.getRow(linha).height = ALTURA_CABECALHO;
-    tabelas.forEach((t, k) => {
-      const { c1, c2 } = faixa(k);
-      bloco(aba, linha, c1, linha, c2, {
-        valor: t.titulo,
-        fonte: { bold: true, color: { argb: COR.branco } },
-        fundo: COR.primaria,
-        borda: { left: BRANCO_MEDIO, right: BRANCO_MEDIO },
-        alinhamento: { vertical: 'middle', horizontal: 'left', indent: 1 },
-      });
-    });
-    linha++;
-
-    // Linhas (top 5 de cada tabela)
-    const topos = tabelas.map((t) => t.itens.slice(0, TOP_RANKING));
-    const qtdLinhas = Math.max(1, ...topos.map((t) => t.length));
-
-    for (let i = 0; i < qtdLinhas; i++) {
+    filtros.forEach(([rotulo, valor], i) => {
+      const linha = 7 + i;
       aba.getRow(linha).height = ALTURA_LINHA;
+      aba.mergeCells(`B${linha}:C${linha}`);
 
-      tabelas.forEach((_, k) => {
-        const { c1, c2 } = faixa(k);
-        const topo = topos[k];
+      const a = aba.getCell(`A${linha}`);
+      a.value = rotulo;
+      a.font = { bold: true };
+      a.alignment = { vertical: 'middle', horizontal: 'left' };
+      preencher(a, COR.fundoFiltro);
 
-        if (topo.length === 0) {
-          if (i === 0) {
-            bloco(aba, linha, c1, linha, c2, {
-              valor: 'Sem dados',
-              fonte: { color: { argb: COR.cinza } },
-              borda: { left: BRANCO_MEDIO, right: BRANCO_MEDIO, bottom: LADO },
-              alinhamento: { vertical: 'middle', horizontal: 'left', indent: 1 },
-            });
-          }
-          return;
-        }
+      const b = aba.getCell(`B${linha}`);
+      b.value = valor;
+      b.alignment = { vertical: 'middle', horizontal: 'left' };
 
-        const item = topo[i];
-        if (!item) return;
-
-        bloco(aba, linha, c1, linha, c2 - 1, {
-          valor: item.nome,
-          borda: { left: BRANCO_MEDIO, bottom: LADO },
-          alinhamento: { vertical: 'middle', horizontal: 'left', indent: 1 },
-        });
-        bloco(aba, linha, c2, linha, c2, {
-          valor: Number(item.total),
-          borda: { right: BRANCO_MEDIO, bottom: LADO },
-          alinhamento: { vertical: 'middle', horizontal: 'right', indent: 1 },
-        });
-      });
-      linha++;
-    }
-
-    return linha;
-  }
-
-  // Detalhamento: mesmas colunas e cores do PDF; abertura e encerramento com horário.
-  private montarDetalhe(
-    aba: ExcelJS.Worksheet,
-    inicio: number,
-    linhas: RelatorioDados['linhas'],
-  ) {
-    let linha = inicio;
-    tituloSecao(aba, linha, 'Detalhamento das ocorrências', COLUNAS);
-    linha++;
-
-    if (!linhas.length) {
-      bloco(aba, linha, 1, linha, COLUNAS, {
-        valor: 'Nenhuma ocorrência encontrada para os filtros informados.',
-        fonte: { color: { argb: COR.cinza } },
-        alinhamento: { vertical: 'middle', horizontal: 'left' },
-      });
-      return;
-    }
-
-    // Cabeçalho (repetido a cada página na impressão)
-    aba.getRow(linha).height = ALTURA_CABECALHO;
-    COLUNAS_DETALHE.forEach((c) => {
-      bloco(aba, linha, c.de, linha, c.ate, {
-        valor: c.titulo,
-        fonte: { bold: true, color: { argb: COR.branco } },
-        fundo: COR.primaria,
-        alinhamento: { vertical: 'middle', horizontal: 'left', indent: 1 },
+      ['A', 'B', 'C'].forEach((col) => {
+        aba.getCell(`${col}${linha}`).border = BORDA;
       });
     });
-    aba.pageSetup.printTitlesRow = `${linha}:${linha}`;
-    linha++;
 
-    const formatoData = 'dd/mm/yyyy hh:mm';
+    // ----- Indicadores (tabela nativa, linhas 13 a 20) -----
+    tituloSecao(aba, 13, 'Indicadores', 3);
 
-    linhas.forEach((l) => {
-      const abertura = paraExcel(l.criadoEm);
-      const encerramento = paraExcel(l.encerradoEm);
+    const semTempo = r.concluidas === 0 || r.tempoMedioHoras == null;
+    aba.addTable({
+      name: 'TabelaIndicadores',
+      ref: 'A14',
+      headerRow: true,
+      totalsRow: false,
+      style: { theme: 'TableStyleMedium2', showRowStripes: true },
+      columns: [
+        { name: 'Indicador', filterButton: false },
+        { name: 'Quantidade', filterButton: false },
+      ],
+      rows: [
+        ['Total de ocorrências', r.total],
+        ['Abertas', r.abertas],
+        ['Em andamento', r.emAndamento],
+        ['Concluídas', r.concluidas],
+        ['Canceladas', r.canceladas],
+        ['Tempo médio de atendimento', semTempo ? '—' : (r.tempoMedioHoras as number)],
+      ],
+    });
+    estilizarCabecalho(aba.getRow(14));
 
-      // Mesma ordem de COLUNAS_DETALHE
-      const valores: ExcelJS.CellValue[] = [
+    for (let i = 0; i < 6; i++) {
+      const row = aba.getRow(15 + i);
+      row.height = ALTURA_LINHA;
+      const a = row.getCell(1);
+      const b = row.getCell(2);
+      a.border = BORDA;
+      b.border = BORDA;
+      a.font = { bold: true };
+      a.alignment = { vertical: 'middle', horizontal: 'left' };
+      b.alignment = { vertical: 'middle', horizontal: 'center' };
+    }
+    if (!semTempo) aba.getCell('B20').numFmt = '0.0 "h"';
+
+    // ----- Por prioridade (tabela nativa, a partir da linha 22) -----
+    if (dados.porPrioridade) {
+      tituloSecao(aba, 22, 'Ocorrências por prioridade', 3);
+
+      const itens = Object.entries(dados.porPrioridade);
+
+      if (!itens.length) {
+        aba.getRow(23).values = ['Prioridade', 'Quantidade'];
+        estilizarCabecalho(aba.getRow(23));
+        const aviso = aba.getCell('A24');
+        aviso.value = 'Sem dados para os filtros informados.';
+        aviso.font = { italic: true, color: { argb: COR.cinza } };
+        return;
+      }
+
+      aba.addTable({
+        name: 'TabelaPrioridades',
+        ref: 'A23',
+        headerRow: true,
+        totalsRow: false,
+        style: { theme: 'TableStyleMedium2', showRowStripes: true },
+        columns: [
+          { name: 'Prioridade', filterButton: false },
+          { name: 'Quantidade', filterButton: false },
+        ],
+        rows: itens.map(([prioridade, qtd]) => [prioridade, Number(qtd)]),
+      });
+      estilizarCabecalho(aba.getRow(23));
+
+      itens.forEach(([prioridade], i) => {
+        const row = aba.getRow(24 + i);
+        row.height = ALTURA_LINHA;
+        const a = row.getCell(1);
+        const b = row.getCell(2);
+        a.border = BORDA;
+        b.border = BORDA;
+        a.alignment = { vertical: 'middle', horizontal: 'left' };
+        b.alignment = { vertical: 'middle', horizontal: 'center' };
+        const cor = COR_PRIORIDADE[norm(prioridade)];
+        if (cor) preencher(a, cor);
+      });
+    }
+  }
+
+  // ---------- Planilha Ocorrências (data e hora em colunas separadas) ----------
+  private montarOcorrencias(
+    workbook: ExcelJS.Workbook,
+    linhas: RelatorioDados['linhas'],
+    origem: string,
+    geradoEm: string,
+  ) {
+    const aba = criarAbaTabela(workbook, {
+      nome: 'Ocorrências',
+      titulo: `Detalhamento das ocorrências (${linhas.length})`,
+      origem,
+      geradoEm,
+      tabela: 'TabelaOcorrencias',
+      orientacao: 'landscape',
+      colunas: [
+        'Nº', 'Título', 'Status', 'Prioridade', 'Ambiente', 'Componente',
+        'Criado por', 'Técnico(s) Atribuído(s)',
+        'Data de abertura', 'Hora de abertura',
+        'Data de encerramento', 'Hora de encerramento',
+      ],
+      larguras: [8, 32, 16, 16, 20, 20, 22, 36, 20, 20, 25, 25],
+      centralizadas: [1, 3, 4, 9, 10, 11, 12],
+      linhas: linhas.map((l) => [
         l.id,
         l.titulo ?? '-',
         l.status,
@@ -512,44 +519,57 @@ export class ExcelExporter {
         l.componente ?? '-',
         l.criadoPor ?? '-',
         l.tecnicos ?? '-',
-        abertura ?? '-',
-        encerramento ?? '-',
-      ];
+        soData(l.criadoEm) ?? '-',
+        soHora(l.criadoEm) ?? '-',
+        soData(l.encerradoEm) ?? '-',
+        soHora(l.encerradoEm) ?? '-',
+      ]),
+    });
 
-      // Altura da linha conforme o maior texto que quebra em várias linhas
-      const necessarias = Math.max(
-        linhasNecessarias(String(valores[1]), 4), // título
-        linhasNecessarias(String(valores[4]), 3), // ambiente
-        linhasNecessarias(String(valores[5]), 2), // componente
-        linhasNecessarias(String(valores[6]), 3), // criado por
-        linhasNecessarias(String(valores[7]), 3), // técnicos
-      );
-      aba.getRow(linha).height = ALTURA_LINHA + (necessarias - 1) * 13;
+    // Cores de status e prioridade (iguais ao PDF) e formato das datas/horas
+    linhas.forEach((l, i) => {
+      const row = aba.getRow(LINHA_TABELA + 1 + i);
 
-      COLUNAS_DETALHE.forEach((c, idx) => {
-        let fundo: string | undefined;
-        if (idx === 2) fundo = COR_STATUS[norm(l.status)];
-        if (idx === 3) fundo = COR_PRIORIDADE[norm(l.prioridade)];
+      const corStatus = COR_STATUS[norm(l.status)];
+      if (corStatus) preencher(row.getCell(3), corStatus);
+      const corPrioridade = COR_PRIORIDADE[norm(l.prioridade)];
+      if (corPrioridade) preencher(row.getCell(4), corPrioridade);
 
-        bloco(aba, linha, c.de, linha, c.ate, {
-          valor: valores[idx],
-          fonte: { size: 10, color: { argb: COR.texto } },
-          fundo,
-          borda: { bottom: LADO },
-          alinhamento: {
-            vertical: 'middle',
-            horizontal: 'left',
-            indent: 1,
-            wrapText: true,
-          },
-          numFmt: idx >= 8 ? formatoData : undefined,
-        });
-      });
-      linha++;
+      row.getCell(9).numFmt = 'dd/mm/yyyy';
+      row.getCell(10).numFmt = 'hh:mm';
+      row.getCell(11).numFmt = 'dd/mm/yyyy';
+      row.getCell(12).numFmt = 'hh:mm';
     });
   }
 
-  // ---------- Aba Agrupamento (extra, só quando pedida) ----------
+  // ---------- Planilhas de ranking (Ambientes, Componentes, Técnicos) ----------
+  private montarRanking(
+    workbook: ExcelJS.Workbook,
+    origem: string,
+    geradoEm: string,
+    o: {
+      nome: string;
+      titulo: string;
+      tabela: string;
+      rotuloNome: string;
+      rotuloTotal: string;
+      itens: RankingItem[];
+    },
+  ) {
+    criarAbaTabela(workbook, {
+      nome: o.nome,
+      titulo: o.titulo,
+      origem,
+      geradoEm,
+      tabela: o.tabela,
+      colunas: ['Posição', o.rotuloNome, o.rotuloTotal],
+      larguras: [10, 44, 16],
+      centralizadas: [1, 3],
+      linhas: o.itens.map((item, i) => [i + 1, item.nome, Number(item.total)]),
+    });
+  }
+
+  // ---------- Planilha Agrupamento (extra, só quando pedida) ----------
   private montarAgrupamento(
     workbook: ExcelJS.Workbook,
     agrupamento: any[],
@@ -557,52 +577,22 @@ export class ExcelExporter {
     geradoEm: string,
   ) {
     const chaves = Object.keys(agrupamento[0]);
-    // A faixa do topo ocupa pelo menos 4 colunas, para o título caber.
-    const ultima = Math.max(chaves.length, 4);
-
-    const aba = workbook.addWorksheet('Agrupamento', {
-      properties: { tabColor: { argb: COR.primaria } },
-      views: [{ state: 'frozen', ySplit: LINHA_TABELA }],
-      pageSetup: {
-        orientation: 'portrait',
-        fitToPage: true,
-        fitToWidth: 1,
-        fitToHeight: 0,
-        printTitlesRow: `${LINHA_TABELA}:${LINHA_TABELA}`,
-      },
-      headerFooter: { oddFooter: rodapeImpressao(geradoEm) },
-    });
-    for (let i = 1; i <= ultima; i++) aba.getColumn(i).width = 24;
-
-    montarTopo(workbook, aba, `Agrupamento  •  ${origem}`, ultima);
-
     const criterio = (ROTULOS_AGRUPAMENTO[chaves[0]] ?? chaves[0]).toLowerCase();
-    tituloSecao(aba, LINHA_SECAO, `Agrupamento por ${criterio}`, ultima);
 
-    aba.addTable({
-      name: 'TabelaAgrupamento',
-      ref: `A${LINHA_TABELA}`,
-      headerRow: true,
-      totalsRow: false,
-      style: { theme: 'TableStyleMedium2', showRowStripes: true },
-      columns: chaves.map((c) => ({ name: ROTULOS_AGRUPAMENTO[c] ?? c })),
-      rows: agrupamento.map((item) =>
+    criarAbaTabela(workbook, {
+      nome: 'Agrupamento',
+      titulo: `Agrupamento por ${criterio}`,
+      origem,
+      geradoEm,
+      tabela: 'TabelaAgrupamento',
+      colunas: chaves.map((c) => ROTULOS_AGRUPAMENTO[c] ?? c),
+      larguras: chaves.map(() => 24),
+      centralizadas: chaves
+        .map((c, i) => (c === 'total' ? i + 1 : 0))
+        .filter((i) => i > 0),
+      linhas: agrupamento.map((item) =>
         chaves.map((c) => formatarCelula(c, item[c])),
       ),
-    });
-    estilizarCabecalho(aba.getRow(LINHA_TABELA));
-
-    agrupamento.forEach((_, i) => {
-      const row = aba.getRow(LINHA_TABELA + 1 + i);
-      row.height = ALTURA_LINHA;
-      chaves.forEach((chave, idx) => {
-        const cell = row.getCell(idx + 1);
-        cell.border = BORDA;
-        cell.alignment = {
-          vertical: 'middle',
-          horizontal: chave === 'total' ? 'center' : 'left',
-        };
-      });
     });
   }
 }
