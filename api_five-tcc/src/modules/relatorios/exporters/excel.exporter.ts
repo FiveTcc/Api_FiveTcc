@@ -58,6 +58,26 @@ const LINHA_SECAO = 6; // título da seção
 const LINHA_TABELA = 7; // cabeçalho da tabela principal
 const ALTURA_LINHA = 20;
 const ALTURA_CABECALHO = 22;
+const LARGURA_PADRAO = 8.43; // largura de uma coluna que não foi definida
+
+// ---- Largura do cabeçalho (em "caracteres" do Excel) ----
+const INDENT_UNIDADES = 13; // espaço do logo + recuo do título
+const TITULO_UNIDADES = 42; // largura do título (fonte 20, negrito)
+const FATOR_SUBTITULO = 0.9; // largura de cada caractere do subtítulo (fonte 9)
+
+// Largura mínima para o título e o subtítulo caberem sem corte.
+// Cresce sozinha se o nome de quem gerou for longo.
+const larguraDoTopo = (subtitulo: string) =>
+  Math.ceil(
+    INDENT_UNIDADES + Math.max(TITULO_UNIDADES, subtitulo.length * FATOR_SUBTITULO),
+  );
+
+// Dados comuns a todas as planilhas do arquivo
+interface Contexto {
+  origem: string; // "Gerado em ... por Nome (perfil)"
+  geradoEm: string;
+  larguraTopo: number;
+}
 
 const rodapeImpressao = (geradoEm: string) =>
   `&L&8N.O.S • Gerado em ${geradoEm}&R&8Página &P de &N`;
@@ -125,8 +145,9 @@ const formatarCelula = (chave: string, valor: unknown): string | number => {
 };
 
 // Faixa do topo, igual em todas as planilhas: logo + título + subtítulo + linha azul.
-// As células da faixa ficam brancas, o que esconde a grade atrás do logo.
-// As colunas da planilha precisam estar com a largura definida ANTES de chamar.
+// Ocupa EXATAMENTE as colunas da tabela (a tabela é alargada para caber, veja
+// criarAbaTabela). As células da faixa ficam brancas, o que esconde a grade
+// atrás do logo. As larguras das colunas precisam estar definidas ANTES de chamar.
 const montarTopo = (
   workbook: ExcelJS.Workbook,
   aba: ExcelJS.Worksheet,
@@ -166,7 +187,7 @@ const montarTopo = (
   aba.mergeCells(`A3:${fim}3`);
 
   // Logo: ~8px da borda esquerda, centralizado na altura das 3 linhas.
-  const larguraA = aba.getColumn(1).width ?? 8.43;
+  const larguraA = aba.getColumn(1).width ?? LARGURA_PADRAO;
   const logoId = workbook.addImage({
     buffer: logoBuffer as unknown as ExcelJS.Buffer,
     extension: 'png',
@@ -177,7 +198,7 @@ const montarTopo = (
   });
 };
 
-// Título de seção (texto azul com fio fino embaixo).
+// Título de seção (texto azul com fio fino embaixo), na largura da tabela.
 const tituloSecao = (
   aba: ExcelJS.Worksheet,
   linha: number,
@@ -190,29 +211,42 @@ const tituloSecao = (
   c.font = { bold: true, size: 11, color: { argb: COR.primaria } };
   c.alignment = { vertical: 'middle', horizontal: 'left' };
   c.border = { bottom: { style: 'thin', color: { argb: COR.primaria } } };
-  aba.mergeCells(`A${linha}:${fim}${linha}`);
+  if (ultimaColuna > 1) aba.mergeCells(`A${linha}:${fim}${linha}`);
   aba.getRow(linha).height = ALTURA_LINHA;
 };
 
 interface OpcoesAba {
   nome: string; // nome da planilha
-  titulo: string; // título da seção e do subtítulo
-  origem: string; // "Gerado em ... por ..."
-  geradoEm: string;
+  titulo: string; // título da seção
   tabela: string; // nome da tabela nativa (único no arquivo)
   colunas: string[];
-  larguras: number[];
+  larguras: number[]; // larguras mínimas desejadas
+  colunaFlex?: number; // coluna (a partir de 0) que absorve a folga; padrão: a última
   linhas: ExcelJS.CellValue[][];
   orientacao?: 'portrait' | 'landscape';
-  centralizadas?: number[]; // colunas centralizadas (começando em 1)
+  centralizadas?: number[]; // colunas centralizadas (a partir de 1)
 }
 
 // Cria uma planilha com a faixa do topo + uma tabela nativa do Excel.
 // Devolve a planilha para quem quiser aplicar formatações extras.
 const criarAbaTabela = (
   workbook: ExcelJS.Workbook,
+  ctx: Contexto,
   o: OpcoesAba,
 ): ExcelJS.Worksheet => {
+  // Cada coluna tem no mínimo o tamanho do próprio título (em negrito) mais
+  // espaço para o botão de filtro, para o cabeçalho nunca ficar cortado.
+  const larguras = o.colunas.map((nome, i) =>
+    Math.max(o.larguras[i] ?? 0, Math.ceil(nome.length * 1.15) + 4),
+  );
+
+  // Se a tabela for mais estreita que a faixa do topo, a coluna flexível
+  // absorve a diferença: tabela e faixa ficam com a mesma largura.
+  const soma = larguras.reduce((a, b) => a + b, 0);
+  if (soma < ctx.larguraTopo) {
+    larguras[o.colunaFlex ?? larguras.length - 1] += ctx.larguraTopo - soma;
+  }
+
   const aba = workbook.addWorksheet(o.nome, {
     properties: { tabColor: { argb: COR.primaria } },
     views: [{ state: 'frozen', ySplit: LINHA_TABELA }],
@@ -223,16 +257,14 @@ const criarAbaTabela = (
       fitToHeight: 0,
       printTitlesRow: `${LINHA_TABELA}:${LINHA_TABELA}`,
     },
-    headerFooter: { oddFooter: rodapeImpressao(o.geradoEm) },
+    headerFooter: { oddFooter: rodapeImpressao(ctx.geradoEm) },
   });
-  o.larguras.forEach((w, i) => {
+  larguras.forEach((w, i) => {
     aba.getColumn(i + 1).width = w;
   });
 
-  // A faixa do topo ocupa pelo menos 3 colunas, para o título caber.
-  const ultima = Math.max(o.colunas.length, 3);
-  montarTopo(workbook, aba, `${o.titulo}  •  ${o.origem}`, ultima);
-  tituloSecao(aba, LINHA_SECAO, o.titulo, ultima);
+  montarTopo(workbook, aba, ctx.origem, o.colunas.length);
+  tituloSecao(aba, LINHA_SECAO, o.titulo, o.colunas.length);
 
   // Sem linhas, o ExcelJS não gera uma tabela válida: só cabeçalho + aviso.
   if (!o.linhas.length) {
@@ -264,7 +296,7 @@ const criarAbaTabela = (
     // Altura conforme o texto que mais quebra em várias linhas
     const quebras = valores.map((v, c) =>
       typeof v === 'string'
-        ? Math.ceil(v.length / Math.max(1, Math.floor(o.larguras[c] * 0.9)))
+        ? Math.ceil(v.length / Math.max(1, Math.floor(larguras[c] * 0.9)))
         : 1,
     );
     row.height = ALTURA_LINHA + (Math.max(1, ...quebras) - 1) * 13;
@@ -295,13 +327,18 @@ export class ExcelExporter {
     const agora = new Date();
     const geradoEm = agora.toLocaleString('pt-BR', { timeZone: TZ });
     const origem = `Gerado em ${geradoEm} por ${dados.geradoPor.nome} (${dados.geradoPor.perfil})`;
+    const ctx: Contexto = {
+      origem,
+      geradoEm,
+      larguraTopo: larguraDoTopo(origem),
+    };
 
-    this.montarResumo(workbook, dados, origem, geradoEm);
-    this.montarOcorrencias(workbook, dados.linhas, origem, geradoEm);
+    this.montarResumo(workbook, dados, ctx);
+    this.montarOcorrencias(workbook, dados.linhas, ctx);
 
     const rk = dados.rankings;
     if (rk?.ambientes) {
-      this.montarRanking(workbook, origem, geradoEm, {
+      this.montarRanking(workbook, ctx, {
         nome: 'Ambientes',
         titulo: 'Ambientes com mais ocorrências',
         tabela: 'TabelaAmbientes',
@@ -311,7 +348,7 @@ export class ExcelExporter {
       });
     }
     if (rk?.componentes) {
-      this.montarRanking(workbook, origem, geradoEm, {
+      this.montarRanking(workbook, ctx, {
         nome: 'Componentes',
         titulo: 'Componentes com mais falhas',
         tabela: 'TabelaComponentes',
@@ -322,7 +359,7 @@ export class ExcelExporter {
     }
     // O service só envia este ranking quando o relatório é gerado por admin.
     if (rk?.tecnicos) {
-      this.montarRanking(workbook, origem, geradoEm, {
+      this.montarRanking(workbook, ctx, {
         nome: 'Técnicos',
         titulo: 'Técnicos com mais atendimentos',
         tabela: 'TabelaTecnicos',
@@ -333,7 +370,7 @@ export class ExcelExporter {
     }
 
     if (dados.agrupamento?.length) {
-      this.montarAgrupamento(workbook, dados.agrupamento, origem, geradoEm);
+      this.montarAgrupamento(workbook, dados.agrupamento, ctx);
     }
 
     const buffer = await workbook.xlsx.writeBuffer();
@@ -350,9 +387,12 @@ export class ExcelExporter {
   private montarResumo(
     workbook: ExcelJS.Workbook,
     dados: RelatorioDados,
-    origem: string,
-    geradoEm: string,
+    ctx: Contexto,
   ) {
+    const COLUNAS = 2; // A: rótulo | B: valor — faixa e tabelas com a mesma largura
+    const larguraA = 30;
+    const larguraB = Math.max(30, ctx.larguraTopo - larguraA);
+
     const aba = workbook.addWorksheet('Resumo', {
       properties: { tabColor: { argb: COR.primaria } },
       pageSetup: {
@@ -361,17 +401,17 @@ export class ExcelExporter {
         fitToWidth: 1,
         fitToHeight: 0,
       },
-      headerFooter: { oddFooter: rodapeImpressao(geradoEm) },
+      headerFooter: { oddFooter: rodapeImpressao(ctx.geradoEm) },
     });
-    aba.columns = [{ width: 34 }, { width: 22 }, { width: 22 }];
+    aba.columns = [{ width: larguraA }, { width: larguraB }];
 
-    montarTopo(workbook, aba, `Resumo  •  ${origem}`, 3);
+    montarTopo(workbook, aba, ctx.origem, COLUNAS);
 
     const r = dados.resumo;
     const f = dados.filtros ?? {};
 
     // ----- Filtros aplicados (linhas 6 a 11) -----
-    tituloSecao(aba, LINHA_SECAO, 'Filtros aplicados', 3);
+    tituloSecao(aba, LINHA_SECAO, 'Filtros aplicados', COLUNAS);
 
     const periodo =
       f.inicio || f.fim
@@ -388,26 +428,24 @@ export class ExcelExporter {
 
     filtros.forEach(([rotulo, valor], i) => {
       const linha = 7 + i;
-      aba.getRow(linha).height = ALTURA_LINHA;
-      aba.mergeCells(`B${linha}:C${linha}`);
+      const quebras = Math.ceil(valor.length / Math.max(1, Math.floor(larguraB * 0.9)));
+      aba.getRow(linha).height = ALTURA_LINHA + (Math.max(1, quebras) - 1) * 13;
 
       const a = aba.getCell(`A${linha}`);
       a.value = rotulo;
       a.font = { bold: true };
       a.alignment = { vertical: 'middle', horizontal: 'left' };
+      a.border = BORDA;
       preencher(a, COR.fundoFiltro);
 
       const b = aba.getCell(`B${linha}`);
       b.value = valor;
-      b.alignment = { vertical: 'middle', horizontal: 'left' };
-
-      ['A', 'B', 'C'].forEach((col) => {
-        aba.getCell(`${col}${linha}`).border = BORDA;
-      });
+      b.alignment = { vertical: 'middle', horizontal: 'left', wrapText: true };
+      b.border = BORDA;
     });
 
     // ----- Indicadores (tabela nativa, linhas 13 a 20) -----
-    tituloSecao(aba, 13, 'Indicadores', 3);
+    tituloSecao(aba, 13, 'Indicadores', COLUNAS);
 
     const semTempo = r.concluidas === 0 || r.tempoMedioHoras == null;
     aba.addTable({
@@ -446,7 +484,7 @@ export class ExcelExporter {
 
     // ----- Por prioridade (tabela nativa, a partir da linha 22) -----
     if (dados.porPrioridade) {
-      tituloSecao(aba, 22, 'Ocorrências por prioridade', 3);
+      tituloSecao(aba, 22, 'Ocorrências por prioridade', COLUNAS);
 
       const itens = Object.entries(dados.porPrioridade);
 
@@ -492,23 +530,20 @@ export class ExcelExporter {
   private montarOcorrencias(
     workbook: ExcelJS.Workbook,
     linhas: RelatorioDados['linhas'],
-    origem: string,
-    geradoEm: string,
+    ctx: Contexto,
   ) {
-    const aba = criarAbaTabela(workbook, {
+    const aba = criarAbaTabela(workbook, ctx, {
       nome: 'Ocorrências',
       titulo: `Detalhamento das ocorrências (${linhas.length})`,
-      origem,
-      geradoEm,
       tabela: 'TabelaOcorrencias',
       orientacao: 'landscape',
       colunas: [
         'Nº', 'Título', 'Status', 'Prioridade', 'Ambiente', 'Componente',
-        'Criado por', 'Técnico(s) Atribuído(s)',
+        'Criado por', 'Técnico(s)',
         'Data de abertura', 'Hora de abertura',
         'Data de encerramento', 'Hora de encerramento',
       ],
-      larguras: [8, 32, 16, 16, 20, 20, 22, 36, 20, 20, 25, 25],
+      larguras: [8, 32, 16, 13, 20, 20, 22, 36, 17, 14, 20, 14],
       centralizadas: [1, 3, 4, 9, 10, 11, 12],
       linhas: linhas.map((l) => [
         l.id,
@@ -545,8 +580,7 @@ export class ExcelExporter {
   // ---------- Planilhas de ranking (Ambientes, Componentes, Técnicos) ----------
   private montarRanking(
     workbook: ExcelJS.Workbook,
-    origem: string,
-    geradoEm: string,
+    ctx: Contexto,
     o: {
       nome: string;
       titulo: string;
@@ -556,14 +590,13 @@ export class ExcelExporter {
       itens: RankingItem[];
     },
   ) {
-    criarAbaTabela(workbook, {
+    criarAbaTabela(workbook, ctx, {
       nome: o.nome,
       titulo: o.titulo,
-      origem,
-      geradoEm,
       tabela: o.tabela,
       colunas: ['Posição', o.rotuloNome, o.rotuloTotal],
-      larguras: [10, 44, 16],
+      larguras: [10, 34, 16],
+      colunaFlex: 1, // o nome absorve a folga até a largura do cabeçalho
       centralizadas: [1, 3],
       linhas: o.itens.map((item, i) => [i + 1, item.nome, Number(item.total)]),
     });
@@ -573,20 +606,18 @@ export class ExcelExporter {
   private montarAgrupamento(
     workbook: ExcelJS.Workbook,
     agrupamento: any[],
-    origem: string,
-    geradoEm: string,
+    ctx: Contexto,
   ) {
     const chaves = Object.keys(agrupamento[0]);
     const criterio = (ROTULOS_AGRUPAMENTO[chaves[0]] ?? chaves[0]).toLowerCase();
 
-    criarAbaTabela(workbook, {
+    criarAbaTabela(workbook, ctx, {
       nome: 'Agrupamento',
       titulo: `Agrupamento por ${criterio}`,
-      origem,
-      geradoEm,
       tabela: 'TabelaAgrupamento',
       colunas: chaves.map((c) => ROTULOS_AGRUPAMENTO[c] ?? c),
       larguras: chaves.map(() => 24),
+      colunaFlex: 0, // a primeira coluna (o critério) absorve a folga
       centralizadas: chaves
         .map((c, i) => (c === 'total' ? i + 1 : 0))
         .filter((i) => i > 0),
