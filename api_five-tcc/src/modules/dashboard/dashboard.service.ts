@@ -1,5 +1,5 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
-import { UserTipo } from '../common/enums/userTipo.enum'; 
+import { UserTipo } from '../common/enums/userTipo.enum';
 import { DashboardRepository } from './dashboard.repository';
 
 @Injectable()
@@ -19,19 +19,19 @@ export class DashboardService {
     }
   }
 
-  // ---------- Administrador: visão geral do sistema ----------
+  // ---------- Administrador ----------
   private async adminDashboard() {
     const [
       ocorrenciasAbertas,
-      ocorrenciasResolvidas,
       ocorrenciasCriticas,
+      ocorrenciasResolvidas,
       ocorrenciasTotal,
       ocorrenciasPorStatus,
       atividadesRecentes,
     ] = await Promise.all([
       this.dashboardRepository.countOcorrenciasAbertas(),
-      this.dashboardRepository.countOcorrenciasResolvidas(),
       this.dashboardRepository.countOcorrenciasCriticas(),
+      this.dashboardRepository.countOcorrenciasResolvidas(),
       this.dashboardRepository.countOcorrenciasTotal(),
       this.dashboardRepository.countOcorrenciasPorStatus(),
       this.dashboardRepository.atividadesRecentes(),
@@ -40,54 +40,69 @@ export class DashboardService {
     return {
       escopo: 'administrador' as const,
       ocorrenciasAbertas,
-      ocorrenciasResolvidas,
       ocorrenciasCriticas,
+      ocorrenciasResolvidas,
       ocorrenciasTotal,
       ocorrenciasPorStatus,
       atividadesRecentes,
     };
   }
 
-  // ---------- Técnico: visão focada no próprio trabalho ----------
+  // ---------- Técnico ----------
   private async tecnicoDashboard(tecnicoId: number) {
     const [
-      minhasAbertas,
-      minhasEncerradas,
-      tempoMedioProprio,
-      minhasPorPrioridade,
-      ultimasAtribuidas,
+      ocorrenciasAbertas,
+      ocorrenciasCriticas,
+      ocorrenciasResolvidas,
+      ocorrenciasTotal,
+      ocorrenciasPorStatus,
+      atividadesRecentes,
     ] = await Promise.all([
       this.dashboardRepository.countOcorrenciasAbertasPorTecnico(tecnicoId),
+      this.dashboardRepository.countOcorrenciasCriticasPorTecnico(tecnicoId),
       this.dashboardRepository.countOcorrenciasEncerradasPorTecnico(tecnicoId),
-      this.dashboardRepository.getTempoMedioAtendimentoPorTecnico(tecnicoId),
-      this.dashboardRepository.getOcorrenciasPorPrioridadePorTecnico(tecnicoId),
+      this.dashboardRepository.countOcorrenciasTotaisPorTecnico(tecnicoId),
+      this.dashboardRepository.getOcorrenciasPorStatusPorTecnico(tecnicoId),
       this.dashboardRepository.getUltimasOcorrenciasAtribuidas(tecnicoId),
     ]);
 
     return {
       escopo: 'tecnico' as const,
-      minhasAbertas,
-      minhasEncerradas,
-      tempoMedioProprio,
-      minhasPorPrioridade,
-      ultimasAtribuidas,
+      ocorrenciasAbertas,
+      ocorrenciasCriticas,
+      ocorrenciasResolvidas,
+      ocorrenciasTotal,
+      ocorrenciasPorStatus,
+      atividadesRecentes,
     };
   }
 
-  // ---------- Funcionário: só as próprias ocorrências ----------
+  // ---------- Funcionário ----------
   private async funcionarioDashboard(usuarioId: number) {
-    const [minhasOcorrenciasAbertas, statusResumo, ultimasOcorrencias] =
-      await Promise.all([
-        this.dashboardRepository.countOcorrenciasAbertasPorUsuario(usuarioId),
-        this.dashboardRepository.getResumoStatusPorUsuario(usuarioId),
-        this.dashboardRepository.getUltimasOcorrenciasPorUsuario(usuarioId),
-      ]);
+    const [
+      ocorrenciasAbertas,
+      ocorrenciasEmAndamento,
+      ocorrenciasResolvidas,
+      ocorrenciasTotal,
+      ocorrenciasPorStatus,
+      atividadesRecentes,
+    ] = await Promise.all([
+      this.dashboardRepository.countOcorrenciasAbertasPorUsuario(usuarioId),
+      this.dashboardRepository.countOcorrenciasEmAndamentoPorUsuario(usuarioId),
+      this.dashboardRepository.countOcorrenciasResolvidasPorUsuario(usuarioId),
+      this.dashboardRepository.countOcorrenciasTotaisPorUsuario(usuarioId),
+      this.dashboardRepository.getOcorrenciasPorStatusPorUsuario(usuarioId),
+      this.dashboardRepository.getUltimasOcorrenciasPorUsuario(usuarioId),
+    ]);
 
     return {
       escopo: 'funcionario' as const,
-      minhasOcorrenciasAbertas,
-      statusResumo,
-      ultimasOcorrencias,
+      ocorrenciasAbertas,
+      ocorrenciasEmAndamento,
+      ocorrenciasResolvidas,
+      ocorrenciasTotal,
+      ocorrenciasPorStatus,
+      atividadesRecentes,
     };
   }
 }

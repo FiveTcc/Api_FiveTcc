@@ -1,6 +1,5 @@
 @baseUrl = http://localhost:3000
-@Token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiYnJheWFuc3RpbG9zQGdtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4OTc3NzE3NSwiZXhwIjoxNzg5NzgwNzc1LCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjMwMDAiLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjMwMDAifQ.Vyg3ut_H6gHrXq4xp9leP2iPh-vJ4pDkz1ntvFE1ED0
-
+@Token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsImVtYWlsIjoibWlkcEBnbWFpbC5jb20iLCJyb2xlIjoiZnVuY2lvbmFyaW8iLCJpYXQiOjE3OTIyMDg2ODQsImV4cCI6MTc5MjIxMjI4NCwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDozMDAwIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDozMDAwIn0.JrUL8yfWLfren2YUqX8pGZ0Je5qJFY1954n0GGF--B0
 
 ### Login como Administrador
 POST {{baseUrl}}/auth/login
@@ -16,8 +15,8 @@ POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "user_email": "maumau@gmail.com",
-  "user_senha": "Mau0609!"
+  "user_email": "midt@gmail.com",
+  "user_senha": "12345*Aa"
 }
 
 ### Login como funcionario
@@ -25,8 +24,8 @@ POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "user_email": "diogitogois@gmail.com",
-  "user_senha": "Diogo!234"
+  "user_email": "midp@gmail.com",
+  "user_senha": "12345*Aa"
 }
 
 ### Dashboard
