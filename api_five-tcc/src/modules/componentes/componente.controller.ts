@@ -70,15 +70,6 @@ export class ComponenteController {
         return await this.componenteService.associarCompAmb(id, AssociateCompAmbDto.id_amb);
     }
 
-    // // Rota para alterar tipo do componente
-    // @Patch(':id/alterarTipoComponente')
-    // async alterarTipoComponente(
-    //     @Param('id', ParseIntPipe) id: number,
-    //     @Body() DefineTipoComponenteDto: DefineTipoComponenteDto
-    // ) {
-    //     return await this.componenteService.alterarTipoComponente(id, DefineTipoComponenteDto.compo_tipo_id)
-    // }
-
     // ##### Rotas de Filtros #####
 
     // Rota para busca por ambiente

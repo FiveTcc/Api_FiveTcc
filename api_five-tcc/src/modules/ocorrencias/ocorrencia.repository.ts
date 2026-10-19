@@ -5,13 +5,13 @@ import { CreateOcorrenciaDto, OcorrenciaStatus, OcorrenciaPrioridade } from "./d
 import { ocorrencias, Ambientes, Componentes } from "src/db/schemas";
 import { UpdateOcorrenciaDto } from "./dtos/update.ocorrenciaDto";
 import { eq, sql, desc, like} from "drizzle-orm";
-import { ComponenteRepository } from "../componentes/componente.repository";
+import { ComponenteService } from "../componentes/componente.service";
 import { AmbienteRepository } from "../ambientes/ambiente.repository";
 
 @Injectable()
 export class OcorrenciaRepository {
     constructor(@Inject(DRIZZLE) private readonly db: DrizzleDB,
-        private readonly componenteRepository: ComponenteRepository,
+        private readonly componenteService: ComponenteService,
         private readonly ambienteRepository: AmbienteRepository
     ) { }
 
@@ -58,7 +58,7 @@ export class OcorrenciaRepository {
         try {
 
             // Verifica se o componente existe
-            await this.componenteRepository.verificaComponenteExiste(dto.componente_id)
+            await this.componenteService.verificaComponenteExiste(dto.componente_id)
 
             // Verifica se o ambiente existe
             await this.ambienteRepository.verificaAmbienteExiste(dto.ambiente_id)
@@ -278,7 +278,7 @@ export class OcorrenciaRepository {
             );
 
             // Verifica se o componente existe
-            await this.componenteRepository.verificaComponenteExiste(idComp);
+            await this.componenteService.verificaComponenteExiste(idComp);
 
             await this.db
                 .update(ocorrencias)

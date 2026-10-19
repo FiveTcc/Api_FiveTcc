@@ -1,21 +1,34 @@
 
 @baseUrl = http://localhost:3000
 
+@Token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoibWlkQGdtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc5MjM3NzkyNiwiZXhwIjoxNzkyMzgxNTI2LCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjMwMDAiLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjMwMDAifQ.Uboe-ibdjhO-UjbYTCnH5XWW7Dcl0Mjb2iDt_gEobwc
+
+### Login como Administrador
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "user_email": "mid@gmail.com",
+  "user_senha": "12345*Aa"
+}
 ### ======================================================
 ### COMPONENTES
 ### ======================================================
 
 ### Listar todos os componentes
 GET {{baseUrl}}/componentes/listarComponente
+Authorization: Bearer: {{Token}}
 
 
 ### Buscar componente por ID
 GET {{baseUrl}}/componentes/listarComponenteId/7
+Authorization: Bearer: {{Token}}
 
 
-### Cadastrar componenten
+### Cadastrar componente
 
 POST {{baseUrl}}/componentes/cadastrarComponente
+Authorization: Bearer: {{Token}}
 Content-Type: application/json
 
 {
@@ -29,6 +42,7 @@ Content-Type: application/json
 
 ### Atualizar componente
 PATCH {{baseUrl}}/componentes/atualizarComponente/8
+Authorization: Bearer: {{Token}}
 Content-Type: application/json
 
 {
@@ -41,15 +55,18 @@ Content-Type: application/json
 
 
 ### Excluir componente
-DELETE {{baseUrl}}/componentes/excluirComponente/10
+DELETE {{baseUrl}}/componentes/excluirComponente/13
+Authorization: Bearer: {{Token}}
 
 
 ### Atualizar status do componente
 PATCH {{baseUrl}}/componentes/atualizarStatusComponente/4
+Authorization: Bearer: {{Token}}
 
 
 ### Associar componente ao ambiente
 PATCH {{baseUrl}}/componentes/15/associarComponenteAmbiente
+Authorization: Bearer: {{Token}}
 Content-Type: application/json
 
 {
@@ -59,6 +76,7 @@ Content-Type: application/json
 
 ### Alterar tipo do componente
 PATCH {{baseUrl}}/componentes/12/alterarTipoComponente
+Authorization: Bearer: {{Token}}
 Content-Type: application/json
 
 {
@@ -73,11 +91,14 @@ Content-Type: application/json
 
 ### Filtrar componentes por ambiente
 GET {{baseUrl}}/componentes/buscarPorAmbiente?nomeAmb=Laboratorio 8
+Authorization: Bearer: {{Token}}
 
 
 ### Filtrar componentes por tipo
 GET {{baseUrl}}/componentes/buscarPorTipo?tipo=ele
+Authorization: Bearer: {{Token}}
 
 ### Filtrar componentes por nome
-GET {{baseUrl}}/componentes/buscarPorNome/P
+GET {{baseUrl}}/componentes/buscarPorNome/5
+Authorization: Bearer: {{Token}}
 
