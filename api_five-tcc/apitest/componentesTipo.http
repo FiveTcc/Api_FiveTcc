@@ -1,5 +1,15 @@
 @baseUrl = http://localhost:3000
 
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoibWlkQGdtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc5MjQzOTI5MywiZXhwIjoxNzkyNDQyODkzLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjMwMDAiLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjMwMDAifQ.zR342urL930O1D208QGJGbUYXPdgzISUiE1GxV4taxw
+
+### Login como Administrador
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "user_email": "mid@gmail.com",
+  "user_senha": "12345*Aa"
+}
 
 ### ======================================================
 ### COMPONENTES TIPO
@@ -7,30 +17,35 @@
 
 ### Listar todos os tipos componentes
 GET {{baseUrl}}/componentes-tipo/listarComponenteTipo
+Authorization: Bearer {{token}}
 
 
 ### Buscar tipo de componente por ID
-GET {{baseUrl}}/componentes-tipo/listarComponenteTipoId/9
+GET {{baseUrl}}/componentes-tipo/listarComponenteTipoId/3
+Authorization: Bearer {{token}}
 
 
 ### Cadastrar tipo de componente
 POST {{baseUrl}}/componentes-tipo/cadastrarComponenteTipo
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-  "compo_tipo": "rede"
+  "compo_tipo": "gamb"
 }
 
 
 ### Atualizar tipo de componente
-PATCH {{baseUrl}}/componentes-tipo/atualizarComponenteTipo/7
+PATCH {{baseUrl}}/componentes-tipo/atualizarComponenteTipo/4
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-  "compo_tipo": "hardware"
+  "compo_tipo": "audio"
 }
 
 
 ### Excluir tipo de componente
-DELETE {{baseUrl}}/componentes-tipo/excluirComponenteTipo/3
+DELETE {{baseUrl}}/componentes-tipo/excluirComponenteTipo/4
+Authorization: Bearer {{token}}
 

@@ -41,7 +41,7 @@ Content-Type: application/json
 
 
 ### Atualizar componente
-PATCH {{baseUrl}}/componentes/atualizarComponente/8
+PATCH {{baseUrl}}/componentes/atualizarComponente/13
 Authorization: Bearer: {{Token}}
 Content-Type: application/json
 
@@ -60,7 +60,7 @@ Authorization: Bearer: {{Token}}
 
 
 ### Atualizar status do componente
-PATCH {{baseUrl}}/componentes/atualizarStatusComponente/4
+PATCH {{baseUrl}}/componentes/atualizarStatusComponente/13
 Authorization: Bearer: {{Token}}
 
 
@@ -90,12 +90,12 @@ Content-Type: application/json
 ### Filtros de componentes ###
 
 ### Filtrar componentes por ambiente
-GET {{baseUrl}}/componentes/buscarPorAmbiente?nomeAmb=Laboratorio 8
+GET {{baseUrl}}/componentes/buscarPorAmbiente?nomeAmb=Laboratorio 1
 Authorization: Bearer: {{Token}}
 
 
 ### Filtrar componentes por tipo
-GET {{baseUrl}}/componentes/buscarPorTipo?tipo=ele
+GET {{baseUrl}}/componentes/buscarPorTipo?tipo=rede
 Authorization: Bearer: {{Token}}
 
 ### Filtrar componentes por nome

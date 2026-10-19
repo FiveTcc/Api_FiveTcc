@@ -1,13 +1,14 @@
 @baseUrl = http://localhost:3000
 
+@Token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoibWlkQGdtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc5MjQzOTI5MywiZXhwIjoxNzkyNDQyODkzLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjMwMDAiLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjMwMDAifQ.zR342urL930O1D208QGJGbUYXPdgzISUiE1GxV4taxw
 
-POST {{baseUrl}}/atribuicaoTecnicos/30/vincularTecnico
+### Login como Administrador
+POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "id_user": 8,
-  "observacoes": "Verificar o equipamento.",
-  "tipo_atuacao": 1
+  "user_email": "mid@gmail.com",
+  "user_senha": "12345*Aa"
 }
 
 ###
