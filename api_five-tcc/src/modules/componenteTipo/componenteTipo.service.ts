@@ -1,4 +1,4 @@
-import { ConflictException, HttpException, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
+import { ConflictException, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { ComponenteTipoRepository } from "./componenteTipo.repository";
 import { CreateComponenteTipoDto } from "./dtos/create.componenteTipoDto";
 import { UpdateComponenteTipoDto } from "./dtos/update.componenteTipoDto";

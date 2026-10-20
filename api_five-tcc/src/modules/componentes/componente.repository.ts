@@ -64,10 +64,10 @@ export class ComponenteRepository {
    }
 
    // Método para atualizar status do componente
-   async atualizarStatusComponente(id: number, ativo: boolean) {
+   async atualizarStatusComponente(id: number, status: boolean) {
       await this.db
          .update(Componentes)
-         .set({ compo_ativo: ativo })
+         .set({ compo_ativo: status })
          .where(eq(Componentes.id_compo, id));
    }
 

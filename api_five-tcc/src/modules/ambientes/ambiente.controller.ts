@@ -50,7 +50,7 @@ export class AmbientesController {
 
     // Rota para Atualizar o status de um ambiente existente (inativar/ativar)
     @Patch('/atualizarStatusAmbiente/:id')
-    async atualizarStatusUser(@Param('id', ParseIntPipe) id: number,) {
+    async AtualizarStatusAmbiente(@Param('id', ParseIntPipe) id: number) {
         return await this.AmbienteService.AtualizarStatusAmbiente(id);
     }
 

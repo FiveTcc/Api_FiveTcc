@@ -1,5 +1,6 @@
 @baseUrl = http://localhost:3000
-@Token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsImVtYWlsIjoibWlkQGdtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4OTc3MjUwMiwiZXhwIjoxNzg5Nzc2MTAyLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjMwMDAiLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjMwMDAifQ.hVcxakNlYeDyL0fdaql9eptV57-okb--DISvn8kZFjk
+@Token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsImVtYWlsIjoibWlkQGdtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc5MjQ1ODQwNiwiZXhwIjoxNzkyNDYyMDA2LCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjMwMDAiLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjMwMDAifQ.uVgmYxvdrPPXtrBOtVnkS_pfBbEvnFrZ4aAmlGsHw9c
+
 ### AMBIENTES
 ### ======================================================
 
@@ -38,6 +39,7 @@ Content-Type: application/json
 
 ### Atualizar ambiente
 PATCH {{baseUrl}}/ambientes/atualizarStatusAmbiente/7
+Authorization: Bearer: {{Token}}
 
 
 
@@ -45,7 +47,9 @@ PATCH {{baseUrl}}/ambientes/atualizarStatusAmbiente/7
 
 
 ### Filtrar ambientes por bloco
-GET {{baseUrl}}/ambientes/buscarPorBloco?bloco=Bloco
+GET {{baseUrl}}/ambientes/buscarPorBloco?bloco=A
+Authorization: Bearer: {{Token}}
 
 ### Filtrar ambientes por tipo
 GET {{baseUrl}}/ambientes/buscarPorTipo?tipo=Sa
+Authorization: Bearer: {{Token}}
