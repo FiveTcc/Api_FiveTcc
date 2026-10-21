@@ -11,6 +11,6 @@ import { NotificacaoModule } from "../notificacao/notificacao.module";
     controllers: [OcorrenciaController ],
     providers: [OcorrenciaService, OcorrenciaRepository],
     imports: [ComponenteModule, AmbienteModule,  NotificacaoModule],
-    exports: [OcorrenciaRepository]
+    exports: [OcorrenciaService]
 })
 export class OcorrenciaModule { }

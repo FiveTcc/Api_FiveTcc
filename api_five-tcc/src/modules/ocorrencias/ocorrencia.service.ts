@@ -13,7 +13,12 @@ export class OcorrenciaService {
 
     // Método para listar ocorrência
     async listarOcorrencia() {
-        return await this.ocorrenciaRepository.listarOcorrencia();
+        try {
+            return await this.ocorrenciaRepository.listarOcorrencia();
+        } catch (error) {
+            
+        }
+        
     }
 
     // Método para listar ocorrência por id
@@ -56,49 +61,31 @@ export class OcorrenciaService {
     }
 
     // Método para alterar status da ocorrência
-    async alterarStatus(
-        id: number,
-        novoStatus: OcorrenciaStatus
-    ) {
+    async alterarStatus(id: number, novoStatus: OcorrenciaStatus) {
         return await this.ocorrenciaRepository.alterarStatus(id, novoStatus);
     }
 
     // Método para alterar prioridade da ocorrência
-    async alterarPrioridade(
-        id: number,
-        prioridade: OcorrenciaPrioridade
-    ) {
+    async alterarPrioridade(id: number, prioridade: OcorrenciaPrioridade) {
         return await this.ocorrenciaRepository.alterarPrioridade(id, prioridade);
     }
 
     // Método para adicionar observação a ocorrência
-    async adicionarObservação(
-        id: number,
-        obs: string
-    ) {
+    async adicionarObservação(id: number, obs: string) {
         return await this.ocorrenciaRepository.adicionarObservacao(id, obs);
     }
 
     // Método para associar componente a ocorrência
-    async associarComponente(
-        id: number,
-        idComp: number
-    ) {
+    async associarComponente(id: number, idComp: number) {
         return await this.ocorrenciaRepository.associarComponente(id, idComp);
     }
 
     // Método para associar ambiente a ocorrência
-    async associarAmbiente(
-        id: number,
-        idAmb: number
-    ) {
+    async associarAmbiente(id: number, idAmb: number) {
         return await this.ocorrenciaRepository.associarAmbiente(id, idAmb);
     }
 
-    // // Histórico de ocorrências
-    // async historicoDeOcorrencia() {
-    //    return await this.ocorrenciaRepository.historicoDeOcorrencia() 
-    // }
+
 
 
     // ##### Filtros de Ocorrências #####
