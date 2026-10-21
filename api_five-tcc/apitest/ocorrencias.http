@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:3000
-@Token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjQsImVtYWlsIjoibWlkdGVzdGVAZ21haWwuY29tIiwicm9sZSI6InRlY25pY28iLCJpYXQiOjE3OTAzODYyMTIsImV4cCI6MTc5MDM4OTgxMiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDozMDAwIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDozMDAwIn0.Zx2nrhL45GUMGJ4Wqc0jRJVfJG6s3wN2WbnPGnznV2w
+@Token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoibWlkQGdtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc5MjU1MDIxMiwiZXhwIjoxNzkyNTUzODEyLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjMwMDAiLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjMwMDAifQ.jk1e939ZmdkxikLrakZFYqni-SMJD38UEaJLVEzFIzk
 
 GET {{baseUrl}}/ocorrencias/listarOcorrencia
 Authorization: Bearer: {{Token}}
@@ -24,7 +24,7 @@ Authorization: Bearer: {{Token}}
 
 ###
 
-PATCH {{baseUrl}}/ocorrencias/editarOcorrencia/3
+PATCH {{baseUrl}}/ocorrencias/editarOcorrencia/11
 Content-Type: application/json
 Authorization: Bearer: {{Token}}
 
@@ -37,30 +37,16 @@ Authorization: Bearer: {{Token}}
 }
 
 ###
-
-PATCH {{baseUrl}}/ocorrencias/editarOcorrencia/6
-Content-Type: application/json
-Authorization: Bearer: {{Token}}
-
-{
-  "ocor_nome": "Computador não liga",
-  "ocor_prioridade": "baixa",
-  "ocor_obs": "O computador da sala não apresenta sinal de energia",
-  "componente_id": 2,
-  "ambiente_id": 1
-}
-
-###
-PATCH {{baseUrl}}/ocorrencias/encerrarOcorrencia/45
+PATCH {{baseUrl}}/ocorrencias/encerrarOcorrencia/11
 Authorization: Bearer: {{Token}}
 
 ###
-PATCH {{baseUrl}}/ocorrencias/cancelarOcorrencia/16
+PATCH {{baseUrl}}/ocorrencias/cancelarOcorrencia/11
 Authorization: Bearer: {{Token}}
 
 ###
 
-PATCH {{baseUrl}}/ocorrencias/alterarStatus/3
+PATCH {{baseUrl}}/ocorrencias/alterarStatus/11
 Authorization: Bearer: {{Token}}
 Content-Type: application/json
 
@@ -69,7 +55,8 @@ Content-Type: application/json
 }
 
 ###
-PATCH {{baseUrl}}/ocorrencias/3/adicionarObservacao
+PATCH {{baseUrl}}/ocorrencias/11/adicionarObservacao
+Authorization: Bearer: {{Token}}
 Content-Type: application/json
 
 {
@@ -77,7 +64,8 @@ Content-Type: application/json
 }
 
 ### Associar componente a ocorrencia
-PATCH {{baseUrl}}/ocorrencias/16/associarComponente
+PATCH {{baseUrl}}/ocorrencias/11/associarComponente
+Authorization: Bearer: {{Token}}
 Content-Type: application/json
 
 {
@@ -86,6 +74,7 @@ Content-Type: application/json
 
 ### Associar ambiente a ocorrencia
 PATCH {{baseUrl}}/ocorrencias/16/associarAmbiente
+Authorization: Bearer: {{Token}}
 Content-Type: application/json
 
 {

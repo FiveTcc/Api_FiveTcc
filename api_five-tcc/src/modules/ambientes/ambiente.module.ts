@@ -4,12 +4,9 @@ import { AmbienteService } from './ambiente.service'
 import { AmbienteRepository } from './ambiente.repository'
 
 @Module({
-
     controllers: [AmbientesController],
     providers: [AmbienteService, AmbienteRepository],
-    exports: [AmbienteRepository]
-
-
+    exports: [AmbienteService]
 })
 
 export class AmbienteModule { }
