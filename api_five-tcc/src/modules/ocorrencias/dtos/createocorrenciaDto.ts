@@ -59,5 +59,4 @@ export class CreateOcorrenciaDto {
     @IsInt({ message: 'O ID de ambiente deve ser um número inteiro' })
     @IsNotEmpty({ message: 'O ID de ambiente é obrigatório' })
     ambiente_id!: number;
-
 }

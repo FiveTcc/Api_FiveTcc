@@ -8,14 +8,13 @@ export enum TipoAtuacao {
 
 
 export class AtribuirTecnicoDto {
-
-  @IsInt()
-  @IsNotEmpty()
+  @IsInt({ message: 'O ID deve ser um número inteiro' })
+  @IsNotEmpty({ message: 'O ID é obrigatório' })
   id_user!: number;
 
   @IsOptional()
-  @IsString()
-  @MaxLength(150)
+  @IsString({ message: 'A observação deve ser uma string' })
+  @MaxLength(150, { message: 'A observação deve ter no máximo 150 caracteres' })
   observacoes?: string;
 
   @IsOptional()

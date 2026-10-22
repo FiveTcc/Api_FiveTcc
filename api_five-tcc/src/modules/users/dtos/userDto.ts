@@ -13,7 +13,6 @@ import { Transform } from 'class-transformer';
 import { UserTipo } from 'src/modules/common/enums/userTipo.enum';
 
 export class CreateUserDto {
-
     @IsString({ message: 'O nome deve ser um texto', })
     @IsNotEmpty({ message: 'O nome é obrigatório', })
     @MinLength(3, { message: 'O nome deve ter no mínimo 3 caracteres', })
@@ -36,7 +35,6 @@ export class CreateUserDto {
     })
     user_email!: string;
 
-
     @IsString({ message: 'A senha deve ser um texto', })
     @MinLength(8, { message: 'A senha deve ter no mínimo 8 caracteres', })
     @MaxLength(50, { message: 'A senha deve ter no máximo 50 caracteres', })
@@ -54,7 +52,6 @@ export class CreateUserDto {
         return value;
     })
     user_senha!: string;
-
 
     @IsPhoneNumber('BR', { message: 'Telefone inválido', })
     @Transform(({ value }) => {

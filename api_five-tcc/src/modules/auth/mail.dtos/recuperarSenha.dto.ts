@@ -5,8 +5,8 @@ import {
 
 export class RecuperarSenhaDto {
 
-  @IsEmail()
-  @IsNotEmpty()
+  @IsEmail({}, { message: 'Informe um e-mail válido.' })
+  @IsNotEmpty({ message: 'O e-mail é obrigatório.' })
   email!: string;
 
 }
