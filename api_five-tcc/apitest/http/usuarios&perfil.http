@@ -1,0 +1,114 @@
+@baseUrl = {{$dotenv BASE_URL}}
+@email = {{$dotenv LOGIN_EMAIL}}
+@senha = {{$dotenv LOGIN_SENHA}}
+@Token = {{login.response.body.accessToken}}
+
+### ========================================
+### LOGIN
+### ========================================
+
+### Login (clique aqui primeiro)
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "user_email": "{{email}}",
+  "user_senha": "{{senha}}"
+}
+
+### Renovar token
+# @name refresh
+POST {{baseUrl}}/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "{{login.response.body.refreshToken}}"
+}
+
+
+### ========================================
+### USUARIOS
+### ========================================
+
+### 1. Listar todos os usuarios
+GET {{baseUrl}}/usuarios/listarUser
+Authorization: Bearer {{Token}}
+
+
+### 2. Listar todos os usuarios por ID
+GET {{baseUrl}}/usuarios/listarUserId/18
+Authorization: Bearer {{Token}}
+
+
+### 3. Cadastrar usuario
+# user_tipo aceita: admin, tecnico, funcionario
+POST {{baseUrl}}/usuarios/cadastrarUser
+Authorization: Bearer {{Token}}
+Content-Type: application/json
+
+{
+  "user_nome": "Mauricio",
+  "user_email": "maumau@gmail.com",
+  "user_senha": "Mau0609!",
+  "user_tel": "(18)99165-3675",
+  "user_tipo": "tecnico"
+}
+
+
+### 4. Atualizar usuario
+PUT {{baseUrl}}/usuarios/atualizarUser/18
+Authorization: Bearer {{Token}}
+Content-Type: application/json
+
+{
+  "user_nome": "Professor",
+  "user_email": "professor@gmail.com",
+  "user_senha": "Professor!234",
+  "user_tel": "(18)99478-3674",
+  "user_tipo": "tecnico"
+}
+
+
+### 5. Atualizar status do usuario
+PATCH {{baseUrl}}/usuarios/inativarUser/2
+Authorization: Bearer {{Token}}
+
+
+### 6. Listar status de todos os usuarios inativados
+GET {{baseUrl}}/usuarios/listarStatusUser
+Authorization: Bearer {{Token}}
+
+### ========================================
+### PERFIL
+### ========================================
+
+### 7. Visualizar meu perfil
+GET {{baseUrl}}/usuarios/perfilUser
+Authorization: Bearer {{Token}}
+
+
+
+### 8. Atualizar meu perfil
+PATCH {{baseUrl}}/usuarios/perfilUpdate
+Authorization: Bearer {{Token}}
+Content-Type: application/json
+
+{
+  "user_nome": "Ronaldo",
+  "user_email": "admin@gmail.com",
+  "user_telefone": "(18) 99999-9999"
+}
+
+
+### 9. Adicionar / atualizar foto de perfil
+POST {{baseUrl}}/usuarios/Pefilfoto
+Authorization: Bearer {{Token}}
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
+
+------WebKitFormBoundary
+Content-Disposition: form-data; name="foto"; filename="diogo.jpeg"
+Content-Type: image/jpeg
+
+< ../imagen/diogo.jpeg
+------WebKitFormBoundary--

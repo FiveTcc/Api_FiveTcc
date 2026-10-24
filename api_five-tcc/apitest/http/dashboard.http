@@ -1,0 +1,37 @@
+@baseUrl = {{$dotenv BASE_URL}}
+@email = {{$dotenv LOGIN_EMAIL}}
+@senha = {{$dotenv LOGIN_SENHA}}
+@Token = {{login.response.body.accessToken}}
+
+### ========================================
+### LOGIN
+### ========================================
+
+### Login (clique aqui primeiro)
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "user_email": "{{email}}",
+  "user_senha": "{{senha}}"
+}
+
+### Renovar token
+# @name refresh
+POST {{baseUrl}}/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "{{login.response.body.refreshToken}}"
+}
+
+
+### ========================================
+### DASHBOARD
+### ========================================
+
+### 1. Dashboard
+# a dashboard mostrará diferentes dados de acordo com o nível de acesso do usuário(admin, tecnico, funcionario)
+GET {{baseUrl}}/dashboard
+Authorization: Bearer {{Token}}

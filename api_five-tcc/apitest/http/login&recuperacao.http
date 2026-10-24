@@ -1,0 +1,61 @@
+@baseUrl = {{$dotenv BASE_URL}}
+@email = {{$dotenv LOGIN_EMAIL}}
+@senha = {{$dotenv LOGIN_SENHA}}
+@Token = {{login.response.body.accessToken}}
+
+### ========================================
+### LOGIN
+### ========================================
+
+### Login (clique aqui primeiro)
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "user_email": "{{email}}",
+  "user_senha": "{{senha}}"
+}
+
+### Renovar token
+# @name refresh
+POST {{baseUrl}}/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "{{login.response.body.refreshToken}}"
+}
+
+
+### ======================================================
+### RECUPERAÇÃO DE SENHA
+### ======================================================
+
+### 1. Solicitar recuperação de senha
+POST {{baseUrl}}/auth/recuperar-senha
+Content-Type: application/json
+
+{
+    "email": "admin@gmail.com"
+}
+
+
+### 2. Redefinir senha (cole o token recebido no e-mail)
+POST {{baseUrl}}/auth/redefinir-senha
+Content-Type: application/json
+
+{
+    "token": "tokenRecuperacao",
+    "novaSenha": "NovaSenha123"
+}
+
+
+### 3. Login com a nova senha
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+    "user_email": "admin@gmail.com",
+    "user_senha": "NovaSenha123"
+}
+

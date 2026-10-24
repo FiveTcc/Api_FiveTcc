@@ -1,0 +1,156 @@
+@baseUrl = {{$dotenv BASE_URL}}
+@email = {{$dotenv LOGIN_EMAIL}}
+@senha = {{$dotenv LOGIN_SENHA}}
+@Token = {{login.response.body.accessToken}}
+
+### ========================================
+### LOGIN
+### ========================================
+
+### Login (clique aqui primeiro)
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "user_email": "{{email}}",
+  "user_senha": "{{senha}}"
+}
+
+### Renovar token
+# @name refresh
+POST {{baseUrl}}/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "{{login.response.body.refreshToken}}"
+}
+
+
+### ======================================================
+### COMPONENTES
+### ======================================================
+
+### 1. Listar todos os componentes
+GET {{baseUrl}}/componentes/listarComponente
+Authorization: Bearer: {{Token}}
+
+
+### 2. Buscar componente por ID
+GET {{baseUrl}}/componentes/listarComponenteId/7
+Authorization: Bearer: {{Token}}
+
+
+### 3. Cadastrar componente
+POST {{baseUrl}}/componentes/cadastrarComponente
+Authorization: Bearer: {{Token}}
+Content-Type: application/json
+
+{
+  "compo_nome": "Roteador TP-Link",
+  "compo_obs": "Roteador do lab 8",
+  "compo_ativo": false,
+  "compo_tipo_id": 1,
+  "id_amb": 1
+}
+
+
+### 4. Atualizar componente
+PATCH {{baseUrl}}/componentes/atualizarComponente/13
+Authorization: Bearer: {{Token}}
+Content-Type: application/json
+
+{
+  "compo_nome": "PC-01",
+  "compo_obs": "computador do lab 5",
+  "compo_ativo": false,
+  "compo_tipo_id": 1,
+  "id_amb": 1
+}
+
+
+### 5. Excluir componente
+DELETE {{baseUrl}}/componentes/excluirComponente/13
+Authorization: Bearer: {{Token}}
+
+
+### 6. Atualizar status do componente
+PATCH {{baseUrl}}/componentes/atualizarStatusComponente/13
+Authorization: Bearer: {{Token}}
+
+
+### 7. Associar componente ao ambiente
+PATCH {{baseUrl}}/componentes/15/associarComponenteAmbiente
+Authorization: Bearer: {{Token}}
+Content-Type: application/json
+
+{
+  "id_amb": 7
+}
+
+
+### 8. Alterar tipo do componente
+PATCH {{baseUrl}}/componentes/12/alterarTipoComponente
+Authorization: Bearer: {{Token}}
+Content-Type: application/json
+
+{
+  "compo_tipo_id": 7
+}
+
+
+### ======================================================
+### FILTROS DE COMPONENTES
+### ======================================================
+
+### 9. Filtrar componentes por ambiente
+GET {{baseUrl}}/componentes/buscarPorAmbiente?nomeAmb=Laboratorio 1
+Authorization: Bearer: {{Token}}
+
+
+### 10. Filtrar componentes por tipo
+GET {{baseUrl}}/componentes/buscarPorTipo?tipo=rede
+Authorization: Bearer: {{Token}}
+
+### 11. Filtrar componentes por nome
+GET {{baseUrl}}/componentes/buscarPorNome/5
+Authorization: Bearer: {{Token}}
+
+
+### ======================================================
+### COMPONENTES TIPO
+### ======================================================
+
+### 12. Listar todos os tipos componentes
+GET {{baseUrl}}/componentes-tipo/listarComponenteTipo
+Authorization: Bearer {{Token}}
+
+
+### 13. Buscar tipo de componente por ID
+GET {{baseUrl}}/componentes-tipo/listarComponenteTipoId/4
+Authorization: Bearer {{Token}}
+
+
+### 14. Cadastrar tipo de componente
+POST {{baseUrl}}/componentes-tipo/cadastrarComponenteTipo
+Authorization: Bearer {{Token}}
+Content-Type: application/json
+
+{
+  "compo_tipo": "hardware"
+}
+
+
+### 15. Atualizar tipo de componente
+PATCH {{baseUrl}}/componentes-tipo/atualizarComponenteTipo/4
+Authorization: Bearer {{Token}}
+Content-Type: application/json
+
+{
+  "compo_tipo": "audio"
+}
+
+
+### 16. Excluir tipo de componente
+DELETE {{baseUrl}}/componentes-tipo/excluirComponenteTipo/4
+Authorization: Bearer {{Token}}

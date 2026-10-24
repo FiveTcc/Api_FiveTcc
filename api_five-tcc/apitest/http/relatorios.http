@@ -1,0 +1,129 @@
+@baseUrl = {{$dotenv BASE_URL}}
+@email = {{$dotenv LOGIN_EMAIL}}
+@senha = {{$dotenv LOGIN_SENHA}}
+@Token = {{login.response.body.accessToken}}
+
+### ========================================
+### LOGIN
+### ========================================
+
+### Login (clique aqui primeiro)
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "user_email": "{{email}}",
+  "user_senha": "{{senha}}"
+}
+
+### Renovar token
+# @name refresh
+POST {{baseUrl}}/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "{{login.response.body.refreshToken}}"
+}
+
+
+### ========================================
+### RELATÓRIOS
+### ========================================
+
+### 1. Relatório em JSON - sem filtros
+GET {{baseUrl}}/relatorios?data_inicial=2026-08-27&data_final=2026-09-25&tecnico=4
+Authorization: Bearer {{Token}}
+
+
+### 2. Relatório com todos os filtros
+GET {{baseUrl}}/relatorios?data_inicial=2026-08-01&data_final=2026-09-25&status=concluida&prioridade=alta&ambiente=3&agruparPor=tecnico
+Authorization: Bearer {{Token}}
+
+
+### 3. Filtro por status e período
+GET {{baseUrl}}/relatorios?data_inicial=2026-09-01&data_final=2026-09-25&status=aberta
+Authorization: Bearer {{Token}}
+
+
+### 4. Agrupado por prioridade
+GET {{baseUrl}}/relatorios?agruparPor=prioridade
+Authorization: Bearer {{Token}}
+
+
+### 5. Agrupado por ambiente
+GET {{baseUrl}}/relatorios?agruparPor=ambiente
+Authorization: Bearer {{Token}}
+
+
+### 6. Agrupado por data
+GET {{baseUrl}}/relatorios?agruparPor=data
+Authorization: Bearer {{Token}}
+
+### 7. Filtro por técnico específico
+GET {{baseUrl}}/relatorios?tecnico=2
+Authorization: Bearer {{Token}}
+
+
+### 8. Filtro por ambiente específico
+GET {{baseUrl}}/relatorios?ambiente=5
+Authorization: Bearer {{Token}}
+
+
+### 9. Exportar Excel (sem filtros)
+GET {{baseUrl}}/relatorios/exportar?formato=xlsx
+Authorization: Bearer {{Token}}
+
+
+### 10. Exportar Excel com filtro de ambiente
+GET {{baseUrl}}/relatorios/exportar?formato=xlsx&ambiente=5
+Authorization: Bearer {{Token}}
+
+
+### 11. Exportar PDF (sem filtros)
+GET {{baseUrl}}/relatorios/exportar?formato=pdf
+Authorization: Bearer {{Token}}
+
+
+### 12. Exportar PDF com período
+GET {{baseUrl}}/relatorios/exportar?formato=pdf&data_inicial=2026-08-01&data_final=2026-09-25
+Authorization: Bearer {{Token}}
+
+
+### 13. Validação - status inválido (espera 400)
+GET {{baseUrl}}/relatorios?status=invalido
+Authorization: Bearer {{Token}}
+
+
+### 14. Validação - prioridade inválida (espera 400)
+GET {{baseUrl}}/relatorios?prioridade=urgente
+Authorization: Bearer {{Token}}
+
+
+### 15. Validação - agruparPor inválido (espera 400)
+GET {{baseUrl}}/relatorios?agruparPor=inexistente
+Authorization: Bearer {{Token}}
+
+
+### 16. Validação - ambiente não numérico (espera 400)
+GET {{baseUrl}}/relatorios?ambiente=abc
+Authorization: Bearer {{Token}}
+
+
+### 17. Validação - data inválida (espera 400)
+GET {{baseUrl}}/relatorios?data_inicial=25-09-2026
+Authorization: Bearer {{Token}}
+
+
+### 18. Sem token (espera 401)
+GET {{baseUrl}}/relatorios
+
+
+### Relatório completo em PDF - últimos 30 dias, todos os filtros preenchidos
+GET {{baseUrl}}/relatorios/exportar?data_inicial=2026-09-01&data_final=2026-10-01&formato=pdf
+Authorization: Bearer {{Token}}
+
+
+### Relatório completo em Excel - últimos 30 dias, todos os filtros preenchidos
+GET {{baseUrl}}/relatorios/exportar?data_inicial=2026-09-01&data_final=2026-10-01&formato=xlsx
+Authorization: Bearer {{Token}}
