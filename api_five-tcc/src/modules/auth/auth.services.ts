@@ -26,17 +26,12 @@ export class AuthServices {
         console.log(jwtConfiguration)
     }
 
-    async Login(loginDto: LoginDto) {
-
-
+       async Login(loginDto: LoginDto) {
         const user = await this.userRepositorio.VerificarEmailExistente(
             loginDto.user_email);
 
-
         if (!user) {
-            throw new UnauthorizedException(
-                'Usuário ou senha inválidos',
-            );
+            throw new UnauthorizedException('Usuário ou senha inválidos');
         }
 
         const passwordisValid = await this.HashingService.compare(
@@ -45,34 +40,13 @@ export class AuthServices {
         );
 
         if (!passwordisValid) {
-            throw new UnauthorizedException(
-                'Usuário ou senha inválidos'
-            )
+            throw new UnauthorizedException('Usuário ou senha inválidos');
         }
 
-        // Gerar o token JWT
-        const accessToken = await this.signJwtAsync(
-            user.id_user,
-            this.jwtConfiguration.jWTtl,
-            {
-                email: user.user_email,
-                role: user.user_tipo
-
-            });
-
-
-        const refreshToken = await this.signJwtAsync(
-            user.id_user,
-            this.jwtConfiguration.jWTtlRefreshTtl,
-        );
-
-        return {
-            accessToken,
-            refreshToken
-        }
+        return await this.gerarTokens(user);
     }
 
-    // 
+ 
     private async signJwtAsync<T>(sub: number, expiresIn: number, payload?: T) {
         return await this.jwtSevices.signAsync({
             sub,
@@ -88,7 +62,33 @@ export class AuthServices {
     }
 
     async refreshTokens(logonRefreshTokenDto: LogonRefreshTokenDto) {
+        let payload: any;
 
+        try {
+            payload = await this.jwtSevices.verifyAsync(
+                logonRefreshTokenDto.refreshToken,
+                {
+                    audience: this.jwtConfiguration.audience,
+                    issuer: this.jwtConfiguration.issuer,
+                },
+            );
+        } catch {
+            throw new UnauthorizedException('Refresh token inválido ou expirado');
+        }
+
+        // Impede usar um access token no lugar do refresh token
+        if (payload.type !== 'refresh') {
+            throw new UnauthorizedException('Token inválido');
+        }
+
+        const resultado = await this.userRepositorio.ListarUserId(payload.sub);
+        const user = resultado[0];
+
+        if (!user) {
+            throw new UnauthorizedException('Usuário não encontrado');
+        }
+
+        return await this.gerarTokens(user);
     }
 
 
@@ -112,7 +112,7 @@ export class AuthServices {
                 type: 'password_reset'
             }
             , {
-                 secret: process.env.JWT_RESET_SECRET,
+                secret: process.env.JWT_RESET_SECRET,
                 expiresIn: '15m'
             },
         );
@@ -186,6 +186,28 @@ export class AuthServices {
 
 
 
+    }
+
+
+
+     // Gera o par de tokens (usado no login e no refresh)
+    private async gerarTokens(user: { id_user: number; user_email: string; user_tipo: string }) {
+        const accessToken = await this.signJwtAsync(
+            user.id_user,
+            this.jwtConfiguration.jWTtl,
+            {
+                email: user.user_email,
+                role: user.user_tipo,
+            },
+        );
+
+        const refreshToken = await this.signJwtAsync(
+            user.id_user,
+            this.jwtConfiguration.jWTtlRefreshTtl,
+            { type: 'refresh' },
+        );
+
+        return { accessToken, refreshToken };
     }
 
 }

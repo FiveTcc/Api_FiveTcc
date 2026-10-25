@@ -3,10 +3,13 @@ import { AtribuicaoTecnicoRepository } from "./atribuicaoTecnico.repository";
 import { AtribuirTecnicoDto } from "./dtos/atribuirTecnicoDtos";
 import { UserTipo } from "../common/enums/userTipo.enum";
 import { OcorrenciaStatus } from "../ocorrencias/dtos/createocorrenciaDto";
+import { OcorrenciaService } from "../ocorrencias/ocorrencia.service";
 
 @Injectable()
 export class AtribuicaoTecnicoService {
-    constructor(private readonly atribuicaoTecnicoRepository: AtribuicaoTecnicoRepository) { }
+    constructor(private readonly atribuicaoTecnicoRepository: AtribuicaoTecnicoRepository,
+        private readonly ocorrenciaService: OcorrenciaService
+    ) { }
 
 
     async vincularTecnico(idOcor: number, dto: AtribuirTecnicoDto) {
@@ -35,9 +38,9 @@ export class AtribuicaoTecnicoService {
 
     async listarTecnicoDaOcorrencia(idOcor: number) {
         try {
-            // await this.ocorrenciService.verificaOcorrenciaExiste(idOcor);
+            await this.ocorrenciaService.verificaOcorrenciaExiste(idOcor);
 
-           return await this.atribuicaoTecnicoRepository.listarTecnicoDaOcorrencia(idOcor);
+            return await this.atribuicaoTecnicoRepository.listarTecnicoDaOcorrencia(idOcor);
         } catch (error) {
             if (error instanceof NotFoundException) {
                 throw error;
@@ -53,7 +56,7 @@ export class AtribuicaoTecnicoService {
 
     async listarOcorrenciaDoTecnico(idUser: number) {
         try {
-           return await this.verificaTecnicoExiste(idUser);
+            return await this.verificaTecnicoExiste(idUser);
 
             await this.atribuicaoTecnicoRepository.listarOcorrenciaDoTecnico(idUser);
         } catch (error) {

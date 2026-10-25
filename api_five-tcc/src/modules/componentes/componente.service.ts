@@ -19,7 +19,7 @@ export class ComponenteService {
     // Método para listar todos os componentes por id
     async listarComponenteId(id: number) {
         try {
-            return await this.componenteRepository.listarComponenteId(id);
+            return await this.verificaComponenteExiste(id);
         } catch (error) {
             if (error instanceof NotFoundException) {
                 throw error;
