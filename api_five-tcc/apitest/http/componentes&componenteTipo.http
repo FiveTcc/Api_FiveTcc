@@ -37,7 +37,7 @@ Authorization: Bearer: {{Token}}
 
 
 ### 2. Buscar componente por ID
-GET {{baseUrl}}/componentes/listarComponenteId/7
+GET {{baseUrl}}/componentes/listarComponenteId/1
 Authorization: Bearer: {{Token}}
 
 
@@ -48,21 +48,21 @@ Content-Type: application/json
 
 {
   "compo_nome": "Roteador TP-Link",
-  "compo_obs": "Roteador do lab 8",
-  "compo_ativo": false,
+  "compo_obs": "Roteador do lab 1",
+  "compo_ativo": true,
   "compo_tipo_id": 1,
   "id_amb": 1
 }
 
 
 ### 4. Atualizar componente
-PATCH {{baseUrl}}/componentes/atualizarComponente/13
-Authorization: Bearer: {{Token}}
+PATCH {{baseUrl}}/componentes/atualizarComponente/1
+Authorization: Bearer {{Token}}
 Content-Type: application/json
 
 {
   "compo_nome": "PC-01",
-  "compo_obs": "computador do lab 5",
+  "compo_obs": "computador do lab 1",
   "compo_ativo": false,
   "compo_tipo_id": 1,
   "id_amb": 1
@@ -70,32 +70,22 @@ Content-Type: application/json
 
 
 ### 5. Excluir componente
-DELETE {{baseUrl}}/componentes/excluirComponente/13
-Authorization: Bearer: {{Token}}
+DELETE {{baseUrl}}/componentes/excluirComponente/1
+Authorization: Bearer {{Token}}
 
 
 ### 6. Atualizar status do componente
-PATCH {{baseUrl}}/componentes/atualizarStatusComponente/13
-Authorization: Bearer: {{Token}}
+PATCH {{baseUrl}}/componentes/atualizarStatusComponente/1
+Authorization: Bearer {{Token}}
 
 
 ### 7. Associar componente ao ambiente
-PATCH {{baseUrl}}/componentes/15/associarComponenteAmbiente
-Authorization: Bearer: {{Token}}
+PATCH {{baseUrl}}/componentes/1/associarComponenteAmbiente
+Authorization: Bearer {{Token}}
 Content-Type: application/json
 
 {
-  "id_amb": 7
-}
-
-
-### 8. Alterar tipo do componente
-PATCH {{baseUrl}}/componentes/12/alterarTipoComponente
-Authorization: Bearer: {{Token}}
-Content-Type: application/json
-
-{
-  "compo_tipo_id": 7
+  "id_amb": 1
 }
 
 
@@ -103,36 +93,46 @@ Content-Type: application/json
 ### FILTROS DE COMPONENTES
 ### ======================================================
 
-### 9. Filtrar componentes por ambiente
-GET {{baseUrl}}/componentes/buscarPorAmbiente?nomeAmb=Laboratorio 1
-Authorization: Bearer: {{Token}}
+### 8. Filtrar componentes por ambiente
+GET {{baseUrl}}/componentes/buscarPorAmbiente?nomeAmb=Laboratorio
+Authorization: Bearer {{Token}}
 
 
-### 10. Filtrar componentes por tipo
-GET {{baseUrl}}/componentes/buscarPorTipo?tipo=rede
-Authorization: Bearer: {{Token}}
+### 9. Filtrar componentes por tipo
+GET {{baseUrl}}/componentes/buscarPorTipo?tipo=hardware
+Authorization: Bearer {{Token}}
 
-### 11. Filtrar componentes por nome
-GET {{baseUrl}}/componentes/buscarPorNome/5
-Authorization: Bearer: {{Token}}
+### 10. Filtrar componentes por nome
+GET {{baseUrl}}/componentes/buscarPorNome/Roteador
+Authorization: Bearer {{Token}}
 
 
 ### ======================================================
 ### COMPONENTES TIPO
 ### ======================================================
 
-### 12. Listar todos os tipos componentes
+### 11. Listar todos os tipos componentes
 GET {{baseUrl}}/componentes-tipo/listarComponenteTipo
 Authorization: Bearer {{Token}}
 
 
-### 13. Buscar tipo de componente por ID
-GET {{baseUrl}}/componentes-tipo/listarComponenteTipoId/4
+### 12. Buscar tipo de componente por ID
+GET {{baseUrl}}/componentes-tipo/listarComponenteTipoId/3
 Authorization: Bearer {{Token}}
 
 
-### 14. Cadastrar tipo de componente
+### 13. Cadastrar tipo de componente
 POST {{baseUrl}}/componentes-tipo/cadastrarComponenteTipo
+Authorization: Bearer {{Token}}
+Content-Type: application/json
+
+{
+  "compo_tipo": "software"
+}
+
+
+### 14. Atualizar tipo de componente
+PATCH {{baseUrl}}/componentes-tipo/atualizarComponenteTipo/1
 Authorization: Bearer {{Token}}
 Content-Type: application/json
 
@@ -141,16 +141,6 @@ Content-Type: application/json
 }
 
 
-### 15. Atualizar tipo de componente
-PATCH {{baseUrl}}/componentes-tipo/atualizarComponenteTipo/4
-Authorization: Bearer {{Token}}
-Content-Type: application/json
-
-{
-  "compo_tipo": "audio"
-}
-
-
-### 16. Excluir tipo de componente
-DELETE {{baseUrl}}/componentes-tipo/excluirComponenteTipo/4
+### 15. Excluir tipo de componente
+DELETE {{baseUrl}}/componentes-tipo/excluirComponenteTipo/5
 Authorization: Bearer {{Token}}

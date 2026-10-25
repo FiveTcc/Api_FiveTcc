@@ -25,3 +25,57 @@ Content-Type: application/json
 {
   "refreshToken": "{{login.response.body.refreshToken}}"
 }
+
+
+### ======================================================
+### AMBIENTES
+### ======================================================
+
+### 1. Listar todos os ambientes
+GET {{baseUrl}}/ambientes/listarAmbiente
+Authorization: Bearer {{Token}}
+
+
+### 2. Cadastrar ambiente
+POST {{baseUrl}}/ambientes/cadastrarAmbiente
+Authorization: Bearer {{Token}}
+Content-Type: application/json
+
+{
+  "amb_nome": "Laboratório 1",
+  "amb_tipo": "laboratorio",
+  "amb_andar": "1º",
+  "amb_bloco": "A",
+  "amb_obs": "laboratório de informática" 
+}
+ 
+
+### 3. Atualizar ambiente
+PATCH {{baseUrl}}/ambientes/editarAmbiente/1
+Authorization: Bearer {{Token}}
+Content-Type: application/json
+
+{
+  "amb_nome": "Sala 1",
+  "amb_tipo": "Sala",
+  "amb_andar": "1º",
+  "amb_bloco": "A",
+  "amb_obs": "sala de aula" 
+}
+
+### 4. Atualizar status do ambiente
+PATCH {{baseUrl}}/ambientes/atualizarStatusAmbiente/1
+Authorization: Bearer {{Token}}
+
+### ======================================================
+### FILTROS DE AMBIENTES
+### ======================================================
+
+### 5. Filtrar ambientes por bloco
+GET {{baseUrl}}/ambientes/buscarPorBloco?bloco=A
+Authorization: Bearer {{Token}}
+
+
+### 6. Filtrar ambientes por tipo
+GET {{baseUrl}}/ambientes/buscarPorTipo?tipo=Sala
+Authorization: Bearer {{Token}}

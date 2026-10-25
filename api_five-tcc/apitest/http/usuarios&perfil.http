@@ -37,7 +37,7 @@ Authorization: Bearer {{Token}}
 
 
 ### 2. Listar todos os usuarios por ID
-GET {{baseUrl}}/usuarios/listarUserId/18
+GET {{baseUrl}}/usuarios/listarUserId/1
 Authorization: Bearer {{Token}}
 
 
@@ -48,30 +48,30 @@ Authorization: Bearer {{Token}}
 Content-Type: application/json
 
 {
-  "user_nome": "Mauricio",
-  "user_email": "maumau@gmail.com",
-  "user_senha": "Mau0609!",
+  "user_nome": "Tecnico",
+  "user_email": "tecnico@gmail.com",
+  "user_senha": "12345*Aa",
   "user_tel": "(18)99165-3675",
   "user_tipo": "tecnico"
 }
 
 
 ### 4. Atualizar usuario
-PUT {{baseUrl}}/usuarios/atualizarUser/18
+PUT {{baseUrl}}/usuarios/atualizarUser/5
 Authorization: Bearer {{Token}}
 Content-Type: application/json
 
 {
   "user_nome": "Professor",
   "user_email": "professor@gmail.com",
-  "user_senha": "Professor!234",
+  "user_senha": "12345*Aa",
   "user_tel": "(18)99478-3674",
-  "user_tipo": "tecnico"
+  "user_tipo": "funcionario"
 }
 
 
 ### 5. Atualizar status do usuario
-PATCH {{baseUrl}}/usuarios/inativarUser/2
+PATCH {{baseUrl}}/usuarios/inativarUser/1
 Authorization: Bearer {{Token}}
 
 

@@ -1,0 +1,50 @@
+@baseUrl = {{$dotenv BASE_URL}}
+@email = {{$dotenv LOGIN_EMAIL}}
+@senha = {{$dotenv LOGIN_SENHA}}
+@Token = {{login.response.body.accessToken}}
+
+### ========================================
+### LOGIN
+### ========================================
+
+### Login (clique aqui primeiro)
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "user_email": "{{email}}",
+  "user_senha": "{{senha}}"
+}
+
+### Renovar token
+# @name refresh
+POST {{baseUrl}}/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "{{login.response.body.refreshToken}}"
+}
+
+### ========================================
+### VINCULOS
+### ========================================
+
+### 1. Listar todos os vinculos
+GET {{baseUrl}}/atribuicaoTecnicos/listarVinculos
+Authorization: Bearer {{Token}}
+
+
+### 2. Listar tecnicos de uma ocorrencia
+GET {{baseUrl}}/atribuicaoTecnicos/ocorrencia/1/tecnicos
+Authorization: Bearer {{Token}}
+
+
+### 3. Listar ocorrencias de um tecnico
+GET {{baseUrl}}/atribuicaoTecnicos/tecnico/1/ocorrencias
+Authorization: Bearer {{Token}}
+
+
+### 4. Desvincular tecnico
+DELETE {{baseUrl}}/atribuicaoTecnicos/1/desvincular
+Authorization: Bearer {{Token}}

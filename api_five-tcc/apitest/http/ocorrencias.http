@@ -1,0 +1,152 @@
+@baseUrl = {{$dotenv BASE_URL}}
+@email = {{$dotenv LOGIN_EMAIL}}
+@senha = {{$dotenv LOGIN_SENHA}}
+@Token = {{login.response.body.accessToken}}
+
+### ========================================
+### LOGIN
+### ========================================
+
+### Login (clique aqui primeiro)
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "user_email": "{{email}}",
+  "user_senha": "{{senha}}"
+}
+
+### Renovar token
+# @name refresh
+POST {{baseUrl}}/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "{{login.response.body.refreshToken}}"
+}
+
+
+### ========================================
+### OCORRENCIAS
+### ========================================
+
+### 1. Listar ocorrencias
+GET {{baseUrl}}/ocorrencias/listarOcorrencia
+Authorization: Bearer {{Token}}
+
+
+### 2. Listar ocorrencia por ID
+GET  {{baseUrl}}/ocorrencias/listarOcorrenciaId/1
+Authorization: Bearer {{Token}}
+
+
+### 3. Abrir ocorrencia
+POST {{baseUrl}}/ocorrencias/abrirOcorrencia
+Content-Type: application/json
+Authorization: Bearer {{Token}}
+
+{
+  "ocor_nome": "PC 01 não liga",
+  "ocor_prioridade": "baixa",
+  "ocor_obs": "Não liga",
+  "componente_id": 1,
+  "ambiente_id": 1
+}
+
+
+### 4. Editar ocorrencia
+PATCH {{baseUrl}}/ocorrencias/editarOcorrencia/1
+Content-Type: application/json
+Authorization: Bearer {{Token}}
+
+{
+  "ocor_nome": "PC 01 não liga",
+  "ocor_prioridade": "baixa",
+  "ocor_obs": "O computador da sala não apresenta sinal de energia",
+  "componente_id": 1,
+  "ambiente_id": 1
+}
+
+
+### 5. Encerrar ocorrencia
+PATCH {{baseUrl}}/ocorrencias/encerrarOcorrencia/1
+Authorization: Bearer {{Token}}
+
+
+### 6. Cancelar ocorrencia
+PATCH {{baseUrl}}/ocorrencias/cancelarOcorrencia/1
+Authorization: Bearer {{Token}}
+
+
+### 7. Alterar status da ocorrencia
+PATCH {{baseUrl}}/ocorrencias/alterarStatus/1
+Authorization: Bearer {{Token}}
+Content-Type: application/json
+
+{
+    "novoStatus": "em andamento"
+}
+
+
+### 8. Adicionar observacao a ocorrencia
+PATCH {{baseUrl}}/ocorrencias/1/adicionarObservacao
+Authorization: Bearer {{Token}}
+Content-Type: application/json
+
+{
+    "ocor_obs": "Já foi relatado problemas semelhantes nessa maquina"
+}
+
+
+### 9. Associar componente a ocorrencia
+PATCH {{baseUrl}}/ocorrencias/1/associarComponente
+Authorization: Bearer {{Token}}
+Content-Type: application/json
+
+{
+  "id_comp": 1
+}
+
+### 10. Associar ambiente a ocorrencia
+PATCH {{baseUrl}}/ocorrencias/1/associarAmbiente
+Authorization: Bearer {{Token}}
+Content-Type: application/json
+
+{
+  "id_amb": 1
+}
+
+
+### ========================================
+### FILTROS DE OCORRENCIAS
+### ========================================
+
+### 11. Filtrar ocorrências por ambiente
+GET {{baseUrl}}/ocorrencias/buscarPorAmbiente?nomeAmb=Lab
+Authorization: Bearer {{Token}}
+
+
+### 12. Filtrar ocorrências por componente
+GET {{baseUrl}}/ocorrencias/buscarPorComponente?nomeComp=Computador
+Authorization: Bearer {{Token}}
+
+
+### 13. Filtrar ocorrências por nome
+GET {{baseUrl}}/ocorrencias/buscarPorNome?nomeOcor=Computador
+Authorization: Bearer {{Token}}
+
+
+### 14. Filtrar ocorrências por status
+GET {{baseUrl}}/ocorrencias/buscarPorStatus?status=concluida
+Authorization: Bearer {{Token}}
+
+
+### 15. Filtrar ocorrências por prioridade
+GET {{baseUrl}}/ocorrencias/buscarPorPrioridade?prioridade=baixa
+Authorization: Bearer {{Token}}
+
+
+### 16. Filtrar ocorrências por período
+GET {{baseUrl}}/ocorrencias/buscarPorPeriodo?dataInicio=2026-08-01&dataFim=2026-08-26
+Authorization: Bearer {{Token}}

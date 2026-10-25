@@ -32,7 +32,7 @@ Content-Type: application/json
 ### ========================================
 
 ### 1. Relatório em JSON - sem filtros
-GET {{baseUrl}}/relatorios?data_inicial=2026-08-27&data_final=2026-09-25&tecnico=4
+GET {{baseUrl}}/relatorios
 Authorization: Bearer {{Token}}
 
 
