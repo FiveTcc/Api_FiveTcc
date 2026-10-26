@@ -1,4 +1,4 @@
-import { Injectable, Inject, UnauthorizedException, NotFoundException } from "@nestjs/common";
+import { Injectable, Inject, UnauthorizedException } from "@nestjs/common";
 import { LoginDto } from "./auth.dto/login.dto";
 import { LogonRefreshTokenDto } from "./auth.dto/logon.dto";
 import { UserRepositorio } from "../users/userRepositorio";
@@ -6,10 +6,7 @@ import type { ConfigType } from '@nestjs/config';
 import { HashingService } from "./hashing/hashing.service";
 import jwtConfig from "./config/jwt.config";
 import { JwtService } from "@nestjs/jwt";
-import { Roles } from "./decorators/roles.decorator";
 import { MailService } from '../email/mail.sevice';
-import { User } from "src/db/schemas";
-
 
 
 @Injectable()
@@ -22,13 +19,10 @@ export class AuthServices {
         private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
         private readonly jwtSevices: JwtService,
         private readonly mailService: MailService
-    ) {
-        console.log(jwtConfiguration)
-    }
+    ) { }
 
-       async Login(loginDto: LoginDto) {
-        const user = await this.userRepositorio.VerificarEmailExistente(
-            loginDto.user_email);
+    async Login(loginDto: LoginDto) {
+        const user = await this.userRepositorio.VerificarEmailExistente(loginDto.user_email);
 
         if (!user) {
             throw new UnauthorizedException('Usuário ou senha inválidos');
@@ -43,10 +37,14 @@ export class AuthServices {
             throw new UnauthorizedException('Usuário ou senha inválidos');
         }
 
+        if (!user.user_ativo) {
+            throw new UnauthorizedException('Usuário inativo');
+        }
+
         return await this.gerarTokens(user);
     }
 
- 
+
     private async signJwtAsync<T>(sub: number, expiresIn: number, payload?: T) {
         return await this.jwtSevices.signAsync({
             sub,
@@ -81,11 +79,10 @@ export class AuthServices {
             throw new UnauthorizedException('Token inválido');
         }
 
-        const resultado = await this.userRepositorio.ListarUserId(payload.sub);
-        const user = resultado[0];
+        const user = await this.userRepositorio.ListarUserId(payload.sub);
 
-        if (!user) {
-            throw new UnauthorizedException('Usuário não encontrado');
+        if (!user || !user.user_ativo) {
+            throw new UnauthorizedException('Usuário não encontrado ou inativo');
         }
 
         return await this.gerarTokens(user);
@@ -97,12 +94,9 @@ export class AuthServices {
 
         const user = await this.userRepositorio.VerificarEmailExistente(email);
 
-        if (!user) {
-
-            return {
-                message: 'Se o e-mail estiver cadastrado, você receberá um link de recuperação'
-            }
-        };
+        if (!user || !user.user_ativo) {
+            return { message: 'Se o e-mail estiver cadastrado, você receberá um link de recuperação' };
+        }
 
         // Gerar token de redefinição de senha
         const token = await this.jwtSevices.signAsync(
@@ -117,7 +111,6 @@ export class AuthServices {
             },
         );
 
-        console.log('TOKEN DE RECUPERAÇÃO:', token);
 
         const linkRecuperacao = `${process.env.FRONTEND_URL}/nova-senha?token=${token}`;
 
@@ -160,17 +153,11 @@ export class AuthServices {
             );
         }
 
-        const resultado =
-            await this.userRepositorio.ListarUserId(payload.sub);
+        const usuario = await this.userRepositorio.ListarUserId(payload.sub);
 
-        const usuario = resultado[0];
-
-        if (!usuario) {
-            throw new NotFoundException(
-                'Usuário não encontrado',
-            );
+        if (!usuario || !usuario.user_ativo) {
+            throw new UnauthorizedException('Token inválido');
         }
-
         const senhaHash = await this.HashingService.hash(novaSenha);
 
         await this.userRepositorio.atualizarSenha(
@@ -190,7 +177,7 @@ export class AuthServices {
 
 
 
-     // Gera o par de tokens (usado no login e no refresh)
+    // Gera o par de tokens (usado no login e no refresh)
     private async gerarTokens(user: { id_user: number; user_email: string; user_tipo: string }) {
         const accessToken = await this.signJwtAsync(
             user.id_user,
@@ -209,5 +196,4 @@ export class AuthServices {
 
         return { accessToken, refreshToken };
     }
-
 }

@@ -36,7 +36,7 @@ GET {{baseUrl}}/usuarios/listarUser
 Authorization: Bearer {{Token}}
 
 
-### 2. Listar todos os usuarios por ID
+### 2. Listar usuario por ID
 GET {{baseUrl}}/usuarios/listarUserId/1
 Authorization: Bearer {{Token}}
 
