@@ -20,7 +20,7 @@ export class AtribuicaoController {
   ) { }
 
   // Vincular técnico
-  @Post(':idOcor/vincularTecnico')
+  @Post('ocorrencia/:idOcor/vincularTecnico')
   async vincularTecnico(
     @Param('idOcor', ParseIntPipe) idOcor: number,
     @Body() dto: AtribuirTecnicoDto,

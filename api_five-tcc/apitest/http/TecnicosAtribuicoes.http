@@ -34,17 +34,25 @@ Content-Type: application/json
 GET {{baseUrl}}/atribuicaoTecnicos/listarVinculos
 Authorization: Bearer {{Token}}
 
+### 2. Vincular técnico a uma ocorrência
+POST {{baseUrl}}/atribuicaoTecnicos/ocorrencia/12/vincularTecnico
+Authorization: Bearer {{Token}}
+Content-Type: application/json
 
-### 2. Listar tecnicos de uma ocorrencia
+{
+  "id_user": 2
+}
+
+### 3. Listar tecnicos de uma ocorrencia
 GET {{baseUrl}}/atribuicaoTecnicos/ocorrencia/1/tecnicos
 Authorization: Bearer {{Token}}
 
 
-### 3. Listar ocorrencias de um tecnico
+### 4. Listar ocorrencias de um tecnico
 GET {{baseUrl}}/atribuicaoTecnicos/tecnico/1/ocorrencias
 Authorization: Bearer {{Token}}
 
 
-### 4. Desvincular tecnico
+### 5. Desvincular tecnico
 DELETE {{baseUrl}}/atribuicaoTecnicos/1/desvincular
 Authorization: Bearer {{Token}}

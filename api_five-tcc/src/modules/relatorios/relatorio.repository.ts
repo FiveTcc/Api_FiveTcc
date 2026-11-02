@@ -1,3 +1,4 @@
+
 import { Inject, Injectable } from '@nestjs/common';
 import { and, desc, eq, gte, lte, sql, SQL } from 'drizzle-orm';
 import { DRIZZLE } from 'src/db/database/database.constants';
@@ -19,7 +20,7 @@ const FUSO = '-03:00';
 export class RelatorioRepository {
   constructor(@Inject(DRIZZLE) private readonly db: DrizzleDB) {}
 
-  // Aceita 'YYYY-MM-DD', ISO completo ou Date e devolve só 'YYYY-MM-DD'.
+  // Aceita YYYY-MM-DD, ISO completo ou Date e devolve YYYY-MM-DD.
   private dia(valor: string | Date): string {
     return valor instanceof Date
       ? valor.toISOString().slice(0, 10)
@@ -27,8 +28,6 @@ export class RelatorioRepository {
   }
 
   // Monta as condições WHERE comuns a todas as consultas do relatório.
-  // O filtro de técnico entra aqui (via EXISTS) para valer também nos
-  // resumos e rankings, e não só na lista de ocorrências.
   private montarCondicoes(filtro: FilterRelatorioDto): SQL<unknown>[] {
     const condicoes: SQL<unknown>[] = [];
 
@@ -40,6 +39,7 @@ export class RelatorioRepository {
         ),
       );
     }
+
     if (filtro.data_final) {
       condicoes.push(
         lte(
@@ -48,23 +48,33 @@ export class RelatorioRepository {
         ),
       );
     }
+
     if (filtro.status) {
-      condicoes.push(eq(ocorrencias.ocor_status, STATUS_MAP[filtro.status]));
-    }
-    if (filtro.prioridade) {
       condicoes.push(
-        eq(ocorrencias.ocor_prioridade, PRIORIDADE_MAP[filtro.prioridade]),
+        eq(ocorrencias.ocor_status, STATUS_MAP[filtro.status]),
       );
     }
-    if (filtro.ambiente) {
-      condicoes.push(eq(ocorrencias.ambiente_id, filtro.ambiente));
+
+    if (filtro.prioridade) {
+      condicoes.push(
+        eq(
+          ocorrencias.ocor_prioridade,
+          PRIORIDADE_MAP[filtro.prioridade],
+        ),
+      );
     }
+
+    if (filtro.ambiente) {
+      condicoes.push(
+        eq(ocorrencias.ambiente_id, filtro.ambiente),
+      );
+    }
+
     if (filtro.tecnico) {
-      // Alias próprio (ou_filtro) para não colidir com o join de
-      // ocorrencias_user usado em contarPorTecnico.
       condicoes.push(sql`EXISTS (
-        SELECT 1 FROM ocorrencias_user ou_filtro
-        WHERE ou_filtro.ocorrencia_id = ocorrencias.id_ocorrencia
+        SELECT 1
+        FROM ocorrencias_user ou_filtro
+        WHERE ou_filtro.ocorrencia_id = ${ocorrencias.id_ocor}
         AND ou_filtro.user_id = ${filtro.tecnico}
       )`);
     }
@@ -73,20 +83,24 @@ export class RelatorioRepository {
   }
 
   // Busca as ocorrências detalhadas para montar as linhas do relatório.
-  // Os técnicos vinculados vêm agregados numa string só (subquery com
-  // GROUP_CONCAT), evitando uma linha duplicada por técnico.
   async buscarOcorrencias(filtro: FilterRelatorioDto) {
     const condicoes = this.montarCondicoes(filtro);
 
     const tecnicosAgrupados = this.db
       .select({
         ocorrencia_id: ocorrencias_user.ocorrencia_id,
-        tecnicos: sql<string>`GROUP_CONCAT(DISTINCT ${User.user_nome} SEPARATOR ', ')`.as(
-          'tecnicos',
-        ),
+        tecnicos: sql<string>`
+          GROUP_CONCAT(
+            DISTINCT ${User.user_nome}
+            SEPARATOR ', '
+          )
+        `.as('tecnicos'),
       })
       .from(ocorrencias_user)
-      .innerJoin(User, eq(User.id_user, ocorrencias_user.user_id))
+      .innerJoin(
+        User,
+        eq(User.id_user, ocorrencias_user.user_id),
+      )
       .groupBy(ocorrencias_user.ocorrencia_id)
       .as('tecnicos_agrupados');
 
@@ -104,28 +118,47 @@ export class RelatorioRepository {
         componente: Componentes.compo_nome,
       })
       .from(ocorrencias)
-      .leftJoin(User, eq(ocorrencias.id_user, User.id_user))
+      .leftJoin(
+        User,
+        eq(ocorrencias.id_user, User.id_user),
+      )
       .leftJoin(
         tecnicosAgrupados,
-        eq(tecnicosAgrupados.ocorrencia_id, ocorrencias.id_ocor),
+        eq(
+          tecnicosAgrupados.ocorrencia_id,
+          ocorrencias.id_ocor,
+        ),
       )
-      .leftJoin(Ambientes, eq(ocorrencias.ambiente_id, Ambientes.id_amb))
-      .leftJoin(Componentes, eq(ocorrencias.componente_id, Componentes.id_compo))
+      .leftJoin(
+        Ambientes,
+        eq(ocorrencias.ambiente_id, Ambientes.id_amb),
+      )
+      .leftJoin(
+        Componentes,
+        eq(ocorrencias.componente_id, Componentes.id_compo),
+      )
       .where(condicoes.length ? and(...condicoes) : undefined)
       .orderBy(desc(ocorrencias.criado_em));
   }
 
+  // Contagem de ocorrências por status.
   async contarPorStatus(filtro: FilterRelatorioDto) {
     const condicoes = this.montarCondicoes(filtro);
+
     return this.db
-      .select({ status: ocorrencias.ocor_status, total: sql<number>`count(*)` })
+      .select({
+        status: ocorrencias.ocor_status,
+        total: sql<number>`count(*)`,
+      })
       .from(ocorrencias)
       .where(condicoes.length ? and(...condicoes) : undefined)
       .groupBy(ocorrencias.ocor_status);
   }
 
+  // Contagem de ocorrências por prioridade.
   async contarPorPrioridade(filtro: FilterRelatorioDto) {
     const condicoes = this.montarCondicoes(filtro);
+
     return this.db
       .select({
         prioridade: ocorrencias.ocor_prioridade,
@@ -136,52 +169,91 @@ export class RelatorioRepository {
       .groupBy(ocorrencias.ocor_prioridade);
   }
 
+  // Contagem de ocorrências por ambiente.
   async contarPorAmbiente(filtro: FilterRelatorioDto) {
     const condicoes = this.montarCondicoes(filtro);
+
     return this.db
-      .select({ ambiente: Ambientes.amb_nome, total: sql<number>`count(*)` })
+      .select({
+        ambiente: Ambientes.amb_nome,
+        total: sql<number>`count(*)`,
+      })
       .from(ocorrencias)
-      .leftJoin(Ambientes, eq(ocorrencias.ambiente_id, Ambientes.id_amb))
+      .leftJoin(
+        Ambientes,
+        eq(ocorrencias.ambiente_id, Ambientes.id_amb),
+      )
       .where(condicoes.length ? and(...condicoes) : undefined)
       .groupBy(Ambientes.amb_nome)
       .orderBy(desc(sql`count(*)`));
   }
 
-  // Ranking de componentes. Agrupa por id para não juntar componentes de
-  // mesmo nome em ambientes diferentes (ex.: "PC-5" em dois laboratórios)
-  // e mostra o ambiente no rótulo.
+  // Ranking de componentes.
   async contarPorComponente(filtro: FilterRelatorioDto) {
     const condicoes = this.montarCondicoes(filtro);
+
     return this.db
       .select({
-        componente: sql<string>`CONCAT(${Componentes.compo_nome}, ' (', COALESCE(${Ambientes.amb_nome}, '-'), ')')`,
+        componente: sql<string>`
+          CONCAT(
+            ${Componentes.compo_nome},
+            ' (',
+            COALESCE(${Ambientes.amb_nome}, '-'),
+            ')'
+          )
+        `,
         total: sql<number>`count(*)`,
       })
       .from(ocorrencias)
-      .innerJoin(Componentes, eq(ocorrencias.componente_id, Componentes.id_compo))
-      .leftJoin(Ambientes, eq(ocorrencias.ambiente_id, Ambientes.id_amb))
+      .innerJoin(
+        Componentes,
+        eq(ocorrencias.componente_id, Componentes.id_compo),
+      )
+      .leftJoin(
+        Ambientes,
+        eq(ocorrencias.ambiente_id, Ambientes.id_amb),
+      )
       .where(condicoes.length ? and(...condicoes) : undefined)
-      .groupBy(Componentes.id_compo, Componentes.compo_nome, Ambientes.amb_nome)
+      .groupBy(
+        Componentes.id_compo,
+        Componentes.compo_nome,
+        Ambientes.amb_nome,
+      )
       .orderBy(desc(sql`count(*)`));
   }
 
+  // Contagem de ocorrências por técnico.
+  // Agrupa pelo ID e pelo nome para evitar juntar técnicos homônimos.
   async contarPorTecnico(filtro: FilterRelatorioDto) {
     const condicoes = this.montarCondicoes(filtro);
+
     return this.db
-      .select({ tecnico: User.user_nome, total: sql<number>`count(*)` })
+      .select({
+        id: User.id_user,
+        tecnico: User.user_nome,
+        total: sql<number>`count(*)`,
+      })
       .from(ocorrencias)
       .innerJoin(
         ocorrencias_user,
-        eq(ocorrencias_user.ocorrencia_id, ocorrencias.id_ocor),
+        eq(
+          ocorrencias_user.ocorrencia_id,
+          ocorrencias.id_ocor,
+        ),
       )
-      .innerJoin(User, eq(User.id_user, ocorrencias_user.user_id))
+      .innerJoin(
+        User,
+        eq(User.id_user, ocorrencias_user.user_id),
+      )
       .where(condicoes.length ? and(...condicoes) : undefined)
-      .groupBy(User.user_nome)
+      .groupBy(User.id_user, User.user_nome)
       .orderBy(desc(sql`count(*)`));
   }
 
+  // Contagem de ocorrências por data.
   async contarPorData(filtro: FilterRelatorioDto) {
     const condicoes = this.montarCondicoes(filtro);
+
     return this.db
       .select({
         data: sql<string>`DATE(${ocorrencias.criado_em})`,
@@ -193,36 +265,73 @@ export class RelatorioRepository {
       .orderBy(sql`DATE(${ocorrencias.criado_em})`);
   }
 
-  // Nome de quem está gerando o relatório (usado no cabeçalho do PDF).
+  // Busca o usuário que está gerando o relatório.
   async buscarUsuarioPorId(id: number) {
     const [usuario] = await this.db
-      .select({ user_nome: User.user_nome })
+      .select({
+        user_nome: User.user_nome,
+      })
       .from(User)
       .where(eq(User.id_user, id))
       .limit(1);
+
     return usuario;
   }
 
-  // Converte os IDs dos filtros (ambiente e técnico) em nomes legíveis
-  // para o cabeçalho do PDF.
+  // Converte os IDs dos filtros em nomes legíveis.
   async buscarNomesFiltros(filtro: FilterRelatorioDto) {
     const [ambiente, tecnico] = await Promise.all([
       filtro.ambiente
         ? this.db
-            .select({ nome: Ambientes.amb_nome })
+            .select({
+              nome: Ambientes.amb_nome,
+            })
             .from(Ambientes)
             .where(eq(Ambientes.id_amb, filtro.ambiente))
             .limit(1)
         : Promise.resolve([] as { nome: string }[]),
+
       filtro.tecnico
         ? this.db
-            .select({ nome: User.user_nome })
+            .select({
+              nome: User.user_nome,
+            })
             .from(User)
             .where(eq(User.id_user, filtro.tecnico))
             .limit(1)
         : Promise.resolve([] as { nome: string }[]),
     ]);
 
-    return { ambiente: ambiente[0]?.nome, tecnico: tecnico[0]?.nome };
+    return {
+      ambiente: ambiente[0]?.nome,
+      tecnico: tecnico[0]?.nome,
+    };
+  }
+
+  // Retorna as opções disponíveis para os filtros do frontend.
+  async listarOpcoesFiltros() {
+    const [ambientes, tecnicos] = await Promise.all([
+      this.db
+        .select({
+          id: Ambientes.id_amb,
+          nome: Ambientes.amb_nome,
+        })
+        .from(Ambientes)
+        .orderBy(Ambientes.amb_nome),
+
+      this.db
+        .select({
+          id: User.id_user,
+          nome: User.user_nome,
+        })
+        .from(User)
+        .where(eq(User.user_tipo, 'tecnico'))
+        .orderBy(User.user_nome),
+    ]);
+
+    return {
+      ambientes,
+      tecnicos,
+    };
   }
 }

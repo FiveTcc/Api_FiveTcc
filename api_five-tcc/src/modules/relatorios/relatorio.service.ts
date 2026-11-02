@@ -13,24 +13,47 @@ export class RelatorioService {
     private readonly repository: RelatorioRepository,
     private readonly excelExporter: ExcelExporter,
     private readonly pdfExporter: PdfExporter,
-  ) {}
+  ) { }
 
-  // Monta o relatório (linhas + resumo + agrupamento, se pedido).
+  // Monta o relatório (linhas + resumo + agrupamento + opções dos filtros).
   async gerar(filtroOriginal: FilterRelatorioDto, user: any) {
     const filtro = this.aplicarRestricaoTecnico(filtroOriginal, user);
 
-    // Técnico não pode agrupar por técnico (veria os colegas das suas ocorrências)
+    // Técnico não pode agrupar por técnico.
     const agruparBloqueado =
-      user.role === UserTipo.TECNICO && filtro.agruparPor === 'tecnico';
+      user.role === UserTipo.TECNICO &&
+      filtro.agruparPor === 'tecnico';
 
-    const linhas = await this.repository.buscarOcorrencias(filtro);
+    const [linhas, opcoesFiltros] = await Promise.all([
+      this.repository.buscarOcorrencias(filtro),
+      this.repository.listarOpcoesFiltros(),
+    ]);
+
     const resumo = this.calcularResumo(linhas);
+
     const agrupamento =
       filtro.agruparPor && !agruparBloqueado
         ? await this.buscarAgrupamento(filtro)
         : undefined;
 
-    return { filtros: filtro, resumo, agrupamento, linhas };
+    // Técnico só recebe a própria opção no filtro de técnicos.
+    const opcoesVisiveis =
+      user.role === UserTipo.TECNICO
+        ? {
+          ...opcoesFiltros,
+          tecnicos: opcoesFiltros.tecnicos.filter(
+            (tecnico) => Number(tecnico.id) === Number(user.id_user),
+          ),
+        }
+        : opcoesFiltros;
+
+    return {
+      filtros: filtro,
+      resumo,
+      agrupamento,
+      opcoesFiltros: opcoesVisiveis,
+      linhas,
+    };
   }
 
   async exportar(filtroOriginal: FilterRelatorioDto, user: any) {
@@ -89,8 +112,8 @@ export class RelatorioService {
         ),
         tecnicos: tecnicos
           ? this.paraRanking(
-              tecnicos.map((t) => ({ nome: t.tecnico ?? '-', total: t.total })),
-            )
+            tecnicos.map((t) => ({ nome: t.tecnico ?? '-', total: t.total })),
+          )
           : undefined,
       },
       linhas: dados.linhas.map((l) => ({
@@ -161,14 +184,14 @@ export class RelatorioService {
 
     const tempoMedioHoras = atendidas.length
       ? Number(
-          (
-            atendidas.reduce(
-              (soma, o) =>
-                soma + (o.encerrado_em.getTime() - o.criado_em.getTime()) / 3_600_000,
-              0,
-            ) / atendidas.length
-          ).toFixed(1),
-        )
+        (
+          atendidas.reduce(
+            (soma, o) =>
+              soma + (o.encerrado_em.getTime() - o.criado_em.getTime()) / 3_600_000,
+            0,
+          ) / atendidas.length
+        ).toFixed(1),
+      )
       : null;
 
     return { total, abertas, emAndamento, concluidas, canceladas, tempoMedioHoras };
