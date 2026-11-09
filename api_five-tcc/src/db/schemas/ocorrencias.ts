@@ -1,4 +1,3 @@
-
 import {mysqlTable,
     int,
     varchar,

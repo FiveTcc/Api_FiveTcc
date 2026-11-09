@@ -6,7 +6,6 @@ import { METHODS } from 'http';
 
 process.env.TZ = 'America/Sao_Paulo';
 
-
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
@@ -21,8 +20,6 @@ async function bootstrap() {
     }),
   );
 
-
   await app.listen(process.env.PORT ?? 3000);
-  
 }
 bootstrap();
