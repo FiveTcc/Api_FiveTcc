@@ -6,7 +6,6 @@ export enum TipoAtuacao {
   SUPERVISOR = 3,
 }
 
-
 export class AtribuirTecnicoDto {
   @IsInt({ message: 'O ID deve ser um número inteiro' })
   @IsNotEmpty({ message: 'O ID é obrigatório' })

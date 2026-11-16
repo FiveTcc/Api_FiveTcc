@@ -1,11 +1,4 @@
-import {
-  ConnectedSocket,
-  MessageBody,
-  SubscribeMessage,
-  WebSocketGateway,
-  WebSocketServer,
-} from '@nestjs/websockets';
-
+import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer, } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 
 @WebSocketGateway({
@@ -14,7 +7,6 @@ import { Server, Socket } from 'socket.io';
   },
 })
 export class NotificacaoGateway {
-
   @WebSocketServer()
   server!: Server;
 
@@ -23,14 +15,11 @@ export class NotificacaoGateway {
     @MessageBody() data: { id_user: number },
     @ConnectedSocket() socket: Socket,
   ) {
-
     const sala = `usuario_${data.id_user}`;
 
     socket.join(sala);
 
-    console.log(
-      `Usuário ${data.id_user} entrou na sala ${sala}`,
-    );
+    console.log(`Usuário ${data.id_user} entrou na sala ${sala}`);
 
     return {
       sucesso: true,
@@ -38,19 +27,11 @@ export class NotificacaoGateway {
     };
   }
 
-  enviarParaUsuario(
-    idUser: number,
-    notificacao: any,
-  ) {
-
+  enviarParaUsuario(idUser: number, notificacao: any) {
     const sala = `usuario_${idUser}`;
 
-    this.server
-      .to(sala)
-      .emit('nova_notificacao', notificacao);
+    this.server.to(sala).emit('nova_notificacao', notificacao);
 
-    console.log(
-      `Notificação enviada para ${sala}`,
-    );
+    console.log(`Notificação enviada para ${sala}`);
   }
 }

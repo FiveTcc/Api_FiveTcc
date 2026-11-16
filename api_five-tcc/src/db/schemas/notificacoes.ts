@@ -1,37 +1,22 @@
-import {
-    mysqlTable,
-    int,
-    varchar,
-    boolean,
-    datetime,
-    mysqlEnum,
-} from "drizzle-orm/mysql-core";
-import { sql } from "drizzle-orm";
-import { User } from "./User";
-import { ocorrencias } from "./ocorrencias";
+import { mysqlTable, int, varchar, boolean, datetime, mysqlEnum, } from 'drizzle-orm/mysql-core';
+import { sql } from 'drizzle-orm';
+import { User } from './User';
+import { ocorrencias } from './ocorrencias';
 
+export const notificacoes = mysqlTable('notificacoes', {
+  id_notificacao: int('id_notificacao').autoincrement().primaryKey(),
 
-export const notificacoes = mysqlTable("notificacoes", {
+  id_user: int('id_user').notNull().references(() => User.id_user),
 
-    id_notificacao: int("id_notificacao").autoincrement().primaryKey(),
+  titulo: varchar('titulo', { length: 150 }).notNull(),
 
-    id_user: int("id_user").notNull().references(() => User.id_user),
+  mensagem: varchar('mensagem', { length: 255 }).notNull(),
 
-    titulo: varchar("titulo", {length: 150,}).notNull(),
+  tipo: mysqlEnum('tipo', ['NOVA_OCORRENCIA', 'ALTERACAO_STATUS', 'ENCERRAMENTO', 'ALERTA',]).notNull(),
 
-    mensagem: varchar("mensagem", {length: 255,}).notNull(),
+  id_ocorrencia: int('id_ocorrencia').references(() => ocorrencias.id_ocor),
 
-    tipo: mysqlEnum("tipo", [
-        "NOVA_OCORRENCIA",
-        "ALTERACAO_STATUS",
-        "ENCERRAMENTO",
-        "ALERTA",
-    ]).notNull(),
+  lida: boolean('lida').default(false).notNull(),
 
-    id_ocorrencia: int("id_ocorrencia").references(() => ocorrencias.id_ocor),
-
-    lida: boolean("lida").default(false).notNull(),
-
-    criado_em: datetime("criado_em").notNull().default(sql`CURRENT_TIMESTAMP`),
-
+  criado_em: datetime('criado_em').notNull().default(sql`CURRENT_TIMESTAMP`),
 });

@@ -1,11 +1,4 @@
-import {
-  IsEnum,
-  IsInt,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-  MaxLength,
-} from 'class-validator';
+import { IsEnum, IsInt, IsNotEmpty, IsOptional, IsString, MaxLength, } from 'class-validator';
 
 export enum TipoNotificacao {
   NOVA_OCORRENCIA = 'NOVA_OCORRENCIA',
@@ -15,7 +8,6 @@ export enum TipoNotificacao {
 }
 
 export class CriarNotificacaoDto {
-
   @IsInt()
   id_user!: number;
 

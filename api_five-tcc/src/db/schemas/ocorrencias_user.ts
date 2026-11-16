@@ -1,11 +1,4 @@
-import {
-    mysqlTable,
-    int,
-    datetime,
-    varchar,
-    tinyint
-
-} from 'drizzle-orm/mysql-core';
+import { mysqlTable, int, datetime, varchar, tinyint, } from 'drizzle-orm/mysql-core';
 import { ocorrencias } from './ocorrencias';
 import { User } from './User';
 import { sql } from 'drizzle-orm';

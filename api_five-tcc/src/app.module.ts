@@ -4,7 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './modules/users/userModule';
 import { DatabaseModule } from './db/database/database.module';
 import { AuthModule } from './modules/auth/auth.module';
-import { AmbienteModule } from './modules/ambientes/ambiente.module'
+import { AmbienteModule } from './modules/ambientes/ambiente.module';
 import { ComponenteModule } from './modules/componentes/componente.module';
 import { ComponenteTipoModule } from './modules/componenteTipo/componenteTipo.module';
 import { OcorrenciaModule } from './modules/ocorrencias/ocorrencia.module';
@@ -13,13 +13,11 @@ import { AtribuicaoTecnicoModule } from './modules/atribuicaoTecnicos/atribuicao
 import { RelatorioModule } from './modules/relatorios/relatorio.module';
 import { NotificacaoModule } from './modules/notificacao/notificacao.module';
 import { ChatModule } from './modules/chat/chat.module';
-import { CloudinaryModule } from './modules/cloudinary/cloudinary.module'
-
+import { CloudinaryModule } from './modules/cloudinary/cloudinary.module';
 
 @Module({
   imports: [
-    
-     ConfigModule.forRoot({
+    ConfigModule.forRoot({
       isGlobal: true,
     }),
 
@@ -30,4 +28,4 @@ import { CloudinaryModule } from './modules/cloudinary/cloudinary.module'
   controllers: [],
   providers: [],
 })
-export class AppModule { }
+export class AppModule {}

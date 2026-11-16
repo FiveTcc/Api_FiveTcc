@@ -7,7 +7,7 @@ export class AtualizarPerfilDto {
   user_nome?: string;
 
   @IsOptional()
-  @IsEmail({}, { message: 'E-mail inválido', })
+  @IsEmail({}, { message: 'E-mail inválido' })
   @MaxLength(255, { message: 'O email deve ter no máximo 20 caracteres' })
   user_email?: string;
 

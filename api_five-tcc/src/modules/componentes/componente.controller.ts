@@ -8,92 +8,85 @@ import { AuthTokenGuard } from '../auth/guards/auth-token.guad';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 
-@UseGuards(AuthTokenGuard, RolesGuard) // Aplica o guard de autenticação a todas as rotas deste controlador 
+@UseGuards(AuthTokenGuard, RolesGuard) // Aplica o guard de autenticação a todas as rotas deste controlador
 @Roles('admin', 'tecnico', 'funcionario') // Aplica o decorator de roles a todas as rotas deste controlador, permitindo apenas usuários com a role 'admin'
 @Controller('componentes')
 export class ComponenteController {
-    constructor(private readonly componenteService: ComponenteService) { }
+  constructor(private readonly componenteService: ComponenteService) {}
 
-    // Rota para listar componentes
-    @Get('/listarComponente')
-    async listarComponente() {
-        return await this.componenteService.listarComponente();
-    }
+  // Rota para listar componentes
+  @Get('/listarComponente')
+  async listarComponente() {
+    return await this.componenteService.listarComponente();
+  }
 
-    // Rota para listar componentes por id
-    @Get('/listarComponenteId/:id')
-    async listarComponentePorId(
-        @Param('id', ParseIntPipe) id: number
-    ) {
-        return await this.componenteService.listarComponenteId(id);
-    }
+  // Rota para listar componentes por id
+  @Get('/listarComponenteId/:id')
+  async listarComponentePorId(@Param('id', ParseIntPipe) id: number) {
+    return await this.componenteService.listarComponenteId(id);
+  }
 
-    // Rota para cadastrar componente 
-    @Post('/cadastrarComponente')
-    async cadastrarComponente(
-        @Body() CreateComponenteDto: CreateComponenteDto
-    ) {
-        return await this.componenteService.cadastrarComponente(CreateComponenteDto);
-    }
+  // Rota para cadastrar componente
+  @Post('/cadastrarComponente')
+  async cadastrarComponente(@Body() CreateComponenteDto: CreateComponenteDto) {
+    return await this.componenteService.cadastrarComponente(
+      CreateComponenteDto,
+    );
+  }
 
-    // Rota para atualizar componentes
-    @Patch('/atualizarComponente/:id')
-    async atualizarComponente(
-        @Param('id', ParseIntPipe) id: number,
-        @Body() UpdateComponenteDto: UpdateComponenteDto
-    ) {
-        return await this.componenteService.atualizarComponente(id, UpdateComponenteDto);
-    }
+  // Rota para atualizar componentes
+  @Patch('/atualizarComponente/:id')
+  async atualizarComponente(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() UpdateComponenteDto: UpdateComponenteDto,
+  ) {
+    return await this.componenteService.atualizarComponente(
+      id,
+      UpdateComponenteDto,
+    );
+  }
 
-    // Rota para excluir componente
-    @Delete('/excluirComponente/:id')
-    async excluirComponente(
-        @Param('id', ParseIntPipe) id: number
-    ) {
-        return await this.componenteService.excluirComponente(id);
-    }
+  // Rota para excluir componente
+  @Delete('/excluirComponente/:id')
+  async excluirComponente(@Param('id', ParseIntPipe) id: number) {
+    return await this.componenteService.excluirComponente(id);
+  }
 
-    // Rota para atualizar o status do componente
-    @Patch('/atualizarStatusComponente/:id')
-    async atualizarStatusComponente(
-        @Param('id', ParseIntPipe) id: number
-    ) {
-        return await this.componenteService.atualizarStatusComponente(id);
-    }
+  // Rota para atualizar o status do componente
+  @Patch('/atualizarStatusComponente/:id')
+  async atualizarStatusComponente(@Param('id', ParseIntPipe) id: number) {
+    return await this.componenteService.atualizarStatusComponente(id);
+  }
 
-    // Rota para associar componente a ambiente
-    @Patch(':id/associarComponenteAmbiente')
-    async associarCompAmb(
-        @Param('id', ParseIntPipe) id: number,
-        @Body() AssociateCompAmbDto: AssociateCompAmbDto
-    ) {
-        return await this.componenteService.associarCompAmb(id, AssociateCompAmbDto.id_amb);
-    }
+  // Rota para associar componente a ambiente
+  @Patch(':id/associarComponenteAmbiente')
+  async associarCompAmb(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() AssociateCompAmbDto: AssociateCompAmbDto,
+  ) {
+    return await this.componenteService.associarCompAmb(
+      id,
+      AssociateCompAmbDto.id_amb,
+    );
+  }
 
-    // ##### Rotas de Filtros #####
+  // ##### Rotas de Filtros #####
 
-    // Rota para busca por ambiente
-    @Get('buscarPorAmbiente')
-    async filtrarPorAmbiente(
-        @Query('nomeAmb') nomeAmb: string
-    ) {
-        return await this.componenteService.filtrarPorAmbiente(nomeAmb);
-    }
+  // Rota para busca por ambiente
+  @Get('buscarPorAmbiente')
+  async filtrarPorAmbiente(@Query('nomeAmb') nomeAmb: string) {
+    return await this.componenteService.filtrarPorAmbiente(nomeAmb);
+  }
 
-    // Rota para busca por tipo de componente
-    @Get('buscarPorTipo')
-    async filtrarPorTipo(
-        @Query('tipo') tipo: string
-    ) {
-        return await this.componenteService.filtrarPorTipo(tipo);
-    }
+  // Rota para busca por tipo de componente
+  @Get('buscarPorTipo')
+  async filtrarPorTipo(@Query('tipo') tipo: string) {
+    return await this.componenteService.filtrarPorTipo(tipo);
+  }
 
-    // Rota para buscar componente po nome
-    @Get('buscarPorNome/:nome')
-    async filtrarPorNome(
-        @Param('nome') nome: string
-    ) {
-        return await this.componenteService.filtrarPorNome(nome)
-    }
-
+  // Rota para buscar componente po nome
+  @Get('buscarPorNome/:nome')
+  async filtrarPorNome(@Param('nome') nome: string) {
+    return await this.componenteService.filtrarPorNome(nome);
+  }
 }

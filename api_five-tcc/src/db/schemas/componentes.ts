@@ -1,14 +1,7 @@
-import {
-mysqlTable,
-int,
-varchar,
-boolean,
-datetime,
-} from 'drizzle-orm/mysql-core';
+import { mysqlTable, int, varchar, boolean, datetime, } from 'drizzle-orm/mysql-core';
 import { sql } from 'drizzle-orm';
-import {Ambientes} from './Ambiente';
-import {Componentes_tipo} from './componentes_tipo';
-
+import { Ambientes } from './Ambiente';
+import { Componentes_tipo } from './componentes_tipo';
 
 export const Componentes = mysqlTable('componentes', {
 id_compo: int ('id_compo').autoincrement().primaryKey(),

@@ -1,8 +1,7 @@
-import { Injectable } from "@nestjs/common";
-import { AuditoriaRepository } from "./auditoria.repository";
+import { Injectable } from '@nestjs/common';
+import { AuditoriaRepository } from './auditoria.repository';
 
 @Injectable()
 export class AuditoriaService {
-    constructor(private readonly auditoriaRepository: AuditoriaRepository) { }
-
+  constructor(private readonly auditoriaRepository: AuditoriaRepository) {}
 }

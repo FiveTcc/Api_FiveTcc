@@ -1,4 +1,3 @@
-
 import { Inject, Injectable } from '@nestjs/common';
 import { and, desc, eq, gte, lte, sql, SQL } from 'drizzle-orm';
 import { DRIZZLE } from 'src/db/database/database.constants';
@@ -50,24 +49,17 @@ export class RelatorioRepository {
     }
 
     if (filtro.status) {
-      condicoes.push(
-        eq(ocorrencias.ocor_status, STATUS_MAP[filtro.status]),
-      );
+      condicoes.push(eq(ocorrencias.ocor_status, STATUS_MAP[filtro.status]));
     }
 
     if (filtro.prioridade) {
       condicoes.push(
-        eq(
-          ocorrencias.ocor_prioridade,
-          PRIORIDADE_MAP[filtro.prioridade],
-        ),
+        eq(ocorrencias.ocor_prioridade, PRIORIDADE_MAP[filtro.prioridade]),
       );
     }
 
     if (filtro.ambiente) {
-      condicoes.push(
-        eq(ocorrencias.ambiente_id, filtro.ambiente),
-      );
+      condicoes.push(eq(ocorrencias.ambiente_id, filtro.ambiente));
     }
 
     if (filtro.tecnico) {
@@ -97,10 +89,7 @@ export class RelatorioRepository {
         `.as('tecnicos'),
       })
       .from(ocorrencias_user)
-      .innerJoin(
-        User,
-        eq(User.id_user, ocorrencias_user.user_id),
-      )
+      .innerJoin(User, eq(User.id_user, ocorrencias_user.user_id))
       .groupBy(ocorrencias_user.ocorrencia_id)
       .as('tecnicos_agrupados');
 
@@ -118,21 +107,12 @@ export class RelatorioRepository {
         componente: Componentes.compo_nome,
       })
       .from(ocorrencias)
-      .leftJoin(
-        User,
-        eq(ocorrencias.id_user, User.id_user),
-      )
+      .leftJoin(User, eq(ocorrencias.id_user, User.id_user))
       .leftJoin(
         tecnicosAgrupados,
-        eq(
-          tecnicosAgrupados.ocorrencia_id,
-          ocorrencias.id_ocor,
-        ),
+        eq(tecnicosAgrupados.ocorrencia_id, ocorrencias.id_ocor),
       )
-      .leftJoin(
-        Ambientes,
-        eq(ocorrencias.ambiente_id, Ambientes.id_amb),
-      )
+      .leftJoin(Ambientes, eq(ocorrencias.ambiente_id, Ambientes.id_amb))
       .leftJoin(
         Componentes,
         eq(ocorrencias.componente_id, Componentes.id_compo),
@@ -179,10 +159,7 @@ export class RelatorioRepository {
         total: sql<number>`count(*)`,
       })
       .from(ocorrencias)
-      .leftJoin(
-        Ambientes,
-        eq(ocorrencias.ambiente_id, Ambientes.id_amb),
-      )
+      .leftJoin(Ambientes, eq(ocorrencias.ambiente_id, Ambientes.id_amb))
       .where(condicoes.length ? and(...condicoes) : undefined)
       .groupBy(Ambientes.amb_nome)
       .orderBy(desc(sql`count(*)`));
@@ -209,16 +186,9 @@ export class RelatorioRepository {
         Componentes,
         eq(ocorrencias.componente_id, Componentes.id_compo),
       )
-      .leftJoin(
-        Ambientes,
-        eq(ocorrencias.ambiente_id, Ambientes.id_amb),
-      )
+      .leftJoin(Ambientes, eq(ocorrencias.ambiente_id, Ambientes.id_amb))
       .where(condicoes.length ? and(...condicoes) : undefined)
-      .groupBy(
-        Componentes.id_compo,
-        Componentes.compo_nome,
-        Ambientes.amb_nome,
-      )
+      .groupBy(Componentes.id_compo, Componentes.compo_nome, Ambientes.amb_nome)
       .orderBy(desc(sql`count(*)`));
   }
 
@@ -236,15 +206,9 @@ export class RelatorioRepository {
       .from(ocorrencias)
       .innerJoin(
         ocorrencias_user,
-        eq(
-          ocorrencias_user.ocorrencia_id,
-          ocorrencias.id_ocor,
-        ),
+        eq(ocorrencias_user.ocorrencia_id, ocorrencias.id_ocor),
       )
-      .innerJoin(
-        User,
-        eq(User.id_user, ocorrencias_user.user_id),
-      )
+      .innerJoin(User, eq(User.id_user, ocorrencias_user.user_id))
       .where(condicoes.length ? and(...condicoes) : undefined)
       .groupBy(User.id_user, User.user_nome)
       .orderBy(desc(sql`count(*)`));
