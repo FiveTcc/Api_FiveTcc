@@ -1,9 +1,3 @@
-import {mysqlTable,
-    int,
-    varchar,
-    datetime,
-} from 'drizzle-orm/mysql-core';
-
 import { mysqlTable, int, varchar, datetime } from 'drizzle-orm/mysql-core';
 import { sql } from 'drizzle-orm';
 import { Ambientes } from './Ambiente';
