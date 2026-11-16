@@ -31,5 +31,4 @@ import * as schema from '../schemas';
 
   exports: [DRIZZLE],
 })
-
-export class DatabaseModule { }
+export class DatabaseModule {}

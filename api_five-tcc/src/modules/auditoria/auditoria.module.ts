@@ -1,12 +1,11 @@
-import { Module } from "@nestjs/common";
-import { AuditoriaController } from "./auditoria.controller";
-import { AuditoriaService } from "./auditoria.service";
-import { AuditoriaRepository } from "./auditoria.repository";
-
+import { Module } from '@nestjs/common';
+import { AuditoriaController } from './auditoria.controller';
+import { AuditoriaService } from './auditoria.service';
+import { AuditoriaRepository } from './auditoria.repository';
 
 @Module({
-    controllers: [AuditoriaController ],
-    providers: [AuditoriaService, AuditoriaRepository],
-    imports: [],
+  controllers: [AuditoriaController],
+  providers: [AuditoriaService, AuditoriaRepository],
+  imports: [],
 })
-export class AuditoriaModule { }
+export class AuditoriaModule {}

@@ -1,8 +1,7 @@
-import { Injectable } from "@nestjs/common";
-import { ChatRepository } from "./chat.repository";
+import { Injectable } from '@nestjs/common';
+import { ChatRepository } from './chat.repository';
 
 @Injectable()
 export class ChatService {
-    constructor(private readonly chatRepository: ChatRepository) { }
-
+  constructor(private readonly chatRepository: ChatRepository) {}
 }

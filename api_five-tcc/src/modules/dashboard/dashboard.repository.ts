@@ -1,12 +1,12 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { eq, ne, and, sql, desc } from 'drizzle-orm';
 import { ocorrencias, ocorrencias_user } from 'src/db/schemas';
-import { DRIZZLE } from "src/db/database/database.constants";
-import type { DrizzleDB } from "src/db/types/drizzleDB";
+import { DRIZZLE } from 'src/db/database/database.constants';
+import type { DrizzleDB } from 'src/db/types/drizzleDB';
 
 @Injectable()
 export class DashboardRepository {
-  constructor(@Inject(DRIZZLE) private readonly db: DrizzleDB) { }
+  constructor(@Inject(DRIZZLE) private readonly db: DrizzleDB) {}
 
   // ===================== Métricas gerais (Admin) =====================
 
@@ -23,10 +23,11 @@ export class DashboardRepository {
       .select({ total: sql<number>`count(*)` })
       .from(ocorrencias)
       .where(
-        and( eq(ocorrencias.ocor_prioridade, 'Critica'),
-        ne(ocorrencias.ocor_status, 'Concluida'),
-        ne(ocorrencias.ocor_status, 'Cancelada'),
-       )
+        and(
+          eq(ocorrencias.ocor_prioridade, 'Critica'),
+          ne(ocorrencias.ocor_status, 'Concluida'),
+          ne(ocorrencias.ocor_status, 'Cancelada'),
+        ),
       );
     return row.total;
   }
@@ -121,11 +122,7 @@ export class DashboardRepository {
       .select({ total: sql<number>`count(*)` })
       .from(ocorrencias_user)
       .innerJoin(ocorrencias, eq(ocorrencias.id_ocor, ocorrencias_user.ocorrencia_id))
-      .where(
-        and(
-          eq(ocorrencias_user.user_id, tecnicoId),
-        ),
-      );
+      .where(and(eq(ocorrencias_user.user_id, tecnicoId)));
     return row.total;
   }
 
@@ -218,11 +215,7 @@ export class DashboardRepository {
     const [row] = await this.db
       .select({ total: sql<number>`count(*)` })
       .from(ocorrencias)
-      .where(
-        and(
-          eq(ocorrencias.id_user, usuarioId),
-        ),
-      );
+      .where(and(eq(ocorrencias.id_user, usuarioId)));
     return row.total;
   }
 

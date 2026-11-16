@@ -9,28 +9,25 @@ import jwtConfig from './config/jwt.config';
 import { JwtModule } from '@nestjs/jwt';
 import { MailModule } from '../email/mail.module';
 
-
 @Global()
 @Module({
-
-    imports:[
-         ConfigModule.forRoot({
+  imports: [
+    ConfigModule.forRoot({
       isGlobal: true,
-   }),
-       ConfigModule.forFeature(jwtConfig),
-       JwtModule.registerAsync(jwtConfig.asProvider()),
-       MailModule
-    ],
-    controllers: [AuthController],
-    providers: [ 
-        AuthServices,
-        UserRepositorio,
-        {
-            provide: HashingService,
-            useClass: BcryptService
-        }
-    ],
-    exports: [HashingService , JwtModule , ConfigModule , ] 
-
+    }),
+    ConfigModule.forFeature(jwtConfig),
+    JwtModule.registerAsync(jwtConfig.asProvider()),
+    MailModule,
+  ],
+  controllers: [AuthController],
+  providers: [
+    AuthServices,
+    UserRepositorio,
+    {
+      provide: HashingService,
+      useClass: BcryptService,
+    },
+  ],
+  exports: [HashingService, JwtModule, ConfigModule],
 })
-export class AuthModule { }
+export class AuthModule {}

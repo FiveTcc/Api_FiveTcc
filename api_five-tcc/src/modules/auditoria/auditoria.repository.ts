@@ -1,9 +1,8 @@
-import { Inject, Injectable } from "@nestjs/common";
-import { DRIZZLE } from "src/db/database/database.constants";
-import type { DrizzleDB } from "src/db/types/drizzleDB";
+import { Inject, Injectable } from '@nestjs/common';
+import { DRIZZLE } from 'src/db/database/database.constants';
+import type { DrizzleDB } from 'src/db/types/drizzleDB';
 
 @Injectable()
 export class AuditoriaRepository {
-    constructor(@Inject(DRIZZLE) private readonly db: DrizzleDB) { }
-
+  constructor(@Inject(DRIZZLE) private readonly db: DrizzleDB) {}
 }

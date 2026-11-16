@@ -13,7 +13,6 @@ if (!emailUser || !emailPass) {
 
 @Injectable()
 export class MailService {
-
   private transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 587,
@@ -24,16 +23,8 @@ export class MailService {
     },
   });
 
-
-
-  async enviarRecuperacao(
-    email: string,
-    nome: string,
-    link: string,
-  ) {
-
+  async enviarRecuperacao(email: string, nome: string, link: string) {
     await this.transporter.sendMail({
-
       from: `"N.O.S - New Occurrence System" <${process.env.EMAIL_USER}>`,
 
       to: email,

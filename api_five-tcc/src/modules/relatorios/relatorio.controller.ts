@@ -10,7 +10,7 @@ import { FilterRelatorioDto } from './dtos/filter.relatorioDto';
 @Roles('admin', 'tecnico')
 @Controller('relatorios')
 export class RelatorioController {
-  constructor(private readonly relatorioService: RelatorioService) { }
+  constructor(private readonly relatorioService: RelatorioService) {}
 
   // Retorna o relatório em JSON (linhas + resumo + agrupamento).
   // Admin vê todas as ocorrências; técnico só vê as próprias.
@@ -26,10 +26,8 @@ export class RelatorioController {
     @Req() req: Request,
     @Res() res: Response,
   ) {
-    const { buffer, nomeArquivo, contentType } = await this.relatorioService.exportar(
-      filtro,
-      req['user'],
-    );
+    const { buffer, nomeArquivo, contentType } =
+      await this.relatorioService.exportar(filtro, req['user']);
 
     res.set({
       'Content-Type': contentType,

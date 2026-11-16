@@ -6,17 +6,13 @@ import { UpdateAmbienteDto } from "./dtos/update.ambienteDtos";
 import { Ambientes } from "src/db/schemas/Ambiente";
 import { eq, like } from 'drizzle-orm';
 
-
 @Injectable()
 export class AmbienteRepository {
-  constructor(
-    @Inject(DRIZZLE) private readonly db: DrizzleDB,) { }
+  constructor(@Inject(DRIZZLE) private readonly db: DrizzleDB) {}
 
   // metodo para dar select na tabela Ambientes
   async ListarAmbientes() {
-    return await this.db
-      .select()
-      .from(Ambientes);
+    return await this.db.select().from(Ambientes);
   }
 
   // metodo para dar select na tabela Ambientes por id
@@ -27,7 +23,7 @@ export class AmbienteRepository {
       amb_andar: CriarAmbienteDto.amb_andar,
       amb_bloco: CriarAmbienteDto.amb_bloco,
       amb_obs: CriarAmbienteDto.amb_obs,
-      id_user: idUser
+      id_user: idUser,
     });
   }
 
@@ -42,21 +38,17 @@ export class AmbienteRepository {
   // metodo para filtrar ambientes por tipo
   async FiltroTipo(tipoAmb: string) {
     try {
-
-      const ambientesFiltrados =
-        await this.db
-          .select()
-          .from(Ambientes)
-          .where(like(Ambientes.amb_tipo, `%${tipoAmb}%`));
+      const ambientesFiltrados = await this.db
+        .select()
+        .from(Ambientes)
+        .where(like(Ambientes.amb_tipo, `%${tipoAmb}%`));
 
       if (ambientesFiltrados.length === 0) {
-        throw new NotFoundException('Nenhum ambiente encontrado para o tipo informado');
+        throw new NotFoundException('Nenhum ambiente encontrado para o tipo informado',);
       }
 
       return ambientesFiltrados;
-
     } catch (error) {
-
       if (error instanceof NotFoundException) {
         throw error;
       }
@@ -87,7 +79,6 @@ export class AmbienteRepository {
       .where(eq(Ambientes.id_amb, id));
   }
 
-
   // Método de verificar se o ambiente existe
   async verificaAmbienteExiste(id: number) {
     const [ambiente] = await this.db
@@ -95,13 +86,11 @@ export class AmbienteRepository {
       .from(Ambientes)
       .where(eq(Ambientes.id_amb, id));
 
-      return ambiente;
+    return ambiente;
   }
 
   // Verifica se já existe um ambiente com o mesmo nome
-  async verificaNomeAmbiente(
-    nAmb: string
-  ) {
+  async verificaNomeAmbiente(nAmb: string) {
     const [ambiente] = await this.db
       .select()
       .from(Ambientes)

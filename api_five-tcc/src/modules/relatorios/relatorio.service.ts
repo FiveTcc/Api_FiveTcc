@@ -13,7 +13,7 @@ export class RelatorioService {
     private readonly repository: RelatorioRepository,
     private readonly excelExporter: ExcelExporter,
     private readonly pdfExporter: PdfExporter,
-  ) { }
+  ) {}
 
   // Monta o relatório (linhas + resumo + agrupamento + opções dos filtros).
   async gerar(filtroOriginal: FilterRelatorioDto, user: any) {
@@ -21,8 +21,7 @@ export class RelatorioService {
 
     // Técnico não pode agrupar por técnico.
     const agruparBloqueado =
-      user.role === UserTipo.TECNICO &&
-      filtro.agruparPor === 'tecnico';
+      user.role === UserTipo.TECNICO && filtro.agruparPor === 'tecnico';
 
     const [linhas, opcoesFiltros] = await Promise.all([
       this.repository.buscarOcorrencias(filtro),
@@ -40,11 +39,11 @@ export class RelatorioService {
     const opcoesVisiveis =
       user.role === UserTipo.TECNICO
         ? {
-          ...opcoesFiltros,
-          tecnicos: opcoesFiltros.tecnicos.filter(
-            (tecnico) => Number(tecnico.id) === Number(user.id_user),
-          ),
-        }
+            ...opcoesFiltros,
+            tecnicos: opcoesFiltros.tecnicos.filter(
+              (tecnico) => Number(tecnico.id) === Number(user.id_user),
+            ),
+          }
         : opcoesFiltros;
 
     return {
@@ -112,8 +111,8 @@ export class RelatorioService {
         ),
         tecnicos: tecnicos
           ? this.paraRanking(
-            tecnicos.map((t) => ({ nome: t.tecnico ?? '-', total: t.total })),
-          )
+              tecnicos.map((t) => ({ nome: t.tecnico ?? '-', total: t.total })),
+            )
           : undefined,
       },
       linhas: dados.linhas.map((l) => ({
@@ -184,14 +183,15 @@ export class RelatorioService {
 
     const tempoMedioHoras = atendidas.length
       ? Number(
-        (
-          atendidas.reduce(
-            (soma, o) =>
-              soma + (o.encerrado_em.getTime() - o.criado_em.getTime()) / 3_600_000,
-            0,
-          ) / atendidas.length
-        ).toFixed(1),
-      )
+          (
+            atendidas.reduce(
+              (soma, o) =>
+                soma +
+                (o.encerrado_em.getTime() - o.criado_em.getTime()) / 3_600_000,
+              0,
+            ) / atendidas.length
+          ).toFixed(1),
+        )
       : null;
 
     return { total, abertas, emAndamento, concluidas, canceladas, tempoMedioHoras };

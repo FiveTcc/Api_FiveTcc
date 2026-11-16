@@ -1,12 +1,6 @@
-
-import {mysqlTable,
-    int,
-    varchar,
-    datetime,
-
-} from 'drizzle-orm/mysql-core';
+import { mysqlTable, int, varchar, datetime } from 'drizzle-orm/mysql-core';
 import { sql } from 'drizzle-orm';
-import {Ambientes} from "./Ambiente";
+import { Ambientes } from './Ambiente';
 import { Componentes } from './componentes';
 import { User } from './User';
 

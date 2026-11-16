@@ -1,15 +1,14 @@
-
 // tabela de usuários
-export *   from './User';
+export * from './User';
 
 // tabela de ambientes
-export *   from './Ambiente';
+export * from './Ambiente';
 
 // tabela de componentes
-export * from  './componentes';
+export * from './componentes';
 
 // tabela de tipo de componentes
-export * from './componentes_tipo'; 
+export * from './componentes_tipo';
 
 // tabela de ocorrencias
 export * from './ocorrencias';
@@ -18,4 +17,4 @@ export * from './ocorrencias';
 export * from './ocorrencias_user';
 
 // tabela de notificacoes
-export * from './notificacoes' 
+export * from './notificacoes';

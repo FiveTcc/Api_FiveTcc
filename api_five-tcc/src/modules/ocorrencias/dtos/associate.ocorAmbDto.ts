@@ -1,9 +1,9 @@
-import { Type } from "class-transformer";
-import { IsInt, IsNotEmpty } from "class-validator";
+import { Type } from 'class-transformer';
+import { IsInt, IsNotEmpty } from 'class-validator';
 
 export class AssociateOcorAmbDto {
-    @Type(() => Number)
-    @IsInt({ message: 'O ID do ambiente deve ser um número inteiro' })
-    @IsNotEmpty({ message: 'O ID do ambiente é obrigatório' })
-    id_amb!: number;
+  @Type(() => Number)
+  @IsInt({ message: 'O ID do ambiente deve ser um número inteiro' })
+  @IsNotEmpty({ message: 'O ID do ambiente é obrigatório' })
+  id_amb!: number;
 }

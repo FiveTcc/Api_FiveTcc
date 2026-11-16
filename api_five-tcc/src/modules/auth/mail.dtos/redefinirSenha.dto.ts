@@ -1,11 +1,6 @@
-import {
-  IsNotEmpty,
-  IsString,
-  MinLength,
-} from 'class-validator';
+import { IsNotEmpty, IsString, MinLength } from 'class-validator';
 
 export class RedefinirSenhaDto {
-
   @IsNotEmpty()
   @IsString()
   token!: string;
@@ -14,5 +9,4 @@ export class RedefinirSenhaDto {
   @IsString()
   @MinLength(6)
   novaSenha!: string;
-
 }

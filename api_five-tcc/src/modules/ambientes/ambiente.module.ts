@@ -1,12 +1,11 @@
-import { Module } from "@nestjs/common";
-import { AmbientesController } from './ambiente.controller'
-import { AmbienteService } from './ambiente.service'
-import { AmbienteRepository } from './ambiente.repository'
+import { Module } from '@nestjs/common';
+import { AmbientesController } from './ambiente.controller';
+import { AmbienteService } from './ambiente.service';
+import { AmbienteRepository } from './ambiente.repository';
 
 @Module({
-    controllers: [AmbientesController],
-    providers: [AmbienteService, AmbienteRepository],
-    exports: [AmbienteService]
+  controllers: [AmbientesController],
+  providers: [AmbienteService, AmbienteRepository],
+  exports: [AmbienteService],
 })
-
-export class AmbienteModule { }
+export class AmbienteModule {}

@@ -9,94 +9,80 @@ import { Roles } from '../auth/decorators/roles.decorator';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 
-
-@UseGuards(AuthTokenGuard, RolesGuard) // Aplica o guard de autenticação a todas as rotas deste controlador 
+@UseGuards(AuthTokenGuard, RolesGuard) // Aplica o guard de autenticação a todas as rotas deste controlador
 @Roles('admin', 'tecnico', 'funcionario') // Aplica o decorator de roles a todas as rotas deste controlador, permitindo apenas usuários com a role 'admin'
 @Controller('usuarios')
 export class UserController {
-    constructor(private readonly useSerevices: UserServices,
-        private readonly CloudinaryService: CloudinaryService
-    ) { }
+  constructor(
+    private readonly useSerevices: UserServices,
+    private readonly CloudinaryService: CloudinaryService,
+  ) {}
 
-    // Rota para listar todos os usuários 
-    @Roles('admin')
-    @Get('/listarUser')
-    async listarUser() {
-        return await this.useSerevices.ListarUser();
+  // Rota para listar todos os usuários
+  @Roles('admin')
+  @Get('/listarUser')
+  async listarUser() {
+    return await this.useSerevices.ListarUser();
+  }
 
-    }
+  // Rota para listar um usuário por ID
+  @Roles('admin')
+  @Get('/listarUserId/:id')
+  async listarUserPorId(@Param('id', ParseIntPipe) id: number) {
+    return await this.useSerevices.ListarUserId(id);
+  }
 
-    // Rota para listar um usuário por ID
-    @Roles('admin')
-    @Get('/listarUserId/:id')
-    async listarUserPorId(@Param('id', ParseIntPipe) id: number) {
-        return await this.useSerevices.ListarUserId(id);
-    }
+  // Rota para cadastrar um novo usuário
+  @Roles('admin')
+  @Post('/cadastrarUser')
+  async cadastrarUser(@Body() CriarUserDto: CreateUserDto) {
+    return await this.useSerevices.CadastrarUser(CriarUserDto);
+  }
 
-    // Rota para cadastrar um novo usuário
-    @Roles('admin')
-    @Post('/cadastrarUser')
-    async cadastrarUser(@Body() CriarUserDto: CreateUserDto) {
-        return await this.useSerevices.CadastrarUser(CriarUserDto);
-    }
+  // Rota para atualizar um usuário existente
+  @Roles('admin')
+  @Put('/atualizarUser/:id')
+  async atualizarUser(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() atualizarUserDto: UpdateUserDto,
+  ) {
+    return await this.useSerevices.AtualizarUser(id, atualizarUserDto);
+  }
 
-    // Rota para atualizar um usuário existente
-    @Roles('admin')
-    @Put('/atualizarUser/:id')
-    async atualizarUser(@Param('id', ParseIntPipe) id: number, @Body() atualizarUserDto: UpdateUserDto) {
-        return await this.useSerevices.AtualizarUser(id, atualizarUserDto);
-    }
+  // Rota para Atualizar o status de um usuário existente (inativar/ativar)
+  @Roles('admin')
+  @Patch('/inativarUser/:id')
+  async atualizarStatusUser(@Param('id', ParseIntPipe) id: number) {
+    return await this.useSerevices.AtualizarStatusUser(id);
+  }
 
-    // Rota para Atualizar o status de um usuário existente (inativar/ativar)
-    @Roles('admin')
-    @Patch('/inativarUser/:id')
-    async atualizarStatusUser(@Param('id', ParseIntPipe) id: number,) {
-        return await this.useSerevices.AtualizarStatusUser(id,);
-    }
+  // Rota para listar os usuários desativados
+  @Roles('admin')
+  @Get('/listarStatusUser')
+  async listarStatusUser() {
+    return await this.useSerevices.listarStatusUser();
+  }
 
-    // Rota para listar os usuários desativados
-    @Roles('admin')
-    @Get('/listarStatusUser')
-    async listarStatusUser() {
-        return await this.useSerevices.listarStatusUser();
-    }
+  // Rota para Visualizar Perfil do usuário logado
+  @Get('/perfilUser')
+  async visualizarPerfilUser(@Req() req: Request) {
+    return this.useSerevices.visualizarPerfilUser(req['user'].id_user);
+  }
 
-    // Rota para Visualizar Perfil do usuário logado
-    @Get('/perfilUser')
-    async visualizarPerfilUser(@Req() req: Request) {
-        return this.useSerevices.visualizarPerfilUser(
-            req['user'].id_user
-        )
-    }
+  // Rota para atualizar perfil
+  @Patch('perfilUpdate')
+  @UseGuards(AuthTokenGuard)
+  async atualizarPerfil(@Req() req: Request, @Body() dto: AtualizarPerfilDto) {
+    return this.useSerevices.atualizarPerfil(req['user'].id_user, dto);
+  }
 
-    // Rota para atualizar perfil
-    @Patch('perfilUpdate')
-    @UseGuards(AuthTokenGuard)
-    async atualizarPerfil(
-        @Req() req: Request,
-        @Body() dto: AtualizarPerfilDto,
-    ) {
-        return this.useSerevices.atualizarPerfil(
-            req['user'].id_user,
-            dto,
-        );
-    }
-
-
-    // Rota add foto / atualizar
-    @Post('/Pefilfoto')
-    @UseInterceptors(FileInterceptor('foto'))
-    async adicionarFoto(
-         @Req() req: Request,
-        @UploadedFile() foto: Express.Multer.File,
-    ) {
-    
-    
-        return this.useSerevices.adicionarFoto(
-            req['user'].id_user, 
-            foto);
-    }
-
+  // Rota add foto / atualizar
+  @Post('/Pefilfoto')
+  @UseInterceptors(FileInterceptor('foto'))
+  async adicionarFoto(
+    @Req() req: Request,
+    @UploadedFile() foto: Express.Multer.File,
+  ) {
+    return this.useSerevices.adicionarFoto(req['user'].id_user, foto);
+  }
 }
-
-

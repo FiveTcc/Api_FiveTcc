@@ -1,11 +1,4 @@
-import {
-  BadRequestException,
-  ConflictException,
-  HttpException,
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, ConflictException, HttpException, Injectable, InternalServerErrorException, NotFoundException, } from '@nestjs/common';
 import { CreateUserDto } from './dtos/userDto';
 import { UpdateUserDto } from './dtos/userUpdateDto';
 import { AtualizarPerfilDto } from './dtos/userDtoPefil';
@@ -19,7 +12,7 @@ export class UserServices {
     private readonly userRepositorio: UserRepositorio,
     private readonly BcryptService: BcryptService,
     private readonly cloudinaryService: CloudinaryService,
-  ) { }
+  ) {}
 
   // Método para listar todos os usuários
   async ListarUser() {
@@ -107,7 +100,6 @@ export class UserServices {
       return {
         message: `Usuário ${novoStatus ? 'ativado' : 'inativado'} com sucesso`,
       };
-
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new InternalServerErrorException('Erro ao atualizar status do usuário');
