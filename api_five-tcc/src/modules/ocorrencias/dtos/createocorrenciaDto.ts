@@ -17,6 +17,15 @@ export enum OcorrenciaPrioridade {
     CRITICA = 'critica'
 }
 
+// Tipo da ocorrência (hardware, software, rede, acesso e permissões, outro)
+export enum OcorrenciaTipo {
+    HARDWARE = 'hardware',
+    SOFTWARE = 'software',
+    REDE = 'rede',
+    ACESSO_PERMISSOES = 'acesso_permissoes',
+    OUTRO = 'outro'
+}
+
 export class CreateOcorrenciaDto {
     @IsString({ message: "O nome deve ser uma string" })
     @IsNotEmpty({ message: "O nome é obrigatório" })
@@ -41,7 +50,6 @@ export class CreateOcorrenciaDto {
 
     @IsOptional()
     @IsString({ message: 'A observação deve ser uma string' })
-    @MaxLength(255, { message: 'A observação deve ter no máximo 255 caracteres' })
     @Transform(({ value }) => {
         if (typeof value === 'string') {
             return value.trim();
@@ -59,4 +67,16 @@ export class CreateOcorrenciaDto {
     @IsInt({ message: 'O ID de ambiente deve ser um número inteiro' })
     @IsNotEmpty({ message: 'O ID de ambiente é obrigatório' })
     ambiente_id!: number;
+
+
+
+    @IsEnum(OcorrenciaTipo, { message: 'Tipo de ocorrência inválido' })
+    @Transform(({ value }) => {
+        if (typeof value === 'string') {
+            return value.trim();
+        }
+        return value;
+    })
+    ocor_tipo!: OcorrenciaTipo;
+    
 }

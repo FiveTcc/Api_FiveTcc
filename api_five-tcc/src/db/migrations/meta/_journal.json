@@ -15,6 +15,20 @@
       "when": 1790291264078,
       "tag": "0001_criaçao_tabela_notificaçao",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1794454203138,
+      "tag": "0002_odd_bushwacker",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1794456941434,
+      "tag": "0003_cool_toxin",
+      "breakpoints": true
     }
   ]
 }

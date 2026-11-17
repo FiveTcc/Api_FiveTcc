@@ -1,0 +1,1 @@
+ALTER TABLE `ocorrencias` ADD `ocorre_tipo` varchar(100) NOT NULL;

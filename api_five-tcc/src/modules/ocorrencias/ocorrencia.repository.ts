@@ -34,6 +34,8 @@ export class OcorrenciaRepository {
                 ocor_prioridade: dto.ocor_prioridade,
                 ocor_status: OcorrenciaStatus.ABERTA,
                 ocor_obs: dto.ocor_obs,
+                // Adicionando o campo ocor_tipo ao inserir uma nova ocorrência
+                ocor_tipo: dto.ocor_tipo,
                 componente_id: dto.componente_id,
                 ambiente_id: dto.ambiente_id,
                 id_user: idUser,
