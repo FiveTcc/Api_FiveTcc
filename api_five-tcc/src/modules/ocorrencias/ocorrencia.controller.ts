@@ -9,10 +9,13 @@ import { AdicionarObservacaoDto } from "./dtos/add.ocorrenciaObsDto";
 import { AlterarOcorrenciaPrioridadeDto } from "./dtos/alter.ocorPriorDto";
 import type { Request } from "express";
 import { AuthTokenGuard } from "../auth/guards/auth-token.guad";
+import { Roles } from '../auth/decorators/roles.decorator';
+import { RolesGuard } from "../auth/guards/roles.guard";
 
 
 
-@UseGuards(AuthTokenGuard)
+@UseGuards(AuthTokenGuard, RolesGuard)
+@Roles('admin', 'tecnico', 'funcionario')
 @Controller('ocorrencias')
 export class OcorrenciaController {
     constructor(private readonly ocorrenciaService: OcorrenciaService) { }
@@ -53,6 +56,7 @@ export class OcorrenciaController {
     }
 
     // Rota para encerrar ocorrência
+    @Roles('admin', 'tecnico')
     @Patch('/encerrarOcorrencia/:id')
     async encerrarOcorrencia(
         @Param('id', ParseIntPipe) id: number
@@ -61,6 +65,7 @@ export class OcorrenciaController {
     }
 
     // Rota para cancelar a ocorrência
+    @Roles('admin', 'tecnico')
     @Patch('/cancelarOcorrencia/:id')
     async cancelarOcorrencia(
         @Param('id', ParseIntPipe) id: number
@@ -69,6 +74,7 @@ export class OcorrenciaController {
     }
 
     // Rota para alterar status da ocorrência(aberta, em andamento, encerrada ou cancelada)
+    @Roles('admin', 'tecnico')
     @Patch('/alterarStatus/:id')
     async alterarStatus(
         @Param('id', ParseIntPipe) id: number,
@@ -81,6 +87,7 @@ export class OcorrenciaController {
     }
 
     // Rota para alterar prioridade da ocorrência(Baixa, Media, Alta)
+    @Roles('admin', 'tecnico')
     @Patch('/alterarPrioridade/:id')
     async alterarPrioridade(
         @Param('id', ParseIntPipe) id: number,
