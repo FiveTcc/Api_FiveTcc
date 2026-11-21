@@ -76,16 +76,26 @@ export class AtribuicaoTecnicoService {
 
     async desvincularTecnico(idOcorUser: number) {
         try {
-            const vinculo = await this.atribuicaoTecnicoRepository.verificaVinculoPorId(idOcorUser)
+            const vinculo =
+                await this.atribuicaoTecnicoRepository.verificaVinculoPorId(idOcorUser);
 
             if (!vinculo) {
-                throw new NotFoundException('Vínculo entre técnico e ocorrência não encontrado');
+                throw new NotFoundException(
+                    'Vínculo entre técnico e ocorrência não encontrado'
+                );
             }
 
-            await this.verificaOcorrenciaPodeDesvincularTecnico(vinculo.ocorrencia_id);
-            await this.atribuicaoTecnicoRepository.desvincularTecnico(idOcorUser);
+            await this.verificaOcorrenciaPodeDesvincularTecnico(
+                vinculo.ocorrencia_id
+            );
 
-            return { message: 'Técnico desvinculado da ocorrência com sucesso' };
+            await this.atribuicaoTecnicoRepository.desvincularTecnico(
+                idOcorUser
+            );
+
+            return {
+                message: 'Técnico desvinculado da ocorrência com sucesso'
+            };
         } catch (error) {
             if (
                 error instanceof NotFoundException ||
@@ -98,7 +108,6 @@ export class AtribuicaoTecnicoService {
                 'Erro ao desvincular técnico da ocorrência'
             );
         }
-
     }
 
 
