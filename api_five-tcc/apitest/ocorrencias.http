@@ -113,3 +113,17 @@ Authorization: Bearer: {{Token}}
 GET {{baseUrl}}/ocorrencias/buscarPorPeriodo?dataInicio=2026-08-01&dataFim=2026-08-26
 Authorization: Bearer: {{Token}}
 
+
+### Criar observação da ocorrência
+POST {{baseUrl}}/ocorrencias/11/observacoes
+Content-Type: application/json
+Authorization: Bearer: {{Token}}
+
+{
+  "obs_texto": "Foi realizada uma tentativa de reparo no computador."
+}
+
+### Listar observações da ocorrência
+GET {{baseUrl}}/ocorrencias/11/observacoes
+Authorization: Bearer: {{Token}}
+

@@ -7,6 +7,7 @@ import { AssociateOcorCompDto } from "./dtos/associate.ocorCompDto";
 import { AssociateOcorAmbDto } from "./dtos/associate.ocorAmbDto";
 import { AdicionarObservacaoDto } from "./dtos/add.ocorrenciaObsDto";
 import { AlterarOcorrenciaPrioridadeDto } from "./dtos/alter.ocorPriorDto";
+import { CreateObservacaoDto } from "./dtos/create.observacaoDto";
 import type { Request } from "express";
 import { AuthTokenGuard } from "../auth/guards/auth-token.guad";
 import { Roles } from '../auth/decorators/roles.decorator';
@@ -178,5 +179,27 @@ export class OcorrenciaController {
         @Query('dataFim') dataFim: string,
     ) {
         return await this.ocorrenciaService.filtrarPorPeriodo(dataInicio, dataFim);
+    }
+
+    @Post(':id/observacoes')
+    async criarObservacao(
+        @Param('id', ParseIntPipe) id: number,
+        @Body() dto: CreateObservacaoDto,
+        @Req() req: Request,
+    ) {
+        const usuario = req['user'] as { id_user: number };
+
+        return await this.ocorrenciaService.criarObservacao(
+            id,
+            usuario.id_user,
+            dto,
+        );
+    }
+
+    @Get(':id/observacoes')
+    async listarObservacoes(
+        @Param('id', ParseIntPipe) id: number,
+    ) {
+        return await this.ocorrenciaService.listarObservacoes(id);
     }
 }

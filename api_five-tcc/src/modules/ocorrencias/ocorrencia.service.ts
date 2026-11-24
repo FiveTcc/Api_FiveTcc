@@ -6,6 +6,7 @@ import { NotificacaoService } from "../notificacao/notificacao.service";
 import { TipoNotificacao } from "../notificacao/dto/criar-notificacao.dto";
 import { ComponenteService } from "../componentes/componente.service";
 import { AmbienteService } from "../ambientes/ambiente.service";
+import { CreateObservacaoDto } from "./dtos/create.observacaoDto";
 
 @Injectable()
 export class OcorrenciaService {
@@ -396,6 +397,59 @@ export class OcorrenciaService {
 
             throw new InternalServerErrorException(
                 'Erro ao filtrar ocorrências por período'
+            );
+        }
+    }
+
+    async criarObservacao(
+        id_ocorrencia: number,
+        id_user: number,
+        dto: CreateObservacaoDto,
+    ) {
+        try {
+            await this.verificaOcorrenciaExiste(id_ocorrencia);
+
+            const obsTexto = dto.obs_texto?.trim();
+
+            if (!obsTexto) {
+                throw new BadRequestException('A observação não pode estar vazia');
+            }
+
+            await this.ocorrenciaRepository.criarObservacao(
+                id_ocorrencia,
+                id_user,
+                obsTexto,
+            );
+
+            return { message: 'Observação adicionada com sucesso' };
+        } catch (error) {
+            if (
+                error instanceof NotFoundException ||
+                error instanceof BadRequestException
+            ) {
+                throw error;
+            }
+
+            throw new InternalServerErrorException(
+                'Erro ao adicionar observação',
+            );
+        }
+    }
+
+    async listarObservacoes(id_ocorrencia: number) {
+        try {
+            await this.verificaOcorrenciaExiste(id_ocorrencia);
+
+            return await this.ocorrenciaRepository.listarObservacoes(
+                id_ocorrencia,
+            );
+        } catch (error) {
+            if (error instanceof NotFoundException) {
+                throw error;
+            }
+
+            throw new InternalServerErrorException(
+                'Erro ao listar observações',
             );
         }
     }

@@ -2,9 +2,9 @@ import { Inject, Injectable } from "@nestjs/common";
 import { DRIZZLE } from "src/db/database/database.constants";
 import type { DrizzleDB } from "src/db/types/drizzleDB";
 import { CreateOcorrenciaDto, OcorrenciaStatus, OcorrenciaPrioridade } from "./dtos/createocorrenciaDto";
-import { ocorrencias, Ambientes, Componentes, User } from "src/db/schemas";
+import { ocorrencias, ocorrenciasObservacoes, Ambientes, Componentes, User } from "src/db/schemas";
 import { UpdateOcorrenciaDto } from "./dtos/update.ocorrenciaDto";
-import { eq, sql, desc, like } from "drizzle-orm";
+import { eq, sql, desc, asc, like } from "drizzle-orm";
 
 
 
@@ -233,5 +233,42 @@ export class OcorrenciaRepository {
             .where(eq(ocorrencias.id_ocor, id));
 
         return ocorrencia;
+    }
+
+    async criarObservacao(
+        id_ocorrencia: number,
+        id_user: number,
+        obs_texto: string,
+    ) {
+        const [resultado] = await this.db
+            .insert(ocorrenciasObservacoes)
+            .values({
+                id_ocorrencia,
+                id_user,
+                obs_texto,
+            });
+
+        return resultado;
+    }
+
+    async listarObservacoes(id_ocorrencia: number) {
+        return await this.db
+            .select({
+                id_obs: ocorrenciasObservacoes.id_obs,
+                id_ocorrencia: ocorrenciasObservacoes.id_ocorrencia,
+                id_user: ocorrenciasObservacoes.id_user,
+                obs_texto: ocorrenciasObservacoes.obs_texto,
+                criada_em: ocorrenciasObservacoes.criada_em,
+                user_nome: User.user_nome,
+            })
+            .from(ocorrenciasObservacoes)
+            .leftJoin(
+                User,
+                eq(ocorrenciasObservacoes.id_user, User.id_user),
+            )
+            .where(
+                eq(ocorrenciasObservacoes.id_ocorrencia, id_ocorrencia),
+            )
+            .orderBy(asc(ocorrenciasObservacoes.criada_em));
     }
 }
