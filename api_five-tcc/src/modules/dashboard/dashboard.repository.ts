@@ -195,7 +195,7 @@ export class DashboardRepository {
       .where(
         and(
           eq(ocorrencias.id_user, usuarioId),
-          eq(ocorrencias.ocor_status, 'Em_andamento'),
+          eq(ocorrencias.ocor_status, 'em andamento'),
         ),
       );
     return row.total;
