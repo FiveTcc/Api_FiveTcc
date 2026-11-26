@@ -19,17 +19,17 @@ const COR = {
 
 // chaves normalizadas (minúsculas, sem acento) — mesmas cores do PDF
 const COR_STATUS: Record<string, string> = {
-  aberta: 'FFFEE2E2',
-  'em andamento': 'FFFEF3C7',
-  concluida: 'FFDCFCE7',
-  cancelada: 'FFE5E7EB',
+  aberta: 'FFF9E2A0',        // Amarelo suave
+  'em andamento': 'FFDDEBF7', // Azul suave
+  concluida: 'FFE2F0D9',      // Verde suave
+  cancelada: 'FFE7E6E6',      // Cinza suave
 };
 
 const COR_PRIORIDADE: Record<string, string> = {
-  critica: 'FFFCA5A5',
-  alta: 'FFFED7AA',
-  media: 'FFFEF9C3',
-  baixa: 'FFE5E7EB',
+  baixa: 'FFFFF2CC',   // Amarelo suave
+  media: 'FFC6D9F1',  // Azul levemente mais escuro
+  alta: 'FFFCE4D6',   // Laranja suave
+  critica: 'FFF4CCCC', // Vermelho suave
 };
 
 const LADO = { style: 'thin' as const, color: { argb: COR.borda } };

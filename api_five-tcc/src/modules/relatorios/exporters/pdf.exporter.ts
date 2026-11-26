@@ -28,17 +28,17 @@ const COR = {
 
 // chaves normalizadas (minúsculas, sem acento)
 const COR_STATUS: Record<string, string> = {
-  aberta: '#FEE2E2',
-  'em andamento': '#FEF3C7',
-  concluida: '#DCFCE7',
-  cancelada: '#E5E7EB',
+  aberta: '#F9E2A0',
+  'em andamento': '#DDEBF7',
+  concluida: '#E2F0D9',
+  cancelada: '#E7E6E6',
 };
 
 const COR_PRIORIDADE: Record<string, string> = {
-  critica: '#FCA5A5',
-  alta: '#FED7AA',
-  media: '#FEF9C3',
-  baixa: '#E5E7EB',
+  baixa: '#FFF2CC',
+  media: '#C6D9F1',
+  alta: '#FCE4D6',
+  critica: '#F4CCCC',
 };
 
 export interface RelatorioFiltros {
