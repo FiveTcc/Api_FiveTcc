@@ -117,27 +117,15 @@ export class ComponenteService {
     // Método para filtrar componentes por ambiente
     async filtrarPorAmbiente(nomeAmb: string) {
         try {
-
             const componentes = await this.componenteRepository.filtrarPorAmbiente(nomeAmb);
 
-            if (componentes.length === 0) {
-                throw new NotFoundException(
-                    'Nenhum componente encontrado para o ambiente informado',
-                );
-            }
-
-            return componentes;
+            return componentes ?? [];
 
         } catch (error) {
-
-            if (error instanceof NotFoundException) {
-                throw error;
-            }
             throw new InternalServerErrorException(
                 'Erro ao filtrar componentes por ambiente',
             );
         }
-
     }
 
     // Método para filtrar componentes por tipo
@@ -145,14 +133,7 @@ export class ComponenteService {
         try {
 
             const componentes = await this.componenteRepository.filtrarPorTipo(tipo);
-
-            if (componentes.length === 0) {
-                throw new NotFoundException(
-                    'Nenhum componente encontrado para o tipo informado',
-                );
-            }
-
-            return componentes;
+            return componentes ?? [];
 
         } catch (error) {
 
@@ -171,14 +152,7 @@ export class ComponenteService {
         try {
 
             const componentes = await this.componenteRepository.filtrarPorNome(nome);
-
-            if (componentes.length === 0) {
-                throw new NotFoundException(
-                    'Nenhum componente encontrado para o nome informado'
-                );
-            }
-
-            return componentes;
+            return componentes ?? [];
 
         } catch (error) {
             if (error instanceof NotFoundException) {
